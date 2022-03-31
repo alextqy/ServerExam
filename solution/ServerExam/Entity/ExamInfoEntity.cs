@@ -1,55 +1,109 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ServerExam.Entity
 {
     public class ExamInfoEntity
     {
         [Key]
-        [Column(TypeName = "int(10)")]
-        [MaxLength(10)]
         [JsonPropertyName("ID")]
         public int ID { get; set; }
 
         /// <summary>
-        /// 键名
+        /// 科目名称
         /// </summary>
-        [Column(TypeName = "varchar(128)")]
-        [MaxLength(128)]
-        [JsonPropertyName("ConfigKey")]
-        public string ConfigKey { get; set; }
+        [JsonPropertyName("SubjectName")]
+        public string SubjectName { get; set; }
 
         /// <summary>
-        /// 描述
+        /// 准考证号
         /// </summary>
-        [Column(TypeName = "varchar(128)")]
-        [MaxLength(128)]
-        [JsonPropertyName("ConfigDesc")]
-        public string ConfigDesc { get; set; }
+        [JsonPropertyName("ExamNo")]
+        public string ExamNo { get; set; }
 
         /// <summary>
-        /// 类型 1input 2textarea 3select
+        /// 总分
         /// </summary>
-        [Column(TypeName = "int(1)")]
-        [MaxLength(1)]
-        [JsonPropertyName("ConfigType")]
-        public int ConfigType { get; set; }
+        [JsonPropertyName("TotalScore")]
+        public decimal TotalScore { get; set; }
 
         /// <summary>
-        /// 键值
+        /// 及格线
         /// </summary>
-        [Column(TypeName = "varchar(65535)")]
-        [MaxLength(65535)]
-        [JsonPropertyName("ConfigValue")]
-        public string ConfigValue { get; set; }
+        [JsonPropertyName("PassLine")]
+        public decimal PassLine { get; set; }
+
+        /// <summary>
+        /// 实际得分
+        /// </summary>
+        [JsonPropertyName("ActualScore")]
+        public decimal ActualScore { get; set; }
+
+        /// <summary>
+        /// 考试时长
+        /// </summary>
+        [JsonPropertyName("ExamDuration")]
+        public int ExamDuration { get; set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [JsonPropertyName("StartTime")]
+        public int StartTime { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [JsonPropertyName("EndTime")]
+        public int EndTime { get; set; }
+
+        /// <summary>
+        /// 实际考试时长
+        /// </summary>
+        [JsonPropertyName("ActualDuration")]
+        public decimal ActualDuration { get; set; }
+
+        /// <summary>
+        /// 通过状态 1否 2是
+        /// </summary>
+        [JsonPropertyName("Pass")]
+        public int Pass { get; set; }
+
+        /// <summary>
+        /// 联系方式
+        /// </summary>
+        [JsonPropertyName("ContactInfo")]
+        public string ContactInfo { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        [JsonPropertyName("CreateTime")]
+        public int CreateTime { get; set; }
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        [JsonPropertyName("UpdateTime")]
+        public int UpdateTime { get; set; }
 
         public ExamInfoEntity()
         {
             this.ID = 0;
-            this.ConfigKey = "";
-            this.ConfigDesc = "";
-            this.ConfigType = 0;
-            this.ConfigValue = "";
+            this.SubjectName = "";
+            this.ExamNo = "";
+            this.TotalScore = 0;
+            this.PassLine = 0;
+            this.ActualScore = 0;
+            this.ExamDuration = 0;
+            this.StartTime = 0;
+            this.EndTime = 0;
+            this.ActualDuration = 0;
+            this.Pass = 0;
+            this.ContactInfo = "";
+            this.CreateTime = 0;
+            this.UpdateTime = 0;
         }
     }
 }
