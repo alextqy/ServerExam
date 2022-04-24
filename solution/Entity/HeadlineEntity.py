@@ -3,6 +3,8 @@ from Entity.BaseEntity import *
 
 # 大标题
 class HeadlineEntity(BaseEntity):
-    Content = ''  # 内容
-    ContentCode = ''  # 内容编码
-    UpdateTime = 0  # 更新时间
+    __tablename__ = 'Headline'
+
+    Content = Column(String(65535), comment='内容')
+    ContentCode = Column(String(128), comment='内容编码')
+    UpdateTime = Column(INTEGER, comment='更新时间')

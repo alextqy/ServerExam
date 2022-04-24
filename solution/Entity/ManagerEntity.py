@@ -1,12 +1,15 @@
+from click import command
 from Entity.BaseEntity import *
 
 
 # 管理员
 class ManagerEntity(BaseEntity):
-    Account = ''  # 账号
-    PWD = ''  # 密码
-    Name = ''  # 名称
-    State = 0  # 状态 1正常 2禁用
-    Permission = 0  # 权限 9 ~ 1 从高到低
-    UpdateTime = 0  # 更新时间
-    Token = ''  # Token
+    __tablename__ = 'Manager'
+
+    Account = Column(String(128), comment='账号')
+    PWD = Column(String(128), comment='密码')
+    Name = Column(String(128), comment='名称')
+    State = Column(INTEGER, comment='状态 1正常 2禁用')
+    Permission = Column(INTEGER, comment='权限 9 ~ 1 从高到低')
+    UpdateTime = Column(INTEGER, comment='更新时间')
+    Token = Column(String, comment='Token')

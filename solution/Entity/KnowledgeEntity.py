@@ -3,7 +3,9 @@ from Entity.BaseEntity import *
 
 # 知识点
 class KnowledgeEntity(BaseEntity):
-    KnowledgeName = ''  # 知识点名称
-    SubjectID = 0  # 科目ID
-    SubjectState = 0  # 知识点状态 1正常 2禁用
-    UpdateTime = 0  # 更新时间
+    __tablename__ = 'Knowledge'
+
+    KnowledgeName = Column(String(128), comment='知识点名称')
+    SubjectID = Column(INTEGER, comment='科目ID')
+    SubjectState = Column(INTEGER, comment='知识点状态 1正常 2禁用')
+    UpdateTime = Column(INTEGER, comment='更新时间')
