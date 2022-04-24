@@ -12,4 +12,4 @@ class ManagerEntity(BaseEntity):
     State = Column(INTEGER, comment='状态 1正常 2禁用')
     Permission = Column(INTEGER, comment='权限 9 ~ 1 从高到低')
     UpdateTime = Column(INTEGER, comment='更新时间')
-    Token = Column(String, comment='Token')
+    Token = Column(String(128), comment='Token')
