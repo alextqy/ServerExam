@@ -1,7 +1,12 @@
-from Entity.BaseEntity import BaseEntity
+from re import T
+
+from sqlalchemy import true
+from Entity.BaseEntity import *
 
 
 # 考生Token
 class ExamineeTokenEntity(BaseEntity):
-    Token = ''  # Token
-    ExamID = 0  # 报名ID
+    __tablename__ = 'ExamineeToken'
+
+    Token = Column(String(128), index=True, comment='Token')
+    ExamID = Column(INTEGER, index=True, comment='报名ID')

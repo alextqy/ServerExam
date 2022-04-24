@@ -1,4 +1,4 @@
-from Entity.BaseEntity import BaseEntity
+from Entity.BaseEntity import *
 
 
 class ScantronSolutionEntity(BaseEntity):
