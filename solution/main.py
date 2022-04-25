@@ -3,7 +3,6 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 # pip install requests
-# pip 
 # pip install fastapi
 # pip install 'uvicorn[standard]'
 # uvicorn main:app --host=0.0.0.0 --port=8080 --reload
