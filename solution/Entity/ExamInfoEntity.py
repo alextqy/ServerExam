@@ -3,7 +3,7 @@ from Entity.BaseEntity import *
 
 # 报名
 class ExamInfoEntity(BaseEntity):
-    __tablename__ = 'ExamineeToken'
+    __tablename__ = 'ExamInfo'
 
     SubjectName = Column(String(128), comment='科目名称')
     ExamNo = Column(String(128), index=True, comment='准考证号')

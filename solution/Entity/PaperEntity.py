@@ -3,10 +3,13 @@ from Entity.BaseEntity import *
 
 # 试卷
 class PaperEntity(BaseEntity):
-    PaperName = ''  # 试卷名称
-    SubjectID = 0  # 科目ID
-    TotalScore = 0.00  # 总分
-    PassLine = 0.00  # 及格分数
-    ExamDuration = 0  # 考试时长
-    PaperState = 0  # 试卷状态 1正常 2禁用
-    UpdateTime = 0  # 更新时间
+    __tablename__ = 'Paper'
+
+    PaperName = Column(String(128), comment='试卷名称')
+    PaperCode = Column(String(128), index=True, comment='试卷编码')
+    SubjectID = Column(INTEGER, comment='科目ID')
+    TotalScore = Column(DECIMAL(10, 2), comment='总分')
+    PassLine = Column(DECIMAL(10, 2), comment='及格分数')
+    ExamDuration = Column(INTEGER, comment='考试时长')
+    PaperState = Column(INTEGER, comment='试卷状态 1正常 2禁用')
+    UpdateTime = Column(INTEGER, comment='更新时间')
