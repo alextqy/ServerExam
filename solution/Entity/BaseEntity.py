@@ -1,4 +1,3 @@
-from xml.etree.ElementTree import Comment
 from sqlalchemy import Column, INTEGER, DECIMAL, String
 from sqlalchemy.orm import relationship
 
