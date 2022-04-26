@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 报名
-class ExamInfoEntity(BaseEntity):
+class ExamInfoEntity(BaseEntity, BaseORM):
     __tablename__ = 'ExamInfo'
 
     SubjectName = Column(String(128), comment='科目名称')
@@ -17,3 +17,6 @@ class ExamInfoEntity(BaseEntity):
     Pass = Column(INTEGER, comment='是否通过 1否 2是')
     UpdateTime = Column(INTEGER, comment='更新时间')
     ExamineeID = Column(INTEGER, comment='考生ID')
+
+    def __init__(self):
+        super().__init__()

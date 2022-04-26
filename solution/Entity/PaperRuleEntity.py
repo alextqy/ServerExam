@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 试卷规则
-class PaperRuleEntity(BaseEntity):
+class PaperRuleEntity(BaseEntity, BaseORM):
     __tablename__ = 'PaperRule'
 
     HeadlineID = Column(INTEGER, comment='大标题ID')
@@ -12,3 +12,6 @@ class PaperRuleEntity(BaseEntity):
     PaperID = Column(INTEGER, comment='试卷ID')
     PaperRuleState = Column(INTEGER, comment='试卷规则状态 1正常 2禁用')
     UpdateTime = Column(INTEGER, comment='更新时间')
+
+    def __init__(self):
+        super().__init__()

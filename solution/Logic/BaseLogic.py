@@ -5,16 +5,18 @@ from Service.File import *
 from Service.Lang import *
 from Service.UDPTool import *
 
-from Entity.BaseEntity import *
-# from sqlalchemy.exc import *
+from Model.BaseModel import *
+from Model.ExamineeModel import ExamineeModel
 
 
-class BaseModel:
+class BaseLogic:
     _cache: Cache()
     _common: Common()
     _file: File()
     _lang: Lang()
     _udp: UDPTool()
+
+    _examineemodel = ExamineeModel()
 
     def __init__(self):
         super().__init__()

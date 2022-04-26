@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 试题
-class QuestionEntity(BaseEntity):
+class QuestionEntity(BaseEntity, BaseORM):
     __tablename__ = 'Question'
 
     QuestionTitle = Column(String(65535), comment='题目')
@@ -14,3 +14,6 @@ class QuestionEntity(BaseEntity):
     Describe = Column(String(65535), comment='试题描述')
     Attachment = Column(String(65535), comment='试题附件')
     UpdateTime = Column(INTEGER, comment='更新时间')
+
+    def __init__(self):
+        super().__init__()

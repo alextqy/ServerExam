@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 知识点
-class KnowledgeEntity(BaseEntity):
+class KnowledgeEntity(BaseEntity, BaseORM):
     __tablename__ = 'Knowledge'
 
     KnowledgeName = Column(String(128), comment='知识点名称')
@@ -10,3 +10,6 @@ class KnowledgeEntity(BaseEntity):
     SubjectID = Column(INTEGER, index=True, comment='科目ID')
     SubjectState = Column(INTEGER, comment='知识点状态 1正常 2禁用')
     UpdateTime = Column(INTEGER, comment='更新时间')
+
+    def __init__(self):
+        super().__init__()

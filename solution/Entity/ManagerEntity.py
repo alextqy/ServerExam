@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 管理员
-class ManagerEntity(BaseEntity):
+class ManagerEntity(BaseEntity, BaseORM):
     __tablename__ = 'Manager'
 
     Account = Column(String(128), comment='账号')
@@ -12,3 +12,6 @@ class ManagerEntity(BaseEntity):
     Permission = Column(INTEGER, comment='权限 9 ~ 1 从高到低')
     UpdateTime = Column(INTEGER, comment='更新时间')
     Token = Column(String(128), comment='Token')
+
+    def __init__(self):
+        super().__init__()

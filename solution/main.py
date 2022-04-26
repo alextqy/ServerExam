@@ -1,7 +1,7 @@
 '''
 pip install fastapi
 pip install 'uvicorn[standard]'
-uvicorn main:app --host=0.0.0.0 --port=8080 --reload
+uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
 '''
 from fastapi import FastAPI, Request, Body
 from fastapi.exceptions import RequestValidationError
@@ -15,7 +15,7 @@ async def request_validation_exception_handler(request: Request, exc: RequestVal
     return JSONResponse({'Code': '200', 'Memo': exc.errors()[0]['loc'][1] + ' ' + exc.errors()[0]['type'].split('.')[1]})
 
 
-@app.get("/test")
+@app.get('/test')
 async def Test():
 
     class Result:
@@ -26,8 +26,10 @@ async def Test():
 
     result = Result()
     result.Status = True
-    result.Memo = "Success"
+    result.Memo = 'Success'
     return result  # json.dumps(result.__dict__)
 
 
-# app.include_router(, prefix=)
+from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
+
+app.include_router(ExamineeRouter, prefix=ExamineePrefix)

@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 答题卡
-class ScantronEntity(BaseEntity):
+class ScantronEntity(BaseEntity, BaseORM):
     __tablename__ = 'Scantron'
 
     QuestionTitle = Column(String(65535), comment='标题')
@@ -16,3 +16,6 @@ class ScantronEntity(BaseEntity):
     Score = Column(DECIMAL(10, 2), comment='额定分数')
     ExamID = Column(INTEGER, comment='报名ID')
     HeadlineContent = Column(String(65535), comment='大标题内容')
+
+    def __init__(self):
+        super().__init__()

@@ -2,7 +2,7 @@ from Entity.BaseEntity import *
 
 
 # 试卷
-class PaperEntity(BaseEntity):
+class PaperEntity(BaseEntity, BaseORM):
     __tablename__ = 'Paper'
 
     PaperName = Column(String(128), comment='试卷名称')
@@ -13,3 +13,6 @@ class PaperEntity(BaseEntity):
     ExamDuration = Column(INTEGER, comment='考试时长')
     PaperState = Column(INTEGER, comment='试卷状态 1正常 2禁用')
     UpdateTime = Column(INTEGER, comment='更新时间')
+
+    def __init__(self):
+        super().__init__()

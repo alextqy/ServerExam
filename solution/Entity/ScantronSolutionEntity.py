@@ -1,7 +1,7 @@
 from Entity.BaseEntity import *
 
 
-class ScantronSolutionEntity(BaseEntity):
+class ScantronSolutionEntity(BaseEntity, BaseORM):
     __tablename__ = 'ScantronSolution'
 
     ScantronID = Column(INTEGER, comment='试题ID')
@@ -11,3 +11,6 @@ class ScantronSolutionEntity(BaseEntity):
     CandidateAnswer = Column(String(128), comment='考生答案')
     ScoreRatio = Column(DECIMAL(10, 2), comment='得分比例')
     UpdateTime = Column(INTEGER, comment='更新时间')
+
+    def __init__(self):
+        super().__init__()
