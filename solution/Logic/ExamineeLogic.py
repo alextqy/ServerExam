@@ -9,7 +9,11 @@ class ExamineeLogic(BaseLogic):
     def NewExaminee(self, Name: str, ExamineeNo: str, Contact: str) -> Result:
         _dbsession = DBsession()
         _dbsession.begin_nested()
-        Result = self._examineemodel.Insert(_dbsession, Name, ExamineeNo, Contact)
+        Param = ExamineeEntity()
+        Param.Name = Name.strip()
+        Param.ExamineeNo = ExamineeNo.strip()
+        Param.Contact = Contact.strip()
+        Result = self._examineemodel.Insert(_dbsession, Param)
         _dbsession.commit()
         return Result
 
@@ -23,7 +27,11 @@ class ExamineeLogic(BaseLogic):
     def UpdateExaminee(self, ID: int, Name: str, ExamineeNo: str, Contact: str) -> Result:
         _dbsession = DBsession()
         _dbsession.begin_nested()
-        Result = self._examineemodel.Update(_dbsession, ID, Name, ExamineeNo, Contact)
+        Param = ExamineeEntity()
+        Param.Name = Name.strip()
+        Param.ExamineeNo = ExamineeNo.strip()
+        Param.Contact = Contact.strip()
+        Result = self._examineemodel.Update(_dbsession, ID, Param)
         _dbsession.commit()
         return Result
 
