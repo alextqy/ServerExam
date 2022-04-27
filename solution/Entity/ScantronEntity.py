@@ -12,7 +12,7 @@ class ScantronEntity(BaseEntity, BaseORM):
     KnowledgeID = Column(INTEGER, comment='知识点ID')
     Describe = Column(String(65535), comment='试题描述')
     Attachment = Column(String(65535), comment='试题附件')
-    UpdateTime = Column(INTEGER, comment='更新时间')
+    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
     Score = Column(DECIMAL(10, 2), comment='额定分数')
     ExamID = Column(INTEGER, comment='报名ID')
     HeadlineContent = Column(String(65535), comment='大标题内容')

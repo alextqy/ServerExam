@@ -7,6 +7,9 @@ from Service.UDPTool import *
 
 from Entity.BaseEntity import *
 # from sqlalchemy.exc import *
+from Entity.ExamineeEntity import ExamineeEntity
+from Entity.ExamineeTokenEntity import ExamineeTokenEntity
+
 
 
 class BaseModel:

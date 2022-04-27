@@ -30,5 +30,5 @@ async def FindExaminee(request: Request, ID: int = Form(0)) -> Result:
 
 # 考生列表
 @ExamineeRouter.post('/list/examinee')
-async def ListExaminee(request: Request, Page: int = Form(0), PageSize: int = Form(0)) -> Result:
-    return examineelogic.ListExaminee(Page, PageSize)
+async def ListExaminee(request: Request, Page: int = Form(1), PageSize: int = Form(10), Stext: str = Form('')) -> Result:
+    return examineelogic.ListExaminee(Page, PageSize, Stext)

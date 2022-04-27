@@ -11,7 +11,7 @@ class PaperRuleEntity(BaseEntity, BaseORM):
     SingleScore = Column(DECIMAL(10, 2), comment='单题分数')
     PaperID = Column(INTEGER, comment='试卷ID')
     PaperRuleState = Column(INTEGER, comment='试卷规则状态 1正常 2禁用')
-    UpdateTime = Column(INTEGER, comment='更新时间')
+    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):
         super().__init__()

@@ -10,7 +10,7 @@ class ScantronSolutionEntity(BaseEntity, BaseORM):
     CorrectAnswer = Column(String(128), comment='正确答案')
     CandidateAnswer = Column(String(128), comment='考生答案')
     ScoreRatio = Column(DECIMAL(10, 2), comment='得分比例')
-    UpdateTime = Column(INTEGER, comment='更新时间')
+    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):
         super().__init__()

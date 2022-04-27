@@ -32,7 +32,7 @@ class ExamineeLogic(BaseLogic):
         Result = self._examineemodel.Find(_dbsession, ID)
         return Result
 
-    def ListExaminee(self, Page: int, PageSize: int) -> Result:
+    def ListExaminee(self, Page: int, PageSize: int, Stext: str) -> Result:
         _dbsession = DBsession()
-        Result = self._examineemodel.List(_dbsession, Page, PageSize)
+        Result = self._examineemodel.List(_dbsession, Page, PageSize, Stext)
         return Result

@@ -20,20 +20,20 @@ class ResultList:
     Status: bool
     Memo: str
     Code: int
-    Data: None
     Page: int
     PageSize: int
     TotalPage: int
+    Data: None
 
     def __init__(self) -> None:
         super().__init__()
         self.Status = False
         self.Memo = ''
         self.Code = 200
-        self.Data = None
         self.Page = 0
         self.PageSize = 0
         self.TotalPage = 0
+        self.Data = None
 
 
 class Common(BaseService):

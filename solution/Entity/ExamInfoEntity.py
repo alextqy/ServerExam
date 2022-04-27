@@ -15,7 +15,7 @@ class ExamInfoEntity(BaseEntity, BaseORM):
     EndTime = Column(INTEGER, comment='实际考试结束时间')
     ActualDuration = Column(INTEGER, comment='实际考试时长')
     Pass = Column(INTEGER, comment='是否通过 1否 2是')
-    UpdateTime = Column(INTEGER, comment='更新时间')
+    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
     ExamineeID = Column(INTEGER, comment='考生ID')
 
     def __init__(self):

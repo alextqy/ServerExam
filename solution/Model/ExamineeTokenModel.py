@@ -1,25 +1,24 @@
 from Model.BaseModel import *
 
 
-class ExamineeModel(BaseModel):
-    DBType: ExamineeEntity = ExamineeEntity
+class ExamineeTokenModel(BaseModel):
+    DBType: ExamineeTokenEntity = ExamineeTokenEntity
 
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Name: str, ExamineeNo: str, Contact: str) -> Result:
+    def Insert(self, _dbsession: DBsession, Token: str, ExamID: str) -> Result:
         _result = Result()
-        if Name == '':
+        if Token == '':
             _result.Memo = 'param err'
             return _result
-        if ExamineeNo == '':
+        if ExamID == '':
             _result.Memo = 'param err'
             return _result
 
         Examinee = self.DBType()
-        Examinee.Name = Name.strip()
-        Examinee.ExamineeNo = ExamineeNo.strip()
-        Examinee.Contact = Contact.strip()
+        Examinee.Token = Token.strip()
+        Examinee.ExamID = ExamID.strip()
         try:
             _dbsession.add(Examinee)
             _dbsession.commit()
@@ -47,13 +46,12 @@ class ExamineeModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Name: str, ExamineeNo: str, Contact: str) -> Result:
+    def Update(self, _dbsession: DBsession, ID: int, Token: str, ExamID: int) -> Result:
         _result = Result()
         try:
             Data = _dbsession.query(self.DBType).filter(self.DBType.ID == ID).first()
-            Data.Name = Name.strip() if Name != '' else Data.Name
-            Data.ExamineeNo = ExamineeNo.strip() if ExamineeNo != '' else Data.ExamineeNo
-            Data.Contact = Contact.strip() if Contact != '' else Data.Contact
+            Data.Token = Token if Token != '' else Data.Token
+            Data.ExamID = ExamID if ExamID != '' else Data.ExamID
             _dbsession.commit()
         except Exception as e:
             _result.Memo = str(e.orig)
@@ -69,7 +67,7 @@ class ExamineeModel(BaseModel):
         _result.Data = _dbsession.query(self.DBType).filter(self.DBType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -77,7 +75,5 @@ class ExamineeModel(BaseModel):
         _result.TotalPage = math.ceil(_dbsession.query(self.DBType).count() / PageSize)
         sql = _dbsession.query(self.DBType)
         sql = sql.order_by(desc(self.DBType.ID))
-        if Stext != '':
-            sql = sql.filter(or_(self.DBType.Name.ilike('%' + Stext.strip() + '%'), self.DBType.ExamineeNo.ilike('%' + Stext.strip() + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

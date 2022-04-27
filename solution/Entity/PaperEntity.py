@@ -12,7 +12,7 @@ class PaperEntity(BaseEntity, BaseORM):
     PassLine = Column(DECIMAL(10, 2), comment='及格分数')
     ExamDuration = Column(INTEGER, comment='考试时长')
     PaperState = Column(INTEGER, comment='试卷状态 1正常 2禁用')
-    UpdateTime = Column(INTEGER, comment='更新时间')
+    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):
         super().__init__()
