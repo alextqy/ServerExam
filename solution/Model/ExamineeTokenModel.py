@@ -46,17 +46,17 @@ class ExamineeTokenModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        try:
-            Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-            Data.Token = Param.Token.strip() if Param.Token != '' else Data.Token
-            Data.ExamID = Param.ExamID if Param.ExamID > 0 else Data.ExamID
-            _dbsession.commit()
-        except Exception as e:
-            _result.Memo = str(e.orig)
-            _dbsession.rollback()
-            return _result
-
-        _result.Status = True
+        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        if Data is not None:
+            try:
+                Data.Token = Param.Token.strip() if Param.Token != '' else Data.Token
+                Data.ExamID = Param.ExamID if Param.ExamID > 0 else Data.ExamID
+                _dbsession.commit()
+            except Exception as e:
+                _result.Memo = str(e.orig)
+                _dbsession.rollback()
+                return _result
+            _result.Status = True
         return _result
 
     def Find(self, _dbsession: DBsession, ID) -> Result:

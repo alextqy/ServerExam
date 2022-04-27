@@ -48,18 +48,18 @@ class ExamineeModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        try:
-            Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-            Data.Name = Param.Name.strip() if Param.Name != '' else Data.Name
-            Data.ExamineeNo = Param.ExamineeNo.strip() if Param.ExamineeNo != '' else Data.ExamineeNo
-            Data.Contact = Param.Contact.strip() if Param.Contact != '' else Data.Contact
-            _dbsession.commit()
-        except Exception as e:
-            _result.Memo = str(e.orig)
-            _dbsession.rollback()
-            return _result
-
-        _result.Status = True
+        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        if Data is not None:
+            try:
+                Data.Name = Param.Name.strip() if Param.Name != '' else Data.Name
+                Data.ExamineeNo = Param.ExamineeNo.strip() if Param.ExamineeNo != '' else Data.ExamineeNo
+                Data.Contact = Param.Contact.strip() if Param.Contact != '' else Data.Contact
+                _dbsession.commit()
+            except Exception as e:
+                _result.Memo = str(e.orig)
+                _dbsession.rollback()
+                return _result
+            _result.Status = True
         return _result
 
     def Find(self, _dbsession: DBsession, ID) -> Result:
