@@ -69,5 +69,5 @@ class ExamineeModel(BaseModel):
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = math.ceil(_dbsession.query(ExamineeEntity).count() / PageSize)
-        _result.Data = _dbsession.query(ExamineeEntity).order_by(desc(ExamineeEntity.ID)).limit(PageSize).offset(Page * PageSize).all()
+        _result.Data = _dbsession.query(ExamineeEntity).order_by(desc(ExamineeEntity.ID)).limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
