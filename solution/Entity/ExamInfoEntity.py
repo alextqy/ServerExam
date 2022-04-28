@@ -5,18 +5,18 @@ from Entity.BaseEntity import *
 class ExamInfoEntity(BaseEntity, BaseORM):
     __tablename__ = 'ExamInfo'
 
-    SubjectName = Column(String(128), comment='科目名称')
-    ExamNo = Column(String(128), index=True, comment='准考证号')
-    TotalScore = Column(DECIMAL(10, 2), comment='总分')
-    PassLine = Column(DECIMAL(10, 2), comment='及格线')
-    ActualScore = Column(DECIMAL(10, 2), comment='真实得分')
-    ExamDuration = Column(INTEGER, comment='额定考试时长')
-    StartTime = Column(INTEGER, comment='实际考试开始时间')
-    EndTime = Column(INTEGER, comment='实际考试结束时间')
-    ActualDuration = Column(INTEGER, comment='实际考试时长')
-    Pass = Column(INTEGER, comment='是否通过 1否 2是')
-    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
-    ExamineeID = Column(INTEGER, comment='考生ID')
+    SubjectName: str = Column(String(128), comment='科目名称')
+    ExamNo: str = Column(String(128), index=True, comment='准考证号')
+    TotalScore: float = Column(DECIMAL(10, 2), comment='总分')
+    PassLine: float = Column(DECIMAL(10, 2), comment='及格线')
+    ActualScore: float = Column(DECIMAL(10, 2), comment='真实得分')
+    ExamDuration: int = Column(INTEGER(10), comment='额定考试时长')
+    StartTime: int = Column(INTEGER(10), comment='实际考试开始时间')
+    EndTime: int = Column(INTEGER(10), comment='实际考试结束时间')
+    ActualDuration: int = Column(INTEGER(10), comment='实际考试时长')
+    Pass: int = Column(INTEGER(1), comment='是否通过 1否 2是')
+    UpdateTime: int = Column(INTEGER(10), comment='更新时间', default=int(time()))
+    ExamineeID: int = Column(INTEGER(10), comment='考生ID')
 
     def __init__(self):
         super().__init__()

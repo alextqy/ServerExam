@@ -5,14 +5,14 @@ from Entity.BaseEntity import *
 class PaperEntity(BaseEntity, BaseORM):
     __tablename__ = 'Paper'
 
-    PaperName = Column(String(128), comment='试卷名称')
-    PaperCode = Column(String(128), index=True, comment='试卷编码')
-    SubjectID = Column(INTEGER, comment='科目ID')
-    TotalScore = Column(DECIMAL(10, 2), comment='总分')
-    PassLine = Column(DECIMAL(10, 2), comment='及格分数')
-    ExamDuration = Column(INTEGER, comment='考试时长')
-    PaperState = Column(INTEGER, comment='试卷状态 1正常 2禁用')
-    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
+    PaperName: str = Column(String(128), comment='试卷名称')
+    PaperCode: str = Column(String(128), index=True, comment='试卷编码')
+    SubjectID: int = Column(INTEGER(10), comment='科目ID')
+    TotalScore: float = Column(DECIMAL(10, 2), comment='总分')
+    PassLine: float = Column(DECIMAL(10, 2), comment='及格分数')
+    ExamDuration: int = Column(INTEGER(10), comment='考试时长')
+    PaperState: int = Column(INTEGER(1), comment='试卷状态 1正常 2禁用')
+    UpdateTime: int = Column(INTEGER(10), comment='更新时间', default=int(time()))
 
     def __init__(self):
         super().__init__()

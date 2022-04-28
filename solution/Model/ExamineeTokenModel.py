@@ -9,14 +9,13 @@ class ExamineeTokenModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.Token = Data.Token.strip()
         if Data.Token == '':
             _result.Memo = 'param err'
             return _result
         if Data.ExamID <= 0:
             _result.Memo = 'param err'
             return _result
-
-        Data.Token = Data.Token.strip()
         try:
             _dbsession.add(Data)
             _dbsession.commit()

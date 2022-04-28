@@ -9,16 +9,15 @@ class ExamineeModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.Name = Data.Name.strip()
+        Data.ExamineeNo = Data.ExamineeNo.strip()
+        Data.Contact = Data.Contact.strip()
         if Data.Name == '':
             _result.Memo = 'param err'
             return _result
         if Data.ExamineeNo == '':
             _result.Memo = 'param err'
             return _result
-
-        Data.Name = Data.Name.strip()
-        Data.ExamineeNo = Data.ExamineeNo.strip()
-        Data.Contact = Data.Contact.strip()
         try:
             _dbsession.add(Data)
             _dbsession.commit()

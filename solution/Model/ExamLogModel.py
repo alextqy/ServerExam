@@ -2,46 +2,26 @@ from Model.BaseModel import *
 
 
 class ExamineeModel(BaseModel):
-    EType: ExamInfoEntity = ExamInfoEntity
+    EType: ExamLogEntity = ExamLogEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.SubjectName = Data.SubjectName.strip()
         Data.ExamNo = Data.ExamNo.strip()
-        if Data.SubjectName == '':
+        Data.Describe = Data.Describe.strip()
+        Data.IP = Data.IP.strip()
+        if Data.Type <= 0:
             _result.Memo = 'param err'
             return _result
         if Data.ExamNo == '':
             _result.Memo = 'param err'
             return _result
-        if Data.TotalScore <= 0:
+        if Data.Describe == '':
             _result.Memo = 'param err'
             return _result
-        if Data.PassLine <= 0:
-            _result.Memo = 'param err'
-            return _result
-        # if Data.ActualScore <= 0:
-        #     _result.Memo = 'param err'
-        #     return _result
-        if Data.ExamDuration <= 0:
-            _result.Memo = 'param err'
-            return _result
-        # if Data.StartTime <= 0:
-        #     _result.Memo = 'param err'
-        #     return _result
-        # if Data.EndTime <= 0:
-        #     _result.Memo = 'param err'
-        #     return _result
-        # if Data.ActualDuration <= 0:
-        #     _result.Memo = 'param err'
-        #     return _result
-        if Data.Pass <= 0:
-            _result.Memo = 'param err'
-            return _result
-        if Data.ExamineeID <= 0:
+        if Data.IP == '':
             _result.Memo = 'param err'
             return _result
         try:
@@ -76,17 +56,9 @@ class ExamineeModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.SubjectName = Param.SubjectName.strip() if Param.SubjectName != '' else Data.SubjectName
                 Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo != '' else Data.ExamNo
-                Data.TotalScore = Param.TotalScore if Param.TotalScore > 0 else Data.TotalScore
-                Data.PassLine = Param.PassLine if Param.PassLine > 0 else Data.PassLine
-                Data.ActualScore = Param.ActualScore if Param.ActualScore > 0 else Data.ActualScore
-                Data.ExamDuration = Param.ExamDuration if Param.ExamDuration > 0 else Data.ExamDuration
-                Data.StartTime = Param.StartTime if Param.StartTime > 0 else Data.StartTime
-                Data.EndTime = Param.EndTime if Param.EndTime > 0 else Data.EndTime
-                Data.ActualDuration = Param.ActualDuration if Param.ActualDuration > 0 else Data.ActualDuration
-                Data.Pass = Param.Pass if Param.Pass > 0 else Data.Pass
-                Data.ExamineeID = Param.ExamineeID if Param.ExamineeID > 0 else Data.ExamineeID
+                Data.Describe = Param.Describe.strip() if Param.Describe != '' else Data.Describe
+                Data.IP = Param.IP.strip() if Param.IP != '' else Data.IP
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -101,7 +73,7 @@ class ExamineeModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, Type: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -110,6 +82,8 @@ class ExamineeModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.SubjectName.ilike('%' + Stext.strip() + '%'), self.EType.ExamNo.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.ExamNo.ilike('%' + Stext.strip() + '%'), self.EType.IP.ilike('%' + Stext.strip() + '%')))
+        if Type > 0:
+            sql = sql.filter(self.EType.Type == Type)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

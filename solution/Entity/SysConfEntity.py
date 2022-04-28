@@ -5,10 +5,10 @@ from Entity.BaseEntity import *
 class SysConfEntity(BaseEntity, BaseORM):
     __tablename__ = 'SysConf'
 
-    Type = Column(INTEGER, comment='配置类型')
-    Key = Column(String(128), comment='配置KEY')
-    Value = Column(String(128), comment='配置Value')
-    Describe = Column(String(128), comment='配置描述')
+    Type: int = Column(INTEGER(1), comment='配置类型')
+    Key: str = Column(String(128), comment='配置KEY')
+    Value: str = Column(String(128), comment='配置Value')
+    Describe: str = Column(String(128), comment='配置描述')
 
     def __init__(self):
         super().__init__()

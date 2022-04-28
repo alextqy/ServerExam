@@ -5,15 +5,15 @@ from Entity.BaseEntity import *
 class QuestionEntity(BaseEntity, BaseORM):
     __tablename__ = 'Question'
 
-    QuestionTitle = Column(String(65535), comment='题目')
-    QuestionCode = Column(String(128), index=True, comment='试题编码')
-    QuestionType = Column(INTEGER, comment='试题类型 1单选 2判断 3多选 4填空 5问答')
-    QuestionState = Column(INTEGER, comment='试题状态 1正常 2禁用')
-    Marking = Column(INTEGER, comment='人工阅卷 1否 2是')
-    KnowledgeID = Column(INTEGER, comment='知识点ID')
-    Describe = Column(String(65535), comment='试题描述')
-    Attachment = Column(String(65535), comment='试题附件')
-    UpdateTime = Column(INTEGER, comment='更新时间', default=int(time()))
+    QuestionTitle: str = Column(String(65535), comment='题目')
+    QuestionCode: str = Column(String(128), index=True, comment='试题编码')
+    QuestionType: int = Column(INTEGER(1), comment='试题类型 1单选 2判断 3多选 4填空 5问答')
+    QuestionState: int = Column(INTEGER(1), comment='试题状态 1正常 2禁用')
+    Marking: int = Column(INTEGER(1), comment='人工阅卷 1否 2是')
+    KnowledgeID: int = Column(INTEGER(10), comment='知识点ID')
+    Describe: str = Column(String(65535), comment='试题描述')
+    Attachment: str = Column(String(65535), comment='试题附件')
+    UpdateTime: int = Column(INTEGER(10), comment='更新时间', default=int(time()))
 
     def __init__(self):
         super().__init__()

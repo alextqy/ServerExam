@@ -5,10 +5,10 @@ from Entity.BaseEntity import *
 class ExamLogEntity(BaseEntity, BaseORM):
     __tablename__ = 'ExamLog'
 
-    Type = Column(INTEGER, comment='日志类型 1操作 2登录')
-    ExamNo = Column(String(128), comment='准考证号')
-    Describe = Column(String(65535), comment='描述信息')
-    IP = Column(String(128), comment='IP地址')
+    Type: int = Column(INTEGER(1), comment='日志类型 1操作 2登录')
+    ExamNo: str = Column(String(128), comment='准考证号')
+    Describe: str = Column(String(65535), comment='描述信息')
+    IP: str = Column(String(128), comment='IP地址')
 
     def __init__(self):
         super().__init__()
