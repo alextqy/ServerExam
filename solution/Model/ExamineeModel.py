@@ -50,9 +50,9 @@ class ExamineeModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.Name = Param.Name.strip() if Param.Name != '' else Data.Name
-                Data.ExamineeNo = Param.ExamineeNo.strip() if Param.ExamineeNo != '' else Data.ExamineeNo
-                Data.Contact = Param.Contact.strip() if Param.Contact != '' else Data.Contact
+                Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
+                Data.ExamineeNo = Param.ExamineeNo.strip() if Param.ExamineeNo.strip() != '' else Data.ExamineeNo
+                Data.Contact = Param.Contact.strip() if Param.Contact.strip() != '' else Data.Contact
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

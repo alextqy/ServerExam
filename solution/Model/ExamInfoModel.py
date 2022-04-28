@@ -76,8 +76,8 @@ class ExamineeModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.SubjectName = Param.SubjectName.strip() if Param.SubjectName != '' else Data.SubjectName
-                Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo != '' else Data.ExamNo
+                Data.SubjectName = Param.SubjectName.strip() if Param.SubjectName.strip() != '' else Data.SubjectName
+                Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo.strip() != '' else Data.ExamNo
                 Data.TotalScore = Param.TotalScore if Param.TotalScore > 0 else Data.TotalScore
                 Data.PassLine = Param.PassLine if Param.PassLine > 0 else Data.PassLine
                 Data.ActualScore = Param.ActualScore if Param.ActualScore > 0 else Data.ActualScore

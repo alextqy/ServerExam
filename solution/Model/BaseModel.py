@@ -29,16 +29,11 @@ from sqlalchemy import asc, desc, and_, or_
 
 
 class BaseModel:
-    _cache: Cache()
-    _common: Common()
-    _file: File()
-    _lang: Lang()
-    _udp: UDPTool()
+    _cache: Cache = Cache()
+    _common: Common = Common()
+    _file: File = File()
+    _lang: Lang = Lang()
+    _udp: UDPTool = UDPTool()
 
     def __init__(self):
         super().__init__()
-        self._cache = Cache()
-        self._common = Common()
-        self._file = File()
-        self._lang = Lang()
-        self._udp = UDPTool()

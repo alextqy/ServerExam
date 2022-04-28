@@ -1,21 +1,33 @@
 from Model.BaseModel import *
 
 
-class ExamineeTokenModel(BaseModel):
-    EType: ExamineeTokenEntity = ExamineeTokenEntity
+class ManagerModel(BaseModel):
+    EType: ManagerEntity = ManagerEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.Token = Data.Token.strip()
-        if Data.Token == '':
+        Data.Account = Data.Account.strip()
+        Data.PWD = Data.PWD.strip()
+        Data.Name = Data.Name.strip()
+        if Data.Account == '':
             _result.Memo = 'param err'
             return _result
-        if Data.ExamID <= 0:
+        if Data.PWD == '':
             _result.Memo = 'param err'
             return _result
+        if Data.Name == '':
+            _result.Memo = 'param err'
+            return _result
+        if Data.State <= 0:
+            _result.Memo = 'param err'
+            return _result
+        if Data.Permission <= 0:
+            _result.Memo = 'param err'
+            return _result
+        Data.PWD = self._common.StrMD5(self._common.StrMD5(Data.PWD) + Data.PWD)
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -48,8 +60,11 @@ class ExamineeTokenModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.Token = Param.Token.strip() if Param.Token.strip() != '' else Data.Token
-                Data.ExamID = Param.ExamID if Param.ExamID > 0 else Data.ExamID
+                Data.Account = Param.Account.strip() if Param.Account.strip() != '' else Data.Account
+                Data.PWD = self._common.StrMD5(self._common.StrMD5(Param.PWD.strip()) + Param.PWD.strip()) if Param.PWD.strip() != '' and self._common.StrMD5(self._common.StrMD5(Param.PWD.strip()) + Param.PWD.strip()) != Data.PWD else Data.PWD
+                Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
+                Data.State = Param.State if Param.State > 0 else Data.State
+                Data.Permission = Param.Permission if Param.Permission > 0 else Data.Permission
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -64,7 +79,7 @@ class ExamineeTokenModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Token: str, ExamID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -72,9 +87,11 @@ class ExamineeTokenModel(BaseModel):
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if Token != '':
-            sql = sql.filter(self.EType.Token == Token.strip())
-        if ExamID > 0:
-            sql = sql.filter(self.EType.ExamID == ExamID)
+        if Stext != '':
+            sql = sql.filter(or_(self.EType.Account.ilike('%' + Stext.strip() + '%'), self.EType.Name.ilike('%' + Stext.strip() + '%')))
+        if State > 0:
+            sql = sql.filter(self.EType.State == State)
+        if Permission > 0:
+            self = sql.filter(self.EType.Permission == Permission)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

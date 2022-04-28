@@ -1,21 +1,19 @@
 from Model.BaseModel import *
 
 
-class ExamineeTokenModel(BaseModel):
-    EType: ExamineeTokenEntity = ExamineeTokenEntity
+class HeadlineModel(BaseModel):
+    EType: HeadlineEntity = HeadlineEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.Token = Data.Token.strip()
-        if Data.Token == '':
+        Data.Content = Data.Content.strip()
+        if Data.Content == '':
             _result.Memo = 'param err'
             return _result
-        if Data.ExamID <= 0:
-            _result.Memo = 'param err'
-            return _result
+        Data.ContentCode = self._common.StrMD5(Data.Content.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -48,8 +46,8 @@ class ExamineeTokenModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.Token = Param.Token.strip() if Param.Token.strip() != '' else Data.Token
-                Data.ExamID = Param.ExamID if Param.ExamID > 0 else Data.ExamID
+                Data.Content = Param.Content.strip() if Param.Content.strip() != '' else Data.Content
+                Data.ContentCode = self._common.StrMD5(Param.Content.strip()) if Param.Content.strip() != Data.Content else Data.ContentCode
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -64,7 +62,7 @@ class ExamineeTokenModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Token: str, ExamID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -72,9 +70,7 @@ class ExamineeTokenModel(BaseModel):
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if Token != '':
-            sql = sql.filter(self.EType.Token == Token.strip())
-        if ExamID > 0:
-            sql = sql.filter(self.EType.ExamID == ExamID)
+        if Stext != '':
+            sql = sql.filter(or_(self.EType.ContentCode.ilike('%' + Stext.strip() + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

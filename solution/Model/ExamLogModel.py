@@ -56,8 +56,8 @@ class ExamineeModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo != '' else Data.ExamNo
-                Data.Describe = Param.Describe.strip() if Param.Describe != '' else Data.Describe
+                Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo.strip() != '' else Data.ExamNo
+                Data.Describe = Param.Describe.strip() if Param.Describe.strip() != '' else Data.Describe
                 Data.IP = Param.IP.strip() if Param.IP != '' else Data.IP
                 _dbsession.commit()
             except Exception as e:
