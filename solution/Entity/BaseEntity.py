@@ -21,7 +21,7 @@ BaseORM = declarative_base()
 
 class BaseEntity:
     ID: int = Column(INTEGER, primary_key=True, index=True, comment='ID')
-    CreateTime: int = Column(INTEGER(10), comment='创建时间', default=int(time()))
+    CreateTime: int = Column(INTEGER, comment='创建时间', default=int(time()))
 
     def __init__(self):
         super().__init__()

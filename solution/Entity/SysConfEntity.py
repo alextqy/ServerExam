@@ -5,7 +5,7 @@ from Entity.BaseEntity import *
 class SysConfEntity(BaseEntity, BaseORM):
     __tablename__ = 'SysConf'
 
-    Type: int = Column(INTEGER(1), comment='配置类型')
+    Type: int = Column(INTEGER, comment='配置类型')
     Key: str = Column(String(128), comment='配置KEY')
     Value: str = Column(String(128), comment='配置Value')
     Describe: str = Column(String(128), comment='配置描述')

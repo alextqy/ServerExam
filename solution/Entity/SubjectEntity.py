@@ -7,8 +7,8 @@ class SubjectEntity(BaseEntity, BaseORM):
 
     SubjectName: str = Column(String(128), comment='科目名称')
     SubjectCode: str = Column(String(128), index=True, comment='科目编码')
-    SubjectState: int = Column(INTEGER(1), comment='科目状态 1正常 2禁用')
-    UpdateTime: int = Column(INTEGER(10), comment='更新时间', default=int(time()))
+    SubjectState: int = Column(INTEGER, comment='科目状态 1正常 2禁用')
+    UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):
         super().__init__()

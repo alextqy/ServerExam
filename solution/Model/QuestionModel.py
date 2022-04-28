@@ -1,25 +1,33 @@
 from Model.BaseModel import *
 
 
-class ExamineeModel(BaseModel):
-    EType: KnowledgeEntity = KnowledgeEntity
+class QuestionModel(BaseModel):
+    EType: QuestionEntity = QuestionEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.KnowledgeName = Data.KnowledgeName.strip()
-        if Data.KnowledgeName == '':
+        Data.QuestionTitle = Data.QuestionTitle.strip()
+        Data.Describe = Data.Describe.strip()
+        Data.Attachment = Data.Attachment.strip()
+        if Data.QuestionTitle == '':
             _result.Memo = 'param err'
             return _result
-        if Data.SubjectID <= 0:
+        if Data.QuestionType <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.SubjectState <= 0:
+        if Data.QuestionState <= 0:
             _result.Memo = 'param err'
             return _result
-        Data.KnowledgeCode = self._common.StrMD5(Data.KnowledgeName.strip())
+        if Data.Marking <= 0:
+            _result.Memo = 'param err'
+            return _result
+        if Data.KnowledgeID <= 0:
+            _result.Memo = 'param err'
+            return _result
+        Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -52,10 +60,14 @@ class ExamineeModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.KnowledgeName = Param.KnowledgeName.strip() if Param.KnowledgeName.strip() != '' else Data.KnowledgeName
-                Data.KnowledgeCode = self._common.StrMD5(Param.KnowledgeCode.strip()) if Param.KnowledgeName.strip() != '' and Param.KnowledgeName.strip() != Data.KnowledgeName else Data.KnowledgeCode
-                Data.SubjectID = Param.SubjectID if Param.SubjectID > 0 else Data.SubjectID
-                Data.SubjectState = Param.SubjectState if Param.SubjectState > 0 else Data.SubjectState
+                Data.QuestionTitle = Param.QuestionTitle.strip() if Param.QuestionTitle.strip() != '' else Data.QuestionTitle
+                Data.QuestionCode = self._common.StrMD5(Param.QuestionTitle.strip()) if Param.QuestionTitle.strip() != '' and Param.QuestionTitle.strip() != Data.QuestionTitle else Data.QuestionCode
+                Data.QuestionType = Param.QuestionType if Param.QuestionType > 0 else Data.QuestionType
+                Data.QuestionState = Param.QuestionState if Param.QuestionState > 0 else Data.QuestionState
+                Data.Marking = Param.Marking if Param.Marking > 0 else Data.Marking
+                Data.KnowledgeID = Param.KnowledgeID if Param.KnowledgeID > 0 else Data.KnowledgeID
+                Data.Describe = Param.Describe if Param.Describe.strip() != '' else Data.Describe
+                Data.Attachment = Param.Attachment if Param.Attachment.strip() != '' else Data.Attachment
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -70,7 +82,7 @@ class ExamineeModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, SubjectID: int, SubjectState: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, Marking: int, KnowledgeID: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -79,10 +91,14 @@ class ExamineeModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.KnowledgeCode.ilike('%' + Stext.strip() + '%')))
-        if SubjectID > 0:
-            sql = sql.filter(self.EType.SubjectID == SubjectID)
-        if SubjectState > 0:
-            sql = sql.filter(self.EType.SubjectState == SubjectState)
+            sql = sql.filter(or_(self.EType.QuestionCode.ilike('%' + Stext.strip() + '%')))
+        if QuestionType > 0:
+            sql = sql.filter(self.EType.QuestionType == QuestionType)
+        if QuestionState > 0:
+            sql = sql.filter(self.EType.QuestionState == QuestionState)
+        if Marking > 0:
+            sql = sql.filter(self.EType.Marking == Marking)
+        if KnowledgeID > 0:
+            sql = sql.filter(self.EType.KnowledgeID == KnowledgeID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

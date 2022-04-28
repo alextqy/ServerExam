@@ -47,7 +47,7 @@ class HeadlineModel(BaseModel):
         if Data is not None:
             try:
                 Data.Content = Param.Content.strip() if Param.Content.strip() != '' else Data.Content
-                Data.ContentCode = self._common.StrMD5(Param.Content.strip()) if Param.Content.strip() != Data.Content else Data.ContentCode
+                Data.ContentCode = self._common.StrMD5(Param.Content.strip()) if Param.Content.strip() != '' and Param.Content.strip() != Data.Content else Data.ContentCode
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

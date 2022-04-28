@@ -1,25 +1,34 @@
 from Model.BaseModel import *
 
 
-class ExamineeModel(BaseModel):
-    EType: KnowledgeEntity = KnowledgeEntity
+class PaperModel(BaseModel):
+    EType: PaperEntity = PaperEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.KnowledgeName = Data.KnowledgeName.strip()
-        if Data.KnowledgeName == '':
+        Data.PaperName = Data.PaperName.strip()
+        if Data.PaperName == '':
             _result.Memo = 'param err'
             return _result
         if Data.SubjectID <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.SubjectState <= 0:
+        if Data.TotalScore <= 0:
             _result.Memo = 'param err'
             return _result
-        Data.KnowledgeCode = self._common.StrMD5(Data.KnowledgeName.strip())
+        if Data.PassLine <= 0:
+            _result.Memo = 'param err'
+            return _result
+        if Data.ExamDuration <= 0:
+            _result.Memo = 'param err'
+            return _result
+        if Data.PaperState <= 0:
+            _result.Memo = 'param err'
+            return _result
+        Data.PaperCode = self._common.StrMD5(Data.PaperName.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -52,10 +61,13 @@ class ExamineeModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.KnowledgeName = Param.KnowledgeName.strip() if Param.KnowledgeName.strip() != '' else Data.KnowledgeName
-                Data.KnowledgeCode = self._common.StrMD5(Param.KnowledgeCode.strip()) if Param.KnowledgeName.strip() != '' and Param.KnowledgeName.strip() != Data.KnowledgeName else Data.KnowledgeCode
+                Data.PaperName = Param.PaperName.strip() if Param.PaperName.strip() != '' else Data.PaperName
+                Data.PaperCode = self._common.StrMD5(Param.PaperName.strip()) if Param.PaperName.strip() != '' and Param.PaperName.strip() != Data.PaperName else Data.PaperCode
                 Data.SubjectID = Param.SubjectID if Param.SubjectID > 0 else Data.SubjectID
-                Data.SubjectState = Param.SubjectState if Param.SubjectState > 0 else Data.SubjectState
+                Data.TotalScore = Param.TotalScore if Param.TotalScore > 0 else Data.TotalScore
+                Data.PassLine = Param.PassLine if Param.PassLine > 0 else Data.PassLine
+                Data.ExamDuration = Param.ExamDuration if Param.ExamDuration > 0 else Data.ExamDuration
+                Data.PaperState = Param.PaperState if Param.PaperState > 0 else Data.PaperState
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -70,7 +82,7 @@ class ExamineeModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, SubjectID: int, SubjectState: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -79,10 +91,10 @@ class ExamineeModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.KnowledgeCode.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.PaperCode.ilike('%' + Stext.strip() + '%')))
         if SubjectID > 0:
             sql = sql.filter(self.EType.SubjectID == SubjectID)
-        if SubjectState > 0:
-            sql = sql.filter(self.EType.SubjectState == SubjectState)
+        if PaperState > 0:
+            sql = sql.filter(self.EType.PaperState == PaperState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

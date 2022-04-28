@@ -6,7 +6,7 @@ class ExamineeTokenEntity(BaseEntity, BaseORM):
     __tablename__ = 'ExamineeToken'
 
     Token: str = Column(String(128), index=True, comment='Token')
-    ExamID: int = Column(INTEGER(10), index=True, comment='报名ID')
+    ExamID: int = Column(INTEGER, index=True, comment='报名ID')
 
     def __init__(self):
         super().__init__()
