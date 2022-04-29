@@ -10,7 +10,7 @@ class ExamineeModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         Data.ExamNo = Data.ExamNo.strip()
-        Data.Describe = Data.Describe.strip()
+        Data.Description = Data.Description.strip()
         Data.IP = Data.IP.strip()
         if Data.Type <= 0:
             _result.Memo = 'param err'
@@ -18,7 +18,7 @@ class ExamineeModel(BaseModel):
         if Data.ExamNo == '':
             _result.Memo = 'param err'
             return _result
-        if Data.Describe == '':
+        if Data.Description == '':
             _result.Memo = 'param err'
             return _result
         if Data.IP == '':
@@ -57,7 +57,7 @@ class ExamineeModel(BaseModel):
         if Data is not None:
             try:
                 Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo.strip() != '' else Data.ExamNo
-                Data.Describe = Param.Describe.strip() if Param.Describe.strip() != '' else Data.Describe
+                Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
                 Data.IP = Param.IP.strip() if Param.IP != '' else Data.IP
                 _dbsession.commit()
             except Exception as e:

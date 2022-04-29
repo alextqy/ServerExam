@@ -53,6 +53,7 @@ class ExamineeModel(BaseModel):
                 Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
                 Data.ExamineeNo = Param.ExamineeNo.strip() if Param.ExamineeNo.strip() != '' else Data.ExamineeNo
                 Data.Contact = Param.Contact.strip() if Param.Contact.strip() != '' else Data.Contact
+                Data.ClassID = Param.ClassID if Param.ClassID > 0 else Data.ClassID
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -67,7 +68,7 @@ class ExamineeModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ClassID: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -77,5 +78,7 @@ class ExamineeModel(BaseModel):
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
             sql = sql.filter(or_(self.EType.Name.ilike('%' + Stext.strip() + '%'), self.EType.ExamineeNo.ilike('%' + Stext.strip() + '%')))
+        if ClassID > 0:
+            sql = sql.filter(self.EType.ClassID == ClassID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

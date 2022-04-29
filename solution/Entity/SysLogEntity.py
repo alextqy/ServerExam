@@ -7,7 +7,7 @@ class SysLogEntity(BaseEntity, BaseORM):
 
     Type: int = Column(INTEGER, comment='日志类型 1操作 2登录')
     ManagerID: int = Column(INTEGER, comment='管理员ID')
-    Describe: str = Column(String(65535), comment='描述信息')
+    Description: str = Column(String(65535), comment='描述信息')
     IP: str = Column(String(128), comment='IP地址')
 
     def __init__(self):

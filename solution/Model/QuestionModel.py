@@ -10,7 +10,7 @@ class QuestionModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         Data.QuestionTitle = Data.QuestionTitle.strip()
-        Data.Describe = Data.Describe.strip()
+        Data.Description = Data.Description.strip()
         Data.Attachment = Data.Attachment.strip()
         if Data.QuestionTitle == '':
             _result.Memo = 'param err'
@@ -66,7 +66,7 @@ class QuestionModel(BaseModel):
                 Data.QuestionState = Param.QuestionState if Param.QuestionState > 0 else Data.QuestionState
                 Data.Marking = Param.Marking if Param.Marking > 0 else Data.Marking
                 Data.KnowledgeID = Param.KnowledgeID if Param.KnowledgeID > 0 else Data.KnowledgeID
-                Data.Describe = Param.Describe if Param.Describe.strip() != '' else Data.Describe
+                Data.Description = Param.Description if Param.Description.strip() != '' else Data.Description
                 Data.Attachment = Param.Attachment if Param.Attachment.strip() != '' else Data.Attachment
                 _dbsession.commit()
             except Exception as e:

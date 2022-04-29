@@ -11,7 +11,7 @@ class QuestionEntity(BaseEntity, BaseORM):
     QuestionState: int = Column(INTEGER, comment='试题状态 1正常 2禁用')
     Marking: int = Column(INTEGER, comment='人工阅卷 1否 2是')
     KnowledgeID: int = Column(INTEGER, comment='知识点ID')
-    Describe: str = Column(String(65535), comment='试题描述')
+    Description: str = Column(String(65535), comment='试题描述')
     Attachment: str = Column(String(65535), comment='试题附件')
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
 
