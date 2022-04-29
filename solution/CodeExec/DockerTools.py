@@ -44,7 +44,7 @@ CodeExecPrefix = ''
 
 
 @CodeExecRouter.get("/Clean/Temp/File")
-async def CleanTempFile(request: Request):
+async def CleanTempFile(request: Request) -> str:
     CodeDir = getcwd() + "/Code/"  # 代码执行文件夹
     try:
         rmtree(CodeDir, ignore_errors=False, onerror=None)
@@ -55,7 +55,7 @@ async def CleanTempFile(request: Request):
 
 
 @CodeExecRouter.post("/Code/Exec")
-async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = Form(...), Version: str = Form(...), CodeStr: str = Form(...), ExamInfoID: int = Form(...)):
+async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = Form(...), Version: str = Form(...), CodeStr: str = Form(...), ExamInfoID: int = Form(...)) -> Result:
     ServerKey = "TXNGG3KidItKrCGf5wXT53eZTYCOynOAIjbKJPdy"
     CodeFilePath = getcwd() + "/CodeFile/"  # 模板文件夹
     CodeDir = getcwd() + "/Code/"  # 代码执行文件夹
