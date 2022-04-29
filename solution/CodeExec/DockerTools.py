@@ -25,8 +25,6 @@ from fastapi import Cookie
 from starlette.requests import Request
 import base64
 
-# uvicorn main:app --host=0.0.0.0 --port=8181 --reload
-
 
 class Result:
 
@@ -35,30 +33,17 @@ class Result:
         self.State = False
         self.Memo = "未知错误"
         self.Data = ""
-        self.ID = 0
-
-
-def OSType():
-    osType = system()
-    if osType == "Windows":
-        return osType
-    elif osType == "Linux":
-        return osType
-    elif osType == "Darwin":
-        return "MacOS"
-    else:
-        return "Other"
 
 
 def CLI(Code=""):
     return os.popen(Code).read()
 
 
-app = FastAPI()
-Router = APIRouter()
+CodeExecRouter = APIRouter()
+CodeExecPrefix = ''
 
 
-@Router.get("/Clean/Temp/File")
+@CodeExecRouter.get("/Clean/Temp/File")
 async def CleanTempFile(request: Request):
     CodeDir = getcwd() + "/Code/"  # 代码执行文件夹
     try:
@@ -69,7 +54,7 @@ async def CleanTempFile(request: Request):
         return "error"
 
 
-@Router.post("/Code/Exec")
+@CodeExecRouter.post("/Code/Exec")
 async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = Form(...), Version: str = Form(...), CodeStr: str = Form(...), ExamInfoID: int = Form(...)):
     ServerKey = "TXNGG3KidItKrCGf5wXT53eZTYCOynOAIjbKJPdy"
     CodeFilePath = getcwd() + "/CodeFile/"  # 模板文件夹
@@ -233,6 +218,3 @@ async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = 
         # remove(CodeDir + "Test" + str(ExamInfoID) + ".java")
 
     return result
-
-
-app.include_router(Router)

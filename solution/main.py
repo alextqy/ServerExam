@@ -30,6 +30,8 @@ async def Test():
     return result  # json.dumps(result.__dict__)
 
 
+from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 
+app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 app.include_router(ExamineeRouter, prefix=ExamineePrefix)
