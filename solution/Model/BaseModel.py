@@ -6,6 +6,7 @@ from Service.Lang import *
 from Service.UDPTool import *
 
 from Entity.BaseEntity import DBsession
+from Entity.ClassEntity import ClassEntity
 from Entity.ExamineeEntity import ExamineeEntity
 from Entity.ExamineeTokenEntity import ExamineeTokenEntity
 from Entity.ExamInfoEntity import ExamInfoEntity
@@ -24,6 +25,7 @@ from Entity.ScantronSolutionHistoryEntity import ScantronSolutionHistoryEntity
 from Entity.SubjectEntity import SubjectEntity
 from Entity.SysConfEntity import SysConfEntity
 from Entity.SysLogEntity import SysLogEntity
+from Entity.TeacherEntity import TeacherEntity
 
 from sqlalchemy import asc, desc, and_, or_
 

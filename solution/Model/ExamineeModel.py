@@ -18,6 +18,12 @@ class ExamineeModel(BaseModel):
         if Data.ExamineeNo == '':
             _result.Memo = 'param err'
             return _result
+        # if Data.Contact == '':
+        #     _result.Memo = 'param err'
+        #     return _result
+        if Data.ClassID <= 0:
+            _result.Memo = 'param err'
+            return _result
         try:
             _dbsession.add(Data)
             _dbsession.commit()

@@ -250,3 +250,7 @@ class Common(BaseService):
     # 字符串MD5
     def StrMD5(self, Param):
         return md5(Param.encode('utf-8')).hexdigest()
+
+    # 生成密码
+    def UserPWD(self, Param):
+        return self.StrMD5(self.StrMD5(Param) + Param)

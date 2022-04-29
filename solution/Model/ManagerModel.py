@@ -27,7 +27,7 @@ class ManagerModel(BaseModel):
         if Data.Permission <= 0:
             _result.Memo = 'param err'
             return _result
-        Data.PWD = self._common.StrMD5(self._common.StrMD5(Data.PWD) + Data.PWD)
+        Data.PWD = self._common.UserPWD(Data.PWD.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -61,7 +61,7 @@ class ManagerModel(BaseModel):
         if Data is not None:
             try:
                 Data.Account = Param.Account.strip() if Param.Account.strip() != '' else Data.Account
-                Data.PWD = self._common.StrMD5(self._common.StrMD5(Param.PWD.strip()) + Param.PWD.strip()) if Param.PWD.strip() != '' and self._common.StrMD5(self._common.StrMD5(Param.PWD.strip()) + Param.PWD.strip()) != Data.PWD else Data.PWD
+                Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and self._common.UserPWD(Param.PWD.strip()) != Data.PWD else Data.PWD
                 Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
                 Data.State = Param.State if Param.State > 0 else Data.State
                 Data.Permission = Param.Permission if Param.Permission > 0 else Data.Permission

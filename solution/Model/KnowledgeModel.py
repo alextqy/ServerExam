@@ -53,7 +53,7 @@ class ExamineeModel(BaseModel):
         if Data is not None:
             try:
                 Data.KnowledgeName = Param.KnowledgeName.strip() if Param.KnowledgeName.strip() != '' else Data.KnowledgeName
-                Data.KnowledgeCode = self._common.StrMD5(Param.KnowledgeCode.strip()) if Param.KnowledgeName.strip() != '' and Param.KnowledgeName.strip() != Data.KnowledgeName else Data.KnowledgeCode
+                Data.KnowledgeCode = self._common.StrMD5(Param.KnowledgeName.strip()) if Param.KnowledgeName.strip() != '' and Param.KnowledgeName.strip() != Data.KnowledgeName else Data.KnowledgeCode
                 Data.SubjectID = Param.SubjectID if Param.SubjectID > 0 else Data.SubjectID
                 Data.SubjectState = Param.SubjectState if Param.SubjectState > 0 else Data.SubjectState
                 _dbsession.commit()
