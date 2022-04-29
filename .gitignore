@@ -11,6 +11,7 @@ solution/appsettings.json
 solution/Wrapper.sh
 
 solution/__pycache__
+solution/CodeExec/__pycache__
 solution/Controller/__pycache__
 solution/Logic/__pycache__
 solution/Model/__pycache__
