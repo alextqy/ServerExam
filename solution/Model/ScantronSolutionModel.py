@@ -12,6 +12,9 @@ class ScantronSolutionModel(BaseModel):
         Data.Option = Data.Option.strip()
         Data.OptionAttachment = Data.OptionAttachment.strip()
         Data.CorrectAnswer = Data.CorrectAnswer.strip()
+        if Data.ScantronID <= 0:
+            _result.Memo = 'param err'
+            return _result
         if Data.Option == '':
             _result.Memo = 'param err'
             return _result
@@ -56,7 +59,7 @@ class ScantronSolutionModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.ScantronID = Param.ScantronID.strip() if Param.ScantronID > 0 else Data.ScantronID
+                Data.ScantronID = Param.ScantronID if Param.ScantronID > 0 else Data.ScantronID
                 Data.Option = Param.Option.strip() if Param.Option.strip() != '' else Data.Option
                 Data.OptionAttachment = Param.OptionAttachment.strip() if Param.OptionAttachment.strip() != '' else Data.OptionAttachment
                 Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
@@ -77,7 +80,7 @@ class ScantronSolutionModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: str, ScantronID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: str, ScantronID: int, Position: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -87,5 +90,7 @@ class ScantronSolutionModel(BaseModel):
         sql = sql.order_by(desc(self.EType.ID))
         if ScantronID > 0:
             sql = sql.filter(self.EType.ScantronID == ScantronID)
+        if Position > 0:
+            sql = sql.filter(self.EType.Position == Position)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

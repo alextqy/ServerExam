@@ -1,33 +1,32 @@
 from Model.BaseModel import *
 
 
-class TeacherModel(BaseModel):
-    EType: TeacherEntity = TeacherEntity
+class ExerciseSolutionModel(BaseModel):
+    EType: ExerciseSolutionEntity = ExerciseSolutionEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.Account = Data.Account.strip()
-        Data.PWD = Data.PWD.strip()
-        Data.Name = Data.Name.strip()
-        if Data.Account == '':
+        Data.Option = Data.Option.strip()
+        Data.OptionAttachment = Data.OptionAttachment.strip()
+        Data.CorrectAnswer = Data.CorrectAnswer.strip()
+        if Data.ExerciseID <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.PWD == '':
+        if Data.Option == '':
             _result.Memo = 'param err'
             return _result
-        if Data.Name == '':
+        # if Data.OptionAttachment == '':
+        #     _result.Memo = 'param err'
+        #     return _result
+        if Data.CorrectAnswer == '':
             _result.Memo = 'param err'
             return _result
-        if Data.State <= 0:
+        if Data.ScoreRatio <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.ClassID <= 0:
-            _result.Memo = 'param err'
-            return _result
-        Data.PWD = self._common.UserPWD(Data.PWD.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -60,12 +59,13 @@ class TeacherModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.Account = Param.Account.strip() if Param.Account.strip() != '' else Data.Account
-                Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and self._common.UserPWD(Param.PWD.strip()) != Data.PWD else Data.PWD
-                Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
-                Data.State = Param.State if Param.State > 0 else Data.State
-                Data.ClassID = Param.ClassID if Param.ClassID > 0 else Data.ClassID
-                Data.Token = Param.Token.strip() if Param.Token.strip() != '' else Data.Token
+                Data.ExerciseID = Param.ExerciseID if Param.ExerciseID > 0 else Data.ExerciseID
+                Data.Option = Param.Option.strip() if Param.Option.strip() != '' else Data.Option
+                Data.OptionAttachment = Param.OptionAttachment.strip() if Param.OptionAttachment.strip() != '' else Data.OptionAttachment
+                Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
+                Data.CandidateAnswer = Param.CandidateAnswer.strip() if Param.CandidateAnswer.strip() != '' else Data.CandidateAnswer
+                Data.ScoreRatio = Param.ScoreRatio if Param.ScoreRatio > 0 else Data.ScoreRatio
+                Data.Position = Param.Position if Param.Position > 0 else Data.Position
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -80,7 +80,7 @@ class TeacherModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: str, ExerciseID: int, Position: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -88,11 +88,9 @@ class TeacherModel(BaseModel):
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if Stext != '':
-            sql = sql.filter(or_(self.EType.Account.ilike('%' + Stext.strip() + '%'), self.EType.Name.ilike('%' + Stext.strip() + '%')))
-        if State > 0:
-            sql = sql.filter(self.EType.State == State)
-        if ClassID > 0:
-            sql = sql.filter(self.EType.ClassID == ClassID)
+        if ExerciseID > 0:
+            sql = sql.filter(self.EType.ExerciseID == ExerciseID)
+        if Position > 0:
+            sql = sql.filter(self.EType.Position == Position)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

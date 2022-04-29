@@ -1,6 +1,7 @@
 from Entity.BaseEntity import *
 
 
+# 答题卡选项
 class ScantronSolutionEntity(BaseEntity, BaseORM):
     __tablename__ = 'ScantronSolution'
 

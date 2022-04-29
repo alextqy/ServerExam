@@ -1,11 +1,11 @@
 from Entity.BaseEntity import *
 
 
-# 历史答题卡选项
-class ScantronSolutionHistoryEntity(BaseEntity, BaseORM):
-    __tablename__ = 'ScantronSolutionHistory'
+# 练习题选项
+class ExerciseSolutionEntity(BaseEntity, BaseORM):
+    __tablename__ = 'ExerciseSolution'
 
-    ScantronID: int = Column(INTEGER, comment='试题ID')
+    ExerciseID: int = Column(INTEGER, comment='试题ID')
     Option: str = Column(String(128), comment='试题选项')
     OptionAttachment: str = Column(String(65535), comment='试题附件')
     CorrectAnswer: str = Column(String(128), comment='正确答案')

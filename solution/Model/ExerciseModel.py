@@ -1,8 +1,8 @@
 from Model.BaseModel import *
 
 
-class ScantronModel(BaseModel):
-    EType: ScantronEntity = ScantronEntity
+class ExerciseModel(BaseModel):
+    EType: ExerciseEntity = ExerciseEntity
 
     def __init__(self):
         super().__init__()
@@ -31,7 +31,7 @@ class ScantronModel(BaseModel):
             if Data.HeadlineContent == '':
                 _result.Memo = 'param err'
                 return _result
-        if Data.ExamID <= 0:
+        if Data.ExamineeID <= 0:
             _result.Memo = 'param err'
             return _result
         try:
@@ -74,7 +74,7 @@ class ScantronModel(BaseModel):
                 Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
                 Data.Attachment = Param.Attachment.strip() if Param.Attachment.strip() != '' else Data.Attachment
                 Data.Score = Param.Score if Param.Score > 0 else Data.Score
-                Data.ExamID = Param.ExamID if Param.ExamID > 0 else Data.ExamID
+                Data.ExamineeID = Param.ExamineeID if Param.ExamineeID > 0 else Data.ExamineeID
                 Data.HeadlineContent = Param.HeadlineContent.strip() if Param.HeadlineContent.strip() != '' else Data.HeadlineContent
                 _dbsession.commit()
             except Exception as e:
@@ -90,7 +90,7 @@ class ScantronModel(BaseModel):
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         return _result
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, ExamID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, ExamineeID: int) -> Result:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -98,7 +98,7 @@ class ScantronModel(BaseModel):
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if ExamID > 0:
-            sql = sql.filter(self.EType.ExamID == ExamID)
+        if ExamineeID > 0:
+            sql = sql.filter(self.EType.ExamineeID == ExamineeID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

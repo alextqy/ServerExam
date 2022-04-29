@@ -59,7 +59,7 @@ class QuestionSolutionModel(BaseModel):
         Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                # Data.QuestionID = Param.QuestionID if Param.QuestionID > 0 else Data.QuestionID
+                Data.QuestionID = Param.QuestionID if Param.QuestionID > 0 else Data.QuestionID
                 Data.Option = Param.Option.strip() if Param.Option.strip() != '' else Data.Option
                 Data.OptionAttachment = Param.OptionAttachment.strip() if Param.OptionAttachment.strip() != '' else Data.OptionAttachment
                 Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
