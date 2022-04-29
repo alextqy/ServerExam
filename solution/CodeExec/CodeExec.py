@@ -25,7 +25,7 @@ from fastapi import Cookie
 from starlette.requests import Request
 import base64
 
-# uvicorn main:app --host=0.0.0.0 --port=8080 --reload
+# uvicorn main:app --host=0.0.0.0 --port=8181 --reload
 
 
 class Result:
