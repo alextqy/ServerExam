@@ -64,6 +64,7 @@ class QuestionSolutionModel(BaseModel):
                 Data.OptionAttachment = Param.OptionAttachment.strip() if Param.OptionAttachment.strip() != '' else Data.OptionAttachment
                 Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
                 Data.ScoreRatio = Param.ScoreRatio if Param.ScoreRatio > 0 else Data.ScoreRatio
+                Data.Position = Param.Position if Param.Position > 0 else Data.Position
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

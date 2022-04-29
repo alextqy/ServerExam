@@ -62,6 +62,7 @@ class ScantronSolutionModel(BaseModel):
                 Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
                 Data.CandidateAnswer = Param.CandidateAnswer.strip() if Param.CandidateAnswer.strip() != '' else Data.CandidateAnswer
                 Data.ScoreRatio = Param.ScoreRatio if Param.ScoreRatio > 0 else Data.ScoreRatio
+                Data.Position = Param.Position if Param.Position > 0 else Data.Position
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
