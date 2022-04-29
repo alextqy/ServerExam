@@ -9,6 +9,7 @@ solution/Init.conf
 solution/ActivationFile.conf
 solution/appsettings.json
 solution/Wrapper.sh
+solution/desktop.ini
 
 solution/__pycache__
 solution/CodeExec/__pycache__
