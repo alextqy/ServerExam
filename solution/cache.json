@@ -1,0 +1,13 @@
+{
+  "Account": "",
+  "Debug": false,
+  "Lang": "",
+  "SwitchHttps": false,
+  "Sync": false,
+  "SynchronizationCycle": 3,
+  "Title": "bitbox",
+  "Token": "",
+  "TokenType": "",
+  "UDPPort": 6002,
+  "URL": ""
+}
