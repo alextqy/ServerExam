@@ -1,4 +1,6 @@
 '''
+pip install python-multipart
+pip install sqlalchemy
 pip install fastapi
 pip install 'uvicorn[standard]'
 uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
