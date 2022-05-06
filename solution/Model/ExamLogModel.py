@@ -53,12 +53,10 @@ class ExamineeModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: ExamLogEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
-                Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo.strip() != '' else Data.ExamNo
                 Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
-                Data.IP = Param.IP.strip() if Param.IP != '' else Data.IP
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

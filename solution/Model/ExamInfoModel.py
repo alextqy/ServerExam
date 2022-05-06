@@ -73,7 +73,7 @@ class ExamineeModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: ExamInfoEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.SubjectName = Param.SubjectName.strip() if Param.SubjectName.strip() != '' else Data.SubjectName
@@ -87,6 +87,7 @@ class ExamineeModel(BaseModel):
                 Data.ActualDuration = Param.ActualDuration if Param.ActualDuration > 0 else Data.ActualDuration
                 Data.Pass = Param.Pass if Param.Pass > 0 else Data.Pass
                 Data.ExamineeID = Param.ExamineeID if Param.ExamineeID > 0 else Data.ExamineeID
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

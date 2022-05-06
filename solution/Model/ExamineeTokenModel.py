@@ -45,7 +45,7 @@ class ExamineeTokenModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: ExamineeTokenEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.Token = Param.Token.strip() if Param.Token.strip() != '' else Data.Token

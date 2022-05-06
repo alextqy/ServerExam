@@ -49,13 +49,14 @@ class ExamineeModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: KnowledgeEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.KnowledgeName = Param.KnowledgeName.strip() if Param.KnowledgeName.strip() != '' else Data.KnowledgeName
                 Data.KnowledgeCode = self._common.StrMD5(Param.KnowledgeName.strip()) if Param.KnowledgeName.strip() != '' and Param.KnowledgeName.strip() != Data.KnowledgeName else Data.KnowledgeCode
                 Data.SubjectID = Param.SubjectID if Param.SubjectID > 0 else Data.SubjectID
                 Data.SubjectState = Param.SubjectState if Param.SubjectState > 0 else Data.SubjectState
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

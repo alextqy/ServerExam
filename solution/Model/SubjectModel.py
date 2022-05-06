@@ -46,12 +46,13 @@ class SubjectModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: SubjectEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.SubjectName = Param.SubjectName.strip() if Param.SubjectName.strip() != '' else Data.SubjectName
                 Data.SubjectCode = self._common.StrMD5(Param.SubjectName.strip()) if Param.SubjectName.strip() != '' and Param.SubjectName.strip() != Data.SubjectName else Data.SubjectCode
                 Data.SubjectState = Param.SubjectState if Param.SubjectState > 0 else Data.SubjectState
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

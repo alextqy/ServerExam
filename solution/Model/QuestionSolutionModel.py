@@ -56,7 +56,7 @@ class QuestionSolutionModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: QuestionSolutionEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.QuestionID = Param.QuestionID if Param.QuestionID > 0 else Data.QuestionID
@@ -65,6 +65,7 @@ class QuestionSolutionModel(BaseModel):
                 Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
                 Data.ScoreRatio = Param.ScoreRatio if Param.ScoreRatio > 0 else Data.ScoreRatio
                 Data.Position = Param.Position if Param.Position > 0 else Data.Position
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

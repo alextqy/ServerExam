@@ -43,11 +43,12 @@ class HeadlineModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: HeadlineEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.Content = Param.Content.strip() if Param.Content.strip() != '' else Data.Content
                 Data.ContentCode = self._common.StrMD5(Param.Content.strip()) if Param.Content.strip() != '' and Param.Content.strip() != Data.Content else Data.ContentCode
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

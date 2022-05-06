@@ -57,14 +57,15 @@ class ManagerModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.Account = Param.Account.strip() if Param.Account.strip() != '' else Data.Account
-                Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and self._common.UserPWD(Param.PWD.strip()) != Data.PWD else Data.PWD
+                Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and Param.PWD.strip() != Data.PWD else Data.PWD
                 Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
                 Data.State = Param.State if Param.State > 0 else Data.State
                 Data.Permission = Param.Permission if Param.Permission > 0 else Data.Permission
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
@@ -95,3 +96,9 @@ class ManagerModel(BaseModel):
             self = sql.filter(self.EType.Permission == Permission)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindAccount(self, _dbsession: DBsession, Account: str) -> ManagerEntity:
+        return _dbsession.query(self.EType).filter(self.EType.Account == Account.strip()).first()
+
+    def FindToken(self, _dbsession: DBsession, Token: str) -> ManagerEntity:
+        return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()

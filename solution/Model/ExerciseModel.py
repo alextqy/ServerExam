@@ -63,7 +63,7 @@ class ExerciseModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: ExerciseEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.QuestionTitle = Param.QuestionTitle.strip() if Param.QuestionTitle.strip() != '' else Data.QuestionTitle
@@ -76,6 +76,7 @@ class ExerciseModel(BaseModel):
                 Data.Score = Param.Score if Param.Score > 0 else Data.Score
                 Data.ExamineeID = Param.ExamineeID if Param.ExamineeID > 0 else Data.ExamineeID
                 Data.HeadlineContent = Param.HeadlineContent.strip() if Param.HeadlineContent.strip() != '' else Data.HeadlineContent
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

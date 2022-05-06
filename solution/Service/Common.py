@@ -247,6 +247,10 @@ class Common(BaseService):
     def Base64ToBytes(self, Param):
         return b64decode(Param)
 
+    # a-zA-Z1-9随机数
+    def RandomStr(self):
+        return ''.join(random.sample(string.ascii_letters + string.digits, 8))
+
     # 字符串MD5
     def StrMD5(self, Param):
         return md5(Param.encode('utf-8')).hexdigest()
@@ -254,3 +258,7 @@ class Common(BaseService):
     # 生成密码
     def UserPWD(self, Param):
         return self.StrMD5(self.StrMD5(Param) + Param)
+
+    # 生成Token
+    def GenerateToken(self):
+        return self.StrMD5(self.RandomStr())

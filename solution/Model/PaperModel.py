@@ -58,7 +58,7 @@ class PaperModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: PaperEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.PaperName = Param.PaperName.strip() if Param.PaperName.strip() != '' else Data.PaperName
@@ -68,6 +68,7 @@ class PaperModel(BaseModel):
                 Data.PassLine = Param.PassLine if Param.PassLine > 0 else Data.PassLine
                 Data.ExamDuration = Param.ExamDuration if Param.ExamDuration > 0 else Data.ExamDuration
                 Data.PaperState = Param.PaperState if Param.PaperState > 0 else Data.PaperState
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

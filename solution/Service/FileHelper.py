@@ -2,7 +2,7 @@
 from Service.BaseService import *
 
 
-class File(BaseService):
+class FileHelper(BaseService):
 
     def __init__(self):
         super().__init__()

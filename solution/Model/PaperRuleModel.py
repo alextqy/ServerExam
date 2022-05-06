@@ -58,7 +58,7 @@ class PaperRuleModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: PaperRuleEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.HeadlineID = Param.HeadlineID if Param.HeadlineID > 0 else Data.HeadlineID
@@ -67,6 +67,7 @@ class PaperRuleModel(BaseModel):
                 Data.SingleScore = Param.SingleScore if Param.SingleScore > 0 else Data.SingleScore
                 Data.PaperID = Param.PaperID if Param.PaperID > 0 else Data.PaperID
                 Data.PaperRuleState = Param.PaperRuleState if Param.PaperRuleState > 0 else Data.PaperRuleState
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)

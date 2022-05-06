@@ -57,7 +57,7 @@ class QuestionModel(BaseModel):
 
     def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
         _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: QuestionEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         if Data is not None:
             try:
                 Data.QuestionTitle = Param.QuestionTitle.strip() if Param.QuestionTitle.strip() != '' else Data.QuestionTitle
@@ -68,6 +68,7 @@ class QuestionModel(BaseModel):
                 Data.KnowledgeID = Param.KnowledgeID if Param.KnowledgeID > 0 else Data.KnowledgeID
                 Data.Description = Param.Description if Param.Description.strip() != '' else Data.Description
                 Data.Attachment = Param.Attachment if Param.Attachment.strip() != '' else Data.Attachment
+                Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
                 _result.Memo = str(e.orig)
