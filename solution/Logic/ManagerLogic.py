@@ -14,7 +14,7 @@ class ManagerLogic(BaseLogic):
         elif Password == '':
             result.Memo = 'wrong password'
         else:
-            ManagerData = self._managerModel.FindAccount(_dbsession, Account)
+            ManagerData: ManagerEntity = self._managerModel.FindAccount(_dbsession, Account)
             if ManagerData is None:
                 result.Memo = 'data does not exist'
             else:
@@ -22,7 +22,7 @@ class ManagerLogic(BaseLogic):
                     result.Memo = 'wrong password'
                 else:
                     ManagerData.Token = self._common.GenerateToken()
-                    result = self._managerModel.Update(_dbsession, ManagerData.ID, ManagerData)
+                    result: Result = self._managerModel.Update(_dbsession, ManagerData.ID, ManagerData)
                     result.Data = ManagerData.Token
         return result
 
@@ -37,7 +37,7 @@ class ManagerLogic(BaseLogic):
                 result.Memo = 'data does not exist'
             else:
                 ManagerData.Token = ''
-                result = self._managerModel.Update(_dbsession, ManagerData.ID, ManagerData)
+                result: Result = self._managerModel.Update(_dbsession, ManagerData.ID, ManagerData)
         return result
 
     def NewManager(self, Token: str, Account: str, Password: str, Name: str) -> Result:
@@ -66,7 +66,7 @@ class ManagerLogic(BaseLogic):
             ManagerData.Name = Name
             ManagerData.State = 1
             ManagerData.Permission = 9
-            result = self._managerModel.Insert(_dbsession, ManagerData)
+            result: Result = self._managerModel.Insert(_dbsession, ManagerData)
         return result
 
     def ManagerDisabled(self, Token: str, ID: int) -> Result:
@@ -80,13 +80,36 @@ class ManagerLogic(BaseLogic):
             result.Memo = 'permission denied'
         else:
             CheckData: Result = self._managerModel.Find(_dbsession, ID)
-            if CheckData is None:
-                result.Memo = 'wrong data'
+            ManagerData: ManagerEntity = CheckData.Data
+            if ManagerData is None:
+                result.Memo = "data error"
             else:
-                ManagerData: ManagerEntity = CheckData.Data
                 if ManagerData.State == 2:
                     ManagerData.State = 1
                 else:
                     ManagerData.State = 2
-                result = self._managerModel.Update(_dbsession, ID, ManagerData)
+                result: Result = self._managerModel.Update(_dbsession, ID, ManagerData)
+        return result
+
+    def ManagerChangePassword(self, Token: str, NewPassword: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif NewPassword == '':
+            result.Memo = 'wrong new password'
+        elif len(NewPassword) < 6:
+            result.Memo = 'password length is not enough'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        else:
+            if ID == 0:
+                ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
+            else:
+                ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
+            if ManagerData is None:
+                result.Memo = 'data error'
+            else:
+                ManagerData.PWD = NewPassword
+                result: Result = self._managerModel.Update(_dbsession, ID, ManagerData)
         return result

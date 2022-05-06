@@ -29,7 +29,7 @@ class ExamineeModel(BaseModel):
             _dbsession.commit()
             _dbsession.flush()
         except Exception as e:
-            _result.Memo = str(e.orig)
+            _result.Memo = str(e)
             _dbsession.rollback()
             return _result
 
@@ -59,7 +59,7 @@ class ExamineeModel(BaseModel):
                 Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
                 _dbsession.commit()
             except Exception as e:
-                _result.Memo = str(e.orig)
+                _result.Memo = str(e)
                 _dbsession.rollback()
                 return _result
             _result.Status = True

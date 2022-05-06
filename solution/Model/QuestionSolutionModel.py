@@ -32,7 +32,7 @@ class QuestionSolutionModel(BaseModel):
             _dbsession.commit()
             _dbsession.flush()
         except Exception as e:
-            _result.Memo = str(e.orig)
+            _result.Memo = str(e)
             _dbsession.rollback()
             return _result
 
@@ -68,7 +68,7 @@ class QuestionSolutionModel(BaseModel):
                 Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
-                _result.Memo = str(e.orig)
+                _result.Memo = str(e)
                 _dbsession.rollback()
                 return _result
             _result.Status = True
