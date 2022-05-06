@@ -27,3 +27,9 @@ async def NewManager(request: Request, Token: str = Form(''), Account: str = For
     Password = Password.strip()
     Name = Name.strip()
     return managerLogic.NewManager(Token, Account, Password, Name)
+
+
+# 禁用/启用 管理员
+@ManagerRouter.post('/Manager/Disabled')
+async def ManagerDisabled(request: Request, Token: str = Form(''), ID: int = Form(0)):
+    return managerLogic.ManagerDisabled(Token, ID)

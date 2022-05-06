@@ -55,22 +55,38 @@ class ManagerLogic(BaseLogic):
             result.Memo = 'password length is not enough'
         elif Name == '':
             result.Memo = 'wrong name'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        elif self._managerModel.FindAccount(_dbsession, Account) is not None:
+            result.Memo = 'data already exists'
         else:
-            CheckPermission = self.PermissionValidation(_dbsession, Token)
-            if CheckPermission is None:
-                result.Memo = 'permission denied'
-            elif CheckPermission.Permission < 9:
-                result.Memo = 'permission denied'
-            elif CheckPermission.Account == Account:
-                result.Memo = 'data already exists'
-            elif self._managerModel.FindAccount(_dbsession, Account) is not None:
-                result.Memo = 'data already exists'
+            ManagerData = ManagerEntity()
+            ManagerData.Account = Account
+            ManagerData.PWD = Password
+            ManagerData.Name = Name
+            ManagerData.State = 1
+            ManagerData.Permission = 9
+            result = self._managerModel.Insert(_dbsession, ManagerData)
+        return result
+
+    def ManagerDisabled(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        else:
+            CheckData: Result = self._managerModel.Find(_dbsession, ID)
+            if CheckData is None:
+                result.Memo = 'wrong data'
             else:
-                ManagerData = ManagerEntity()
-                ManagerData.Account = Account
-                ManagerData.PWD = Password
-                ManagerData.Name = Name
-                ManagerData.State = 1
-                ManagerData.Permission = 9
-                result = self._managerModel.Insert(_dbsession, ManagerData)
+                ManagerData: ManagerEntity = CheckData.Data
+                if ManagerData.State == 2:
+                    ManagerData.State = 1
+                else:
+                    ManagerData.State = 2
+                result = self._managerModel.Update(_dbsession, ID, ManagerData)
         return result

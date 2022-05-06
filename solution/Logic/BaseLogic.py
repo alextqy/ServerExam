@@ -46,5 +46,10 @@ class BaseLogic:
     def __init__(self):
         super().__init__()
 
-    def PermissionValidation(self, _dbsession: DBsession, Token: str) -> ManagerEntity:
-        return self._managerModel.FindToken(_dbsession, Token)
+    def PermissionValidation(self, _dbsession: DBsession, Token: str) -> bool:
+        ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
+        if ManagerData is None:
+            return False
+        elif ManagerData.Permission < 9:
+            return False
+        return True
