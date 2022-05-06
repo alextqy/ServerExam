@@ -44,76 +44,76 @@ class Common(BaseService):
     # 判断操作系统类型
     def OSType(self):
         osType = system()
-        if osType == "Windows":
+        if osType == 'Windows':
             return osType
-        elif osType == "Linux":
+        elif osType == 'Linux':
             return osType
-        elif osType == "Darwin":
-            return "MacOS"
+        elif osType == 'Darwin':
+            return 'MacOS'
         else:
-            return "Other"
+            return 'Other'
 
     # 获取CPU序列号
     def CPUID(self):
         osType = self.OSType()
-        if osType == "Windows":
+        if osType == 'Windows':
             from wmi import WMI
             _wmi = WMI()
             for _, cpu in enumerate(_wmi.Win32_Processor()):
                 cpuInfo = cpu
             return cpuInfo.ProcessorId.strip()
-        elif osType == "Linux":
-            cpuInfo = os.system("sudo dmidecode -t 4 | grep ID")
-            return cpuInfo.decode("utf8").strip().replace("ID:", "").replace(" ", "")
+        elif osType == 'Linux':
+            cpuInfo = os.system('sudo dmidecode -t 4 | grep ID')
+            return cpuInfo.decode('utf8').strip().replace('ID:', '').replace(' ', '')
         else:
-            return ""
+            return ''
 
     # 获取主板序列号
     def MotherboardID(self):
         osType = self.OSType()
-        if osType == "Windows":
+        if osType == 'Windows':
             from wmi import WMI
             _wmi = WMI()
             boardInfo = _wmi.Win32_BaseBoard()[0].SerialNumber
-            return boardInfo.strip().replace(" ", "")
-        elif osType == "Linux":
-            boardInfo = os.popen("sudo dmidecode -t 1 | grep Serial").read()
-            return boardInfo.strip().replace("Serial Number:", "").replace(" ", "")
+            return boardInfo.strip().replace(' ', '')
+        elif osType == 'Linux':
+            boardInfo = os.popen('sudo dmidecode -t 1 | grep Serial').read()
+            return boardInfo.strip().replace('Serial Number:', '').replace(' ', '')
         else:
-            return ""
+            return ''
 
     # 字符串过滤 只匹配大小写字母和数字的组合
-    def MatchAll(self, Param=""):
-        if Param == "":
+    def MatchAll(self, Param=''):
+        if Param == '':
             return False
-        elif search("^[a-zA-Z0-9_]+$", Param) == None:
+        elif search('^[a-zA-Z0-9_]+$', Param) == None:
             return False
         else:
             return True
 
     # 字符串过滤 只匹配小写字母
-    def MatchStr(self, Param=""):
-        if Param == "":
+    def MatchStr(self, Param=''):
+        if Param == '':
             return False
-        elif search("^[a-z_]+$", Param) == None:
+        elif search('^[a-z_]+$', Param) == None:
             return False
         else:
             return True
 
     # 字符串过滤 只匹配数字
-    def MatchNum(self, Param=""):
-        if Param == "":
+    def MatchNum(self, Param=''):
+        if Param == '':
             return False
-        elif search("^[0-9]+$", Param) == None:
+        elif search('^[0-9]+$', Param) == None:
             return False
         else:
             return True
 
     # 大小写字母 中文 数字 下划线 点
-    def MatchSafe(self, Param=""):
-        if Param == "":
+    def MatchSafe(self, Param=''):
+        if Param == '':
             return False
-        elif search("^[\u4E00-\u9FA5A-Za-z0-9_.]+$", Param) == None:
+        elif search('^[\u4E00-\u9FA5A-Za-z0-9_.]+$', Param) == None:
             return False
         else:
             return True
@@ -133,11 +133,11 @@ class Common(BaseService):
     # 时间戳转换成时间(接收10位str时间戳)
     def TimeToStr(self, TimeNum):
         timeData = localtime(int(str(TimeNum)[:10]))
-        return strftime("%Y-%m-%d %H:%M:%S", timeData)
+        return strftime('%Y-%m-%d %H:%M:%S', timeData)
 
     # 时间转换成时间戳
     def StrToTime(self, TimeStr):
-        timeFormat = strptime(TimeStr, "%Y-%m-%d %H:%M:%S")
+        timeFormat = strptime(TimeStr, '%Y-%m-%d %H:%M:%S')
         return int(mktime(timeFormat))
 
     # 当前时间戳
@@ -151,7 +151,7 @@ class Common(BaseService):
     # 获取当天的年月日
     def TodayStr(self):
         timeData = localtime(self.Time())
-        return strftime("%Y-%m-%d 00:00:00", timeData)
+        return strftime('%Y-%m-%d 00:00:00', timeData)
 
     # 过去的时间
     def TimePast(self, Day=0):
@@ -191,23 +191,23 @@ class Common(BaseService):
     def IMGToBase64(self, FilePath):
         with open(FilePath, 'rb') as f:  # 以二进制读取图片
             FileEncode = b64encode(f.read())  # 得到 byte 编码的数据
-            FileEncodeStr = str(FileEncode, "utf-8")  # 重新编码数据
+            FileEncodeStr = str(FileEncode, 'utf-8')  # 重新编码数据
         return FileEncodeStr
 
     # 发送邮件
-    def SendMail(self, Content=""):
-        if Content == "":
+    def SendMail(self, Content=''):
+        if Content == '':
             return False
 
-        # MailHost = ""  # SMTP服务器
-        # MailUser = ""  # 用户名
-        # MailPass = ""  # 密码(这里的密码不是登录邮箱密码，而是授权码)
-        # Sender = ""  # 发件人邮箱
-        # Receivers = [""]  # 接收人邮箱
+        # MailHost = ''  # SMTP服务器
+        # MailUser = ''  # 用户名
+        # MailPass = ''  # 密码(这里的密码不是登录邮箱密码，而是授权码)
+        # Sender = ''  # 发件人邮箱
+        # Receivers = ['']  # 接收人邮箱
         # Title = 'BitBox Suggestions & Opinion'  # 邮件主题
-        # Message = MIMEText(Content, "plain", "utf-8")  # 内容, 格式, 编码
-        # Message['From'] = "{}".format(Sender)
-        # Message['To'] = ",".join(Receivers)
+        # Message = MIMEText(Content, 'plain', 'utf-8')  # 内容, 格式, 编码
+        # Message['From'] = '{}'.format(Sender)
+        # Message['To'] = ','.join(Receivers)
         # Message['Subject'] = Title
         # try:
         #     # smtpObj = smtplib.SMTP(MailHost, 465)  # 不启用SSL发信, 端口一般是465
@@ -221,23 +221,23 @@ class Common(BaseService):
         mailFrom = 'alextqy@qq.com'  # 发送方邮箱
         smtpObj = MIMEMultipart()
         smtpObj.attach(MIMEText(Content, 'plain', 'utf-8'))
-        smtpObj['Subject'] = "BitBox Suggestions & Opinion"
+        smtpObj['Subject'] = 'BitBox Suggestions & Opinion'
         smtpObj['From'] = mailFrom
-        email = smtplib.SMTP_SSL("smtp.qq.com", 465)  # 通过SSL方式发送，服务器地址和端口
-        email.login(mailFrom, "rkswvfmitwzlbggd")  # 登录邮箱
+        email = smtplib.SMTP_SSL('smtp.qq.com', 465)  # 通过SSL方式发送，服务器地址和端口
+        email.login(mailFrom, 'rkswvfmitwzlbggd')  # 登录邮箱
         try:
-            email.sendmail(mailFrom, "285150667@qq.com", smtpObj.as_string())  # 开始发送
+            email.sendmail(mailFrom, '285150667@qq.com', smtpObj.as_string())  # 开始发送
             return True
         except smtplib.SMTPException as e:
             return False
 
     # str to bytes
     def StringToBytes(self, Param):
-        return bytes(Param, encoding="utf8")
+        return bytes(Param, encoding='utf8')
 
     # bytes to str
     def BytesToString(self, Param):
-        return str(Param, encoding="utf-8")
+        return str(Param, encoding='utf-8')
 
     # bytes to Base64
     def BytesToBase64(self, Param):

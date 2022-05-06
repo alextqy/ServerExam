@@ -4,27 +4,27 @@ from Service.BaseService import *
 
 class Cache(BaseService):
 
-    def __init__(self, Path="", jsonFile="cache.json"):
+    def __init__(self, Path='', jsonFile='cache.json'):
         self.jsonFile = Path + jsonFile
         self.configData = OrderedDict()
-        if Path == "":
-            self.configData = {"Debug": False, "URL": "", "SwitchHttps": False, "Account": "", "Title": "bitbox", "Lang": "", "Token": "", "TokenType": "", "Sync": False, "UDPPort": 6002, "SynchronizationCycle": 3}
+        if Path == '':
+            self.configData = {'Debug': False, 'URL': '', 'SwitchHttps': False, 'Account': '', 'Title': 'bitbox', 'Lang': '', 'Token': '', 'TokenType': '', 'Sync': False, 'UDPPort': 6002, 'SynchronizationCycle': 3}
 
         selectFile = isfile(self.jsonFile)
         if selectFile == False:
-            with open(self.jsonFile, "w", encoding="utf-8") as f:
+            with open(self.jsonFile, 'w', encoding='utf-8') as f:
                 dump(self.configData, f, indent=2, sort_keys=True, ensure_ascii=False)  # 写为多行
 
     def Select(self):
         try:
-            with open(self.jsonFile, encoding="utf-8") as f:
+            with open(self.jsonFile, encoding='utf-8') as f:
                 data = load(f)
             return data
         except OSError as e:
             return
 
     def Get(self, k):
-        with open(self.jsonFile, encoding="utf-8") as f:
+        with open(self.jsonFile, encoding='utf-8') as f:
             data = load(f)
 
         if k in data.keys():
@@ -39,7 +39,7 @@ class Cache(BaseService):
         else:
             self.configData = {**self.configData, **{k: v}}  # 数据合并
         try:
-            with open(self.jsonFile, "w", encoding="utf-8") as f:
+            with open(self.jsonFile, 'w', encoding='utf-8') as f:
                 dump(self.configData, f, indent=2, sort_keys=True, ensure_ascii=False)  # 写入多行
         except OSError as e:
             return
@@ -51,7 +51,7 @@ class Cache(BaseService):
         else:
             return
         try:
-            with open(self.jsonFile, "w", encoding="utf-8") as f:
+            with open(self.jsonFile, 'w', encoding='utf-8') as f:
                 dump(self.configData, f, indent=2, sort_keys=True, ensure_ascii=False)  # 写入多行
         except OSError as e:
             return
@@ -61,7 +61,7 @@ class Cache(BaseService):
         if type(v) == list:
             data.extend(v)
         elif type(v) == str:
-            data = data + "v"
+            data = data + 'v'
         else:
             data = v
         self.configData[k] = data
