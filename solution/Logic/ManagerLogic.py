@@ -38,7 +38,7 @@ class ManagerLogic(BaseLogic):
         if Token == '':
             result.Memo = 'wrong token'
         else:
-            ManagerData = self._managerModel.FindToken(_dbsession, Token)
+            ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             if ManagerData is None:
                 result.Memo = 'data does not exist'
             else:
@@ -172,5 +172,23 @@ class ManagerLogic(BaseLogic):
         elif self.PermissionValidation(_dbsession, Token) == False:
             result.Memo = 'permission denied'
         else:
-            result: Result = self._managerModel.List(_dbsession, Page, PageSize, Stext, State, Permission)
+            result: ResultList = self._managerModel.List(_dbsession, Page, PageSize, Stext, State, Permission)
+        return result
+
+    def ManagerInfo(self, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        else:
+            ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
+            if ManagerData is None:
+                result.Memo = 'data error'
+            else:
+                result.Status = True
+                result.Data = ManagerData
         return result

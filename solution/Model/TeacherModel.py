@@ -78,9 +78,10 @@ class TeacherModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         Data.PWD = ''
+        Data.Token = ''
         return Data
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> ResultList:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -97,6 +98,7 @@ class TeacherModel(BaseModel):
         DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         for i in DataList:
             i.PWD = ''
+            i.Token = ''
         _result.Data = DataList
         return _result
 
