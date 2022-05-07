@@ -79,8 +79,7 @@ class ManagerLogic(BaseLogic):
         elif self.PermissionValidation(_dbsession, Token) == False:
             result.Memo = 'permission denied'
         else:
-            CheckData: Result = self._managerModel.Find(_dbsession, ID)
-            ManagerData: ManagerEntity = CheckData.Data
+            ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
                 result.Memo = "data error"
             else:
@@ -110,6 +109,6 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
-                ManagerData.PWD = NewPassword
-                result: Result = self._managerModel.Update(_dbsession, ID, ManagerData)
+                if self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword) == True:
+                    result.Status = True
         return result

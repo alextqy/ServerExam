@@ -61,7 +61,7 @@ class ManagerModel(BaseModel):
         if Data is not None:
             try:
                 Data.Account = Param.Account.strip() if Param.Account.strip() != '' else Data.Account
-                Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and Param.PWD.strip() != Data.PWD else Data.PWD
+                # Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and Param.PWD.strip() != Data.PWD else Data.PWD
                 Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
                 Data.State = Param.State if Param.State > 0 else Data.State
                 Data.Permission = Param.Permission if Param.Permission > 0 else Data.Permission
@@ -74,11 +74,8 @@ class ManagerModel(BaseModel):
             _result.Status = True
         return _result
 
-    def Find(self, _dbsession: DBsession, ID: int) -> Result:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
+    def Find(self, _dbsession: DBsession, ID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
         _result = ResultList()
@@ -97,8 +94,16 @@ class ManagerModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def FindAccount(self, _dbsession: DBsession, Account: str) -> ManagerEntity:
+    def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.Account == Account.strip()).first()
 
-    def FindToken(self, _dbsession: DBsession, Token: str) -> ManagerEntity:
+    def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
+
+    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> bool:
+        try:
+            Data.PWD = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.PWD else Data.PWD
+            _dbsession.commit()
+        except Exception as e:
+            return False
+        return True

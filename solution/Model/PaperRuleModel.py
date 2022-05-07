@@ -76,7 +76,7 @@ class PaperRuleModel(BaseModel):
             _result.Status = True
         return _result
 
-    def Find(self, _dbsession: DBsession, ID: int) -> Result:
+    def Find(self, _dbsession: DBsession, ID: int) -> EType:
         _result = Result()
         _result.Status = True
         _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
