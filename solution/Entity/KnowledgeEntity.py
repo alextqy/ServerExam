@@ -8,7 +8,7 @@ class KnowledgeEntity(BaseEntity, BaseORM):
     KnowledgeName: str = Column(String(128), comment='知识点名称')
     KnowledgeCode: str = Column(String(128), index=True, comment='知识点编码')
     SubjectID: int = Column(INTEGER, index=True, comment='科目ID')
-    SubjectState: int = Column(INTEGER, comment='知识点状态 1正常 2禁用')
+    KnowledgeState: int = Column(INTEGER, comment='知识点状态 1正常 2禁用')
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):
@@ -26,9 +26,9 @@ class KnowledgeEntity(BaseEntity, BaseORM):
         if isinstance(Value, int):
             self.SubjectID = Value
 
-    def SetSubjectState(self, Value: int):
+    def SetKnowledgeState(self, Value: int):
         if isinstance(Value, int):
-            self.SubjectState = Value
+            self.KnowledgeState = Value
 
     def SetUpdateTime(self, Value: int):
         if isinstance(Value, int):

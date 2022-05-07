@@ -13,9 +13,10 @@ class SubjectModel(BaseModel):
         if Data.SubjectName == '':
             _result.Memo = 'param err'
             return _result
-        if Data.SubjectState <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.SubjectState <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
+        Data.SubjectState = 1
         Data.SubjectCode = self._common.StrMD5(Data.SubjectName.strip())
         try:
             _dbsession.add(Data)
@@ -78,3 +79,6 @@ class SubjectModel(BaseModel):
             sql = sql.filter(self.EType.SubjectState == SubjectState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FIndSubjectCode(self, _dbsession: DBsession, SubjectName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.SubjectCode == self._common.StrMD5(SubjectName.strip())).first()

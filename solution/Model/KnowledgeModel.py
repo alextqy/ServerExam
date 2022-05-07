@@ -1,7 +1,7 @@
 from Model.BaseModel import *
 
 
-class ExamineeModel(BaseModel):
+class KnowledgeModel(BaseModel):
     EType: KnowledgeEntity = KnowledgeEntity
 
     def __init__(self):

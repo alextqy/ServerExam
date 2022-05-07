@@ -39,9 +39,11 @@ async def Test(request: Request, Param: str):
 
 
 from Controller.ManagerController import ManagerRouter, ManagerPrefix
+from Controller.SubjectController import SubjectRouter, SubjectPrefix
 from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 
 app.include_router(ManagerRouter, prefix=ManagerPrefix)
+app.include_router(SubjectRouter, prefix=SubjectPrefix)
 app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix

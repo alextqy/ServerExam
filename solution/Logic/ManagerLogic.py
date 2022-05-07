@@ -57,6 +57,8 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         if Token == '':
             result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
         elif Account == '':
             result.Memo = 'wrong account'
         elif len(Account) < 6:
@@ -69,8 +71,6 @@ class ManagerLogic(BaseLogic):
             result.Memo = 'password length is not enough'
         elif Name == '':
             result.Memo = 'wrong name'
-        elif self.PermissionValidation(_dbsession, Token) == False:
-            result.Memo = 'permission denied'
         elif self._managerModel.FindAccount(_dbsession, Account) is not None:
             result.Memo = 'data already exists'
         else:
@@ -88,10 +88,10 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         if Token == '':
             result.Memo = 'wrong token'
-        elif ID <= 0:
-            result.Memo = 'wrong id'
         elif self.PermissionValidation(_dbsession, Token) == False:
             result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
@@ -115,12 +115,12 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         if Token == '':
             result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
         elif NewPassword == '':
             result.Memo = 'wrong new password'
         elif len(NewPassword) < 6:
             result.Memo = 'password length is not enough'
-        elif self.PermissionValidation(_dbsession, Token) == False:
-            result.Memo = 'permission denied'
         else:
             if ID == 0:
                 ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
@@ -138,12 +138,12 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         if Token == '':
             result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
         elif Name == '':
             result.Memo = 'wrong name'
         elif Permission <= 0:
             result.Memo = 'wrong permission'
-        elif self.PermissionValidation(_dbsession, Token) == False:
-            result.Memo = 'permission denied'
         else:
             if ID == 0:
                 ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)

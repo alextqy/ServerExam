@@ -6,7 +6,9 @@ from Service.Lang import *
 from Service.UDPTool import *
 
 from Logic.ManagerLogic import ManagerLogic
+from Logic.SubjectLogic import SubjectLogic
 from Logic.ExamineeLogic import ExamineeLogic
 
 managerLogic = ManagerLogic()
+subjectLogic = SubjectLogic()
 examineeLogic = ExamineeLogic()

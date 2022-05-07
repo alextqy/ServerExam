@@ -1,7 +1,7 @@
 from Model.BaseModel import *
 
 
-class ExamineeModel(BaseModel):
+class ExamLogModel(BaseModel):
     EType: ExamLogEntity = ExamLogEntity
 
     def __init__(self):

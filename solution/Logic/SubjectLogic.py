@@ -1,0 +1,75 @@
+from Logic.BaseLogic import *
+
+
+class SubjectLogic(BaseLogic):
+
+    def __init__(self):
+        super().__init__()
+
+    def NewSubject(self, Token: str, SubjectName: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        elif SubjectName == '':
+            result.Memo = 'wrong subject name'
+        elif self._subjectModel.FIndSubjectCode(_dbsession, SubjectName) is not None:
+            result.Memo = 'data already exists'
+        else:
+            SubjectData = SubjectEntity()
+            SubjectData.SubjectName = SubjectName
+            result: Result = self._subjectModel.Insert(_dbsession, SubjectData)
+        return result
+
+    def SubjectDisabled(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        else:
+            SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
+            if SubjectData is None:
+                result.Memo = 'data error'
+            else:
+                try:
+                    if SubjectData.SubjectState == 2:
+                        SubjectData.SubjectState = 1
+                    else:
+                        SubjectData.SubjectState = 2
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+                result.Status = True
+        return result
+
+    def UpdateSubjectInfo(self, Token: str, ID: int, SubjectName: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        elif SubjectName == '':
+            result.Memo = 'wrong subject name'
+        else:
+            SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
+            if SubjectData is None:
+                result.Memo = 'data error'
+            elif SubjectData.SubjectName == SubjectName:
+                result.Status = True
+                return result
+            elif self._
+            else:
+                SubjectData.SubjectName = SubjectName
+                result: Result = self._subjectModel.Update(ID, SubjectData)
+        return result
