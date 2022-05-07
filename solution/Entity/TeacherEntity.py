@@ -15,3 +15,31 @@ class TeacherEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
+
+    def SetAccount(self, Value: str):
+        if isinstance(Value, str):
+            self.Account = Value.strip()
+
+    def SetPWD(self, Value: str):
+        if isinstance(Value, str):
+            self.PWD = Value.strip()
+
+    def SetName(self, Value: str):
+        if isinstance(Value, str):
+            self.Name = Value.strip()
+
+    def SetState(self, Value: int):
+        if isinstance(Value, int):
+            self.State = Value
+
+    def SetClassID(self, Value: int):
+        if isinstance(Value, int):
+            self.ClassID = Value
+
+    def SetUpdateTime(self, Value: int):
+        if isinstance(Value, int):
+            self.UpdateTime = Value
+
+    def SetToken(self, Value: str):
+        if isinstance(Value, str):
+            self.Token = Value.strip()

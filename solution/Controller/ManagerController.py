@@ -31,14 +31,22 @@ async def NewManager(request: Request, Token: str = Form(''), Account: str = For
 
 # 禁用/启用 管理员
 @ManagerRouter.post('/Manager/Disabled')
-async def ManagerDisabled(request: Request, Token: str = Form(''), ID: int = Form(0)):
+async def ManagerDisabled(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
     return managerLogic.ManagerDisabled(Token, ID)
 
 
 # 管理员修改密码
 @ManagerRouter.post('/Manager/Change/Password')
-async def ManagerChangePassword(request: Request, Token: str = Form(''), NewPassword: str = Form(''), ID: int = Form(0)):
+async def ManagerChangePassword(request: Request, Token: str = Form(''), NewPassword: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
     NewPassword = NewPassword.strip()
     return managerLogic.ManagerChangePassword(Token, NewPassword, ID)
+
+
+# 更新管理员信息
+@ManagerRouter.post('/Update/Manager/Info')
+async def UpdateManagerInfo(request: Request, Token: str = Form(''), Name: str = Form(''), Permission: int = Form(0), ID: int = Form(0)) -> Result:
+    Token = Token.strip()
+    Name = Name.strip()
+    return managerLogic.UpdateManagerInfo(Token, Name, Permission, ID)

@@ -13,3 +13,23 @@ class KnowledgeEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
+
+    def SetKnowledgeName(self, Value: str):
+        if isinstance(Value, str):
+            self.KnowledgeName = Value.strip()
+
+    def SetKnowledgeCode(self, Value: str):
+        if isinstance(Value, str):
+            self.KnowledgeCode = Value.strip()
+
+    def SetSubjectID(self, Value: int):
+        if isinstance(Value, int):
+            self.SubjectID = Value
+
+    def SetSubjectState(self, Value: int):
+        if isinstance(Value, int):
+            self.SubjectState = Value
+
+    def SetUpdateTime(self, Value: int):
+        if isinstance(Value, int):
+            self.UpdateTime = Value

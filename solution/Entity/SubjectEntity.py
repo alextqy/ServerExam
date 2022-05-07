@@ -12,3 +12,19 @@ class SubjectEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
+
+    def SetSubjectName(self, Value: str):
+        if isinstance(Value, str):
+            self.SubjectName = Value.strip()
+
+    def SetSubjectCode(self, Value: str):
+        if isinstance(Value, str):
+            self.SubjectCode = Value.strip()
+
+    def SetSubjectState(self, Value: int):
+        if isinstance(Value, int):
+            self.SubjectState = Value
+
+    def SetUpdateTime(self, Value: int):
+        if isinstance(Value, int):
+            self.UpdateTime = Value

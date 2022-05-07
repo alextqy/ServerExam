@@ -49,6 +49,8 @@ class ManagerLogic(BaseLogic):
             result.Memo = 'wrong account'
         elif len(Account) < 6:
             result.Memo = 'account length is not enough'
+        elif self._common.MatchAll(Account) == False:
+            result.Memo = 'account format error'
         elif Password == '':
             result.Memo = 'wrong password'
         elif len(Password) < 6:
@@ -90,7 +92,7 @@ class ManagerLogic(BaseLogic):
                 result: Result = self._managerModel.Update(_dbsession, ID, ManagerData)
         return result
 
-    def ManagerChangePassword(self, Token: str, NewPassword: str, ID: int):
+    def ManagerChangePassword(self, Token: str, NewPassword: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         if Token == '':
@@ -111,4 +113,27 @@ class ManagerLogic(BaseLogic):
             else:
                 if self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword) == True:
                     result.Status = True
+        return result
+
+    def UpdateManagerInfo(self, Token: str, Name: str, Permission: int, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif Name == '':
+            result.Memo = 'wrong name'
+        elif Permission <= 0:
+            result.Memo = 'wrong permission'
+        else:
+            if ID == 0:
+                ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
+            else:
+                ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
+            if ManagerData is None:
+                result.Memo = 'data error'
+            else:
+                Data = ManagerEntity()
+                Data.Name = Name
+                Data.Permission = Permission
+                result: Result = self._managerModel.Update(_dbsession, ID, Data)
         return result

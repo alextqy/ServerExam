@@ -12,3 +12,19 @@ class ExamLogEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
+
+    def SetType(self, Value: int):
+        if isinstance(Value, int):
+            self.Type = Value
+
+    def SetExamNo(self, Value: str):
+        if isinstance(Value, str):
+            self.ExamNo = Value.strip()
+
+    def SetDescription(self, Value: str):
+        if isinstance(Value, str):
+            self.Description = Value.strip()
+
+    def SetIP(self, Value: str):
+        if isinstance(Value, str):
+            self.IP = Value.strip()

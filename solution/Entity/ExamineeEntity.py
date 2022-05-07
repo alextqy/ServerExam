@@ -12,3 +12,19 @@ class ExamineeEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
+
+    def SetName(self, Value: str):
+        if isinstance(Value, str):
+            self.Name = Value.strip()
+
+    def SetExamineeNo(self, Value: str):
+        if isinstance(Value, str):
+            self.ExamineeNo = Value.strip()
+
+    def SetContact(self, Value: str):
+        if isinstance(Value, str):
+            self.Contact = Value.strip()
+
+    def SetClassID(self, Value: int):
+        if isinstance(Value, int):
+            self.ClassID = Value
