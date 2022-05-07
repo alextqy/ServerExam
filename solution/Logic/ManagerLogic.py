@@ -21,8 +21,14 @@ class ManagerLogic(BaseLogic):
                 if ManagerData.PWD != self._common.UserPWD(Password):
                     result.Memo = 'wrong password'
                 else:
-                    ManagerData.Token = self._common.GenerateToken()
-                    result: Result = self._managerModel.Update(_dbsession, ManagerData.ID, ManagerData)
+                    try:
+                        ManagerData.Token = self._common.GenerateToken()
+                        _dbsession.commit()
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _dbsession.rollback()
+                        return result
+                    result.Status = True
                     result.Data = ManagerData.Token
         return result
 
@@ -36,8 +42,14 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data does not exist'
             else:
-                ManagerData.Token = ''
-                result: Result = self._managerModel.Update(_dbsession, ManagerData.ID, ManagerData)
+                try:
+                    ManagerData.Token = ''
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+                result.Status = True
         return result
 
     def NewManager(self, Token: str, Account: str, Password: str, Name: str) -> Result:
@@ -85,11 +97,17 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = "data error"
             else:
-                if ManagerData.State == 2:
-                    ManagerData.State = 1
-                else:
-                    ManagerData.State = 2
-                result: Result = self._managerModel.Update(_dbsession, ID, ManagerData)
+                try:
+                    if ManagerData.State == 2:
+                        ManagerData.State = 1
+                    else:
+                        ManagerData.State = 2
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+                result.Status = True
         return result
 
     def ManagerChangePassword(self, Token: str, NewPassword: str, ID: int) -> Result:
@@ -132,8 +150,19 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
-                Data = ManagerEntity()
-                Data.Name = Name
-                Data.Permission = Permission
-                result: Result = self._managerModel.Update(_dbsession, ID, Data)
+                try:
+                    Data: ManagerEntity = ManagerData
+                    Data.SetName(Name)
+                    Data.SetPermission(Permission)
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+                result.Status = True
         return result
+
+    def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
+        _dbsession = DBsession()
+        Result = self._managerModel.List(_dbsession, Page, PageSize, Stext, State, Permission)
+        return Result

@@ -50,3 +50,11 @@ async def UpdateManagerInfo(request: Request, Token: str = Form(''), Name: str =
     Token = Token.strip()
     Name = Name.strip()
     return managerLogic.UpdateManagerInfo(Token, Name, Permission, ID)
+
+
+# 管理员列表
+@ManagerRouter.post('/Manager/List')
+async def ManagerList(request: Request, Token: str = Form(''), Page: int = Form(1), PageSize: int = Form(10), Stext: str = Form(''), State: int = Form(0), Permission: int = Form(0)) -> Result:
+    Token = Token.strip()
+    Stext = Stext.strip()
+    return managerLogic.ManagerList(Token, Page, PageSize, Stext, State, Permission)

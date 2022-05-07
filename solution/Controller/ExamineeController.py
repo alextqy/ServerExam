@@ -7,28 +7,28 @@ ExamineePrefix = ''
 # 添加考生
 @ExamineeRouter.post('/new/examinee')
 async def NewExaminee(request: Request, Name: str = Form(''), ExamineeNo: str = Form(''), Contact: str = Form('')) -> Result:
-    return examineelogic.NewExaminee(Name, ExamineeNo, Contact)
+    return examineeLogic.NewExaminee(Name, ExamineeNo, Contact)
 
 
 # 删除考生
 @ExamineeRouter.post('/delete/examinee')
 async def DeleteExaminee(request: Request, ID: int = Form(0)) -> Result:
-    return examineelogic.DeleteExaminee(ID)
+    return examineeLogic.DeleteExaminee(ID)
 
 
 # 更新考生信息
 @ExamineeRouter.post('/update/examinee')
 async def UpdateExaminee(request: Request, ID: int = Form(0), Name: str = Form(''), ExamineeNo: str = Form(''), Contact: str = Form('')) -> Result:
-    return examineelogic.UpdateExaminee(ID, Name, ExamineeNo, Contact)
+    return examineeLogic.UpdateExaminee(ID, Name, ExamineeNo, Contact)
 
 
 # 查询考生
 @ExamineeRouter.post('/find/examinee')
 async def FindExaminee(request: Request, ID: int = Form(0)) -> Result:
-    return examineelogic.FindExaminee(ID)
+    return examineeLogic.FindExaminee(ID)
 
 
 # 考生列表
 @ExamineeRouter.post('/list/examinee')
 async def ListExaminee(request: Request, Page: int = Form(1), PageSize: int = Form(10), Stext: str = Form('')) -> Result:
-    return examineelogic.ListExaminee(Page, PageSize, Stext)
+    return examineeLogic.ListExaminee(Page, PageSize, Stext)
