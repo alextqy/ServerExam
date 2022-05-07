@@ -75,7 +75,9 @@ class ManagerModel(BaseModel):
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data.PWD = ''
+        return Data
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
         _result = ResultList()
@@ -90,8 +92,11 @@ class ManagerModel(BaseModel):
         if State > 0:
             sql = sql.filter(self.EType.State == State)
         if Permission > 0:
-            self = sql.filter(self.EType.Permission == Permission)
-        _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
+            sql = sql.filter(self.EType.Permission == Permission)
+        DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
+        for i in DataList:
+            i.PWD = ''
+        _result.Data = DataList
         return _result
 
     def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:

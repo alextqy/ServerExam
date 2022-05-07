@@ -76,10 +76,7 @@ class ScantronSolutionHistoryModel(BaseModel):
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: str, ScantronID: int, Position: int) -> Result:
         _result = ResultList()

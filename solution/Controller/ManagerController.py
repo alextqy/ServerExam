@@ -58,3 +58,10 @@ async def ManagerList(request: Request, Token: str = Form(''), Page: int = Form(
     Token = Token.strip()
     Stext = Stext.strip()
     return managerLogic.ManagerList(Token, Page, PageSize, Stext, State, Permission)
+
+
+@ManagerRouter.post('/Manager/Info')
+async def ManagerInfo(request: Request):
+    Token = Token.strip()
+    Stext = Stext.strip()
+    return managerLogic.ManagerList(Token, Page, PageSize, Stext, State, Permission)

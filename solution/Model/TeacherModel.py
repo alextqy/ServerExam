@@ -76,10 +76,9 @@ class TeacherModel(BaseModel):
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
+        Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
+        Data.PWD = ''
+        return Data
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> Result:
         _result = ResultList()
@@ -95,7 +94,10 @@ class TeacherModel(BaseModel):
             sql = sql.filter(self.EType.State == State)
         if ClassID > 0:
             sql = sql.filter(self.EType.ClassID == ClassID)
-        _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
+        DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
+        for i in DataList:
+            i.PWD = ''
+        _result.Data = DataList
         return _result
 
     def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> bool:
