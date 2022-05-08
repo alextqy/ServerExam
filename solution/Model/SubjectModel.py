@@ -71,6 +71,12 @@ class SubjectModel(BaseModel):
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        if Page <= 0:
+            Page = 1
+        if PageSize <= 0:
+            PageSize = 10
+        if Page > _result.TotalPage:
+            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
@@ -80,5 +86,5 @@ class SubjectModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def FIndSubjectCode(self, _dbsession: DBsession, SubjectName: str) -> EType:
+    def FindSubjectCode(self, _dbsession: DBsession, SubjectName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.SubjectCode == self._common.StrMD5(SubjectName.strip())).first()

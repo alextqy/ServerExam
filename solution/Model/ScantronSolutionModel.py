@@ -84,6 +84,12 @@ class ScantronSolutionModel(BaseModel):
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        if Page <= 0:
+            Page = 1
+        if PageSize <= 0:
+            PageSize = 10
+        if Page > _result.TotalPage:
+            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if ScantronID > 0:

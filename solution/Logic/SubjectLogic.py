@@ -15,7 +15,7 @@ class SubjectLogic(BaseLogic):
             result.Memo = 'permission denied'
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
-        elif self._subjectModel.FIndSubjectCode(_dbsession, SubjectName) is not None:
+        elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
             result.Memo = 'data already exists'
         else:
             SubjectData = SubjectEntity()
@@ -68,8 +68,20 @@ class SubjectLogic(BaseLogic):
             elif SubjectData.SubjectName == SubjectName:
                 result.Status = True
                 return result
-            elif self._
+            elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
+                result.Memo = 'data already exists'
             else:
                 SubjectData.SubjectName = SubjectName
-                result: Result = self._subjectModel.Update(ID, SubjectData)
+                result: Result = self._subjectModel.Update(_dbsession, ID, SubjectData)
+        return result
+
+    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        else:
+            result: ResultList = self._subjectModel.List(_dbsession, Page, PageSize, Stext, SubjectState)
         return result
