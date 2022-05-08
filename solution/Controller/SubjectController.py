@@ -33,3 +33,11 @@ async def SubjectList(request: Request, Token: str = Form(''), Page: int = Form(
     Token = Token.strip()
     Stext = Stext.strip()
     return subjectLogic.SubjectList(Token, Page, PageSize, Stext, SubjectState)
+
+
+# 科目详情
+@SubjectRouter.post('/Subject/Info')
+async def SubjectInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
+    Token = Token.strip()
+    ID = ID
+    return subjectLogic.SubjectInfo(Token, ID)

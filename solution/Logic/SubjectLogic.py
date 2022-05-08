@@ -85,3 +85,21 @@ class SubjectLogic(BaseLogic):
         else:
             result: ResultList = self._subjectModel.List(_dbsession, Page, PageSize, Stext, SubjectState)
         return result
+
+    def SubjectInfo(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif self.PermissionValidation(_dbsession, Token) == False:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        else:
+            SubjectData: ManagerEntity = self._subjectModel.Find(_dbsession, ID)
+            if SubjectData is None:
+                result.Memo = 'data error'
+            else:
+                result.Status = True
+                result.Data = SubjectData
+        return result
