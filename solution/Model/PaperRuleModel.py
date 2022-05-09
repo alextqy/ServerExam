@@ -56,26 +56,6 @@ class PaperRuleModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: PaperRuleEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.HeadlineID = Param.HeadlineID if Param.HeadlineID > 0 else Data.HeadlineID
-                Data.QuestionType = Param.QuestionType if Param.QuestionType > 0 else Data.QuestionType
-                Data.QuestionNum = Param.QuestionNum if Param.QuestionNum > 0 else Data.QuestionNum
-                Data.SingleScore = Param.SingleScore if Param.SingleScore > 0 else Data.SingleScore
-                Data.PaperID = Param.PaperID if Param.PaperID > 0 else Data.PaperID
-                Data.PaperRuleState = Param.PaperRuleState if Param.PaperRuleState > 0 else Data.PaperRuleState
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

@@ -51,23 +51,6 @@ class SysConfModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: SysConfEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.Type = Param.Type if Param.Type > 0 else Data.Type
-                Data.Key = Param.Key.strip() if Param.Key.strip() != '' else Data.Key
-                Data.Value = Param.Value.strip() if Param.Value.strip() != '' else Data.Value
-                Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

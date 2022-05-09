@@ -54,27 +54,6 @@ class ExerciseSolutionModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: ExerciseSolutionEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.ExerciseID = Param.ExerciseID if Param.ExerciseID > 0 else Data.ExerciseID
-                Data.Option = Param.Option.strip() if Param.Option.strip() != '' else Data.Option
-                Data.OptionAttachment = Param.OptionAttachment.strip() if Param.OptionAttachment.strip() != '' else Data.OptionAttachment
-                Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
-                Data.CandidateAnswer = Param.CandidateAnswer.strip() if Param.CandidateAnswer.strip() != '' else Data.CandidateAnswer
-                Data.ScoreRatio = Param.ScoreRatio if Param.ScoreRatio > 0 else Data.ScoreRatio
-                Data.Position = Param.Position if Param.Position > 0 else Data.Position
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

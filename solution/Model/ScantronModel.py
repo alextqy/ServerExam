@@ -61,30 +61,6 @@ class ScantronModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: ScantronEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.QuestionTitle = Param.QuestionTitle.strip() if Param.QuestionTitle.strip() != '' else Data.QuestionTitle
-                Data.QuestionCode = self._common.StrMD5(Param.QuestionTitle.strip()) if Param.QuestionTitle.strip() != '' and Param.QuestionTitle.strip() != Data.QuestionTitle else Data.QuestionCode
-                Data.QuestionType = Param.QuestionType if Param.QuestionType > 0 else Data.QuestionType
-                Data.Marking = Param.Marking if Param.Marking > 0 else Data.Marking
-                Data.KnowledgeID = Param.KnowledgeID if Param.KnowledgeID > 0 else Data.KnowledgeID
-                Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
-                Data.Attachment = Param.Attachment.strip() if Param.Attachment.strip() != '' else Data.Attachment
-                Data.Score = Param.Score if Param.Score > 0 else Data.Score
-                Data.ExamID = Param.ExamID if Param.ExamID > 0 else Data.ExamID
-                Data.HeadlineContent = Param.HeadlineContent.strip() if Param.HeadlineContent.strip() != '' else Data.HeadlineContent
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

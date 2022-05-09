@@ -19,7 +19,7 @@ async def KnowledgeDisabled(request: Request, Token: str = Form(''), ID: int = F
     return knowledgeLogic.KnowledgeDisabled(request.client.host, Token, ID)
 
 
-# # 修改知识点信息
+# 修改知识点信息
 @KnowledgeRouter.post('/Update/Knowledge/Info')
 async def UpdateKnowledgeInfo(request: Request, Token: str = Form(''), ID: int = Form(0), KnowledgeName: str = Form('')) -> Result:
     Token = Token.strip()

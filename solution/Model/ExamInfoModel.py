@@ -71,31 +71,6 @@ class ExamInfoModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: ExamInfoEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.SubjectName = Param.SubjectName.strip() if Param.SubjectName.strip() != '' else Data.SubjectName
-                Data.ExamNo = Param.ExamNo.strip() if Param.ExamNo.strip() != '' else Data.ExamNo
-                Data.TotalScore = Param.TotalScore if Param.TotalScore > 0 else Data.TotalScore
-                Data.PassLine = Param.PassLine if Param.PassLine > 0 else Data.PassLine
-                Data.ActualScore = Param.ActualScore if Param.ActualScore > 0 else Data.ActualScore
-                Data.ExamDuration = Param.ExamDuration if Param.ExamDuration > 0 else Data.ExamDuration
-                Data.StartTime = Param.StartTime if Param.StartTime > 0 else Data.StartTime
-                Data.EndTime = Param.EndTime if Param.EndTime > 0 else Data.EndTime
-                Data.ActualDuration = Param.ActualDuration if Param.ActualDuration > 0 else Data.ActualDuration
-                Data.Pass = Param.Pass if Param.Pass > 0 else Data.Pass
-                Data.ExamineeID = Param.ExamineeID if Param.ExamineeID > 0 else Data.ExamineeID
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

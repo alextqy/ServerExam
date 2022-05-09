@@ -41,22 +41,6 @@ class HeadlineModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: HeadlineEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.Content = Param.Content.strip() if Param.Content.strip() != '' else Data.Content
-                Data.ContentCode = self._common.StrMD5(Param.Content.strip()) if Param.Content.strip() != '' and Param.Content.strip() != Data.Content else Data.ContentCode
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
@@ -78,3 +62,6 @@ class HeadlineModel(BaseModel):
             sql = sql.filter(or_(self.EType.ContentCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindContentCode(self, _dbsession: DBsession, Content: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ContentCode == self._common.StrMD5(Content.strip())).first()

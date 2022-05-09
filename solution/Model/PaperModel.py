@@ -59,27 +59,6 @@ class PaperModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: PaperEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.PaperName = Param.PaperName.strip() if Param.PaperName.strip() != '' else Data.PaperName
-                Data.PaperCode = self._common.StrMD5(Param.PaperName.strip()) if Param.PaperName.strip() != '' and Param.PaperName.strip() != Data.PaperName else Data.PaperCode
-                Data.SubjectID = Param.SubjectID if Param.SubjectID > 0 else Data.SubjectID
-                Data.TotalScore = Param.TotalScore if Param.TotalScore > 0 else Data.TotalScore
-                Data.PassLine = Param.PassLine if Param.PassLine > 0 else Data.PassLine
-                Data.ExamDuration = Param.ExamDuration if Param.ExamDuration > 0 else Data.ExamDuration
-                Data.PaperState = Param.PaperState if Param.PaperState > 0 else Data.PaperState
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

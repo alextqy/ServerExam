@@ -9,10 +9,12 @@ from Logic.ManagerLogic import ManagerLogic
 from Logic.SubjectLogic import SubjectLogic
 from Logic.KnowledgeLogic import KnowledgeLogic
 from Logic.PaperLogic import PaperLogic
+from Logic.HeadlineLogic import HeadlineLogic
 from Logic.ExamineeLogic import ExamineeLogic
 
 managerLogic = ManagerLogic()
 subjectLogic = SubjectLogic()
 knowledgeLogic = KnowledgeLogic()
 paperLogic = PaperLogic()
+headlineLogic = HeadlineLogic()
 # examineeLogic = ExamineeLogic()

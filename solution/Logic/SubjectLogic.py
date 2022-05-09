@@ -52,6 +52,7 @@ class SubjectLogic(BaseLogic):
                         SubjectData.SubjectState = 1
                     else:
                         SubjectData.SubjectState = 2
+                    SubjectData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
@@ -86,8 +87,15 @@ class SubjectLogic(BaseLogic):
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
-                SubjectData.SubjectName = SubjectName
-                result: Result = self._subjectModel.Update(_dbsession, ID, SubjectData)
+                try:
+                    SubjectData.SubjectName = SubjectName
+                    SubjectData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+                result.Status = True
         return result
 
     def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> Result:

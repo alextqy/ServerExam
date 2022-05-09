@@ -45,22 +45,6 @@ class ClassModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: ClassEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.ClassName = Param.ClassName.strip() if Param.ClassName.strip() != '' else Data.ClassName
-                Data.ClassCode = self._common.StrMD5(Param.ClassName.strip()) if Param.ClassName.strip() != '' and Param.ClassName.strip() != Data.ClassName else Data.ClassCode
-                Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 

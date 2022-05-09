@@ -19,7 +19,7 @@ async def SubjectDisabled(request: Request, Token: str = Form(''), ID: int = For
     return subjectLogic.SubjectDisabled(request.client.host, Token, ID)
 
 
-# 科目详情
+# 修改科目详情
 @SubjectRouter.post('/Update/Subject/Info')
 async def UpdateSubjectInfo(request: Request, Token: str = Form(''), ID: int = Form(0), SubjectName: str = Form('')) -> Result:
     Token = Token.strip()

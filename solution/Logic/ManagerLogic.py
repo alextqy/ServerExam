@@ -120,6 +120,7 @@ class ManagerLogic(BaseLogic):
                         ManagerData.State = 1
                     else:
                         ManagerData.State = 2
+                    ManagerData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
@@ -180,9 +181,9 @@ class ManagerLogic(BaseLogic):
                     result.Memo = 'logging failed'
                     return result
                 try:
-                    Data: ManagerEntity = ManagerData
-                    Data.Name = Name
-                    Data.Permission = Permission
+                    ManagerData.Name = Name
+                    ManagerData.Permission = Permission
+                    ManagerData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)

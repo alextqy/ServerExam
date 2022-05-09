@@ -93,6 +93,7 @@ class KnowledgeLogic(BaseLogic):
                     return result
                 try:
                     KnowledgeData.KnowledgeName = KnowledgeName
+                    KnowledgeData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)

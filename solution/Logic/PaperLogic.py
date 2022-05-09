@@ -70,13 +70,13 @@ class PaperLogic(BaseLogic):
                         PaperData.PaperState = 1
                     else:
                         PaperData.PaperState = 2
+                    PaperData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
                 result.Status = True
-                result: Result = self._paperModel.Update(_dbsession, ID, PaperData)
         return result
 
     def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
@@ -111,6 +111,7 @@ class PaperLogic(BaseLogic):
                     PaperData.TotalScore = TotalScore
                     PaperData.PassLine = PassLine
                     PaperData.ExamDuration = ExamDuration * 60
+                    PaperData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)

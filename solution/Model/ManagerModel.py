@@ -55,25 +55,6 @@ class ManagerModel(BaseModel):
         _result.Status = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.Account = Param.Account.strip() if Param.Account.strip() != '' else Data.Account
-                # Data.PWD = self._common.UserPWD(Param.PWD.strip()) if Param.PWD.strip() != '' and Param.PWD.strip() != Data.PWD else Data.PWD
-                Data.Name = Param.Name.strip() if Param.Name.strip() != '' else Data.Name
-                Data.State = Param.State if Param.State > 0 else Data.State
-                Data.Permission = Param.Permission if Param.Permission > 0 else Data.Permission
-                Data.UpdateTime = self._common.Time()
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
-
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
         Data.PWD = ''
@@ -117,6 +98,7 @@ class ManagerModel(BaseModel):
         _result = Result()
         try:
             Data.PWD = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.PWD else Data.PWD
+            Data.UpdateTime = self._common.Time()
             _dbsession.commit()
         except Exception as e:
             _result.Memo = str(e)
