@@ -95,7 +95,7 @@ class PaperModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.PaperCode.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.PaperCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
         if SubjectID > 0:
             sql = sql.filter(self.EType.SubjectID == SubjectID)
         if PaperState > 0:

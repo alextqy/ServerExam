@@ -95,7 +95,7 @@ class QuestionModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.QuestionCode.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.QuestionCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
         if QuestionType > 0:
             sql = sql.filter(self.EType.QuestionType == QuestionType)
         if QuestionState > 0:
