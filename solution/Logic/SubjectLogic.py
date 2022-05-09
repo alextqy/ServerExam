@@ -113,7 +113,7 @@ class SubjectLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = 'wrong id'
         else:
-            SubjectData: ManagerEntity = self._subjectModel.Find(_dbsession, ID)
+            SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
                 result.Memo = 'data error'
             else:

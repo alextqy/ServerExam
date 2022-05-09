@@ -18,19 +18,23 @@ class KnowledgeLogic(BaseLogic):
             result.Memo = 'wrong knowledge name'
         elif SubjectID <= 0:
             result.Memo = 'wrong subject id'
-        elif self._knowledgeModel.FindKnowledgeName(_dbsession, KnowledgeName) is not None:
+        elif self._knowledgeModel.FindKnowledgeCode(_dbsession, KnowledgeName) is not None:
             result.Memo = 'data already exists'
-        elif self._subjectModel.Find(_dbsession, SubjectID) is None:
-            result.Memo = 'data error'
         else:
-            Desc = 'new knowledge:' + KnowledgeName
-            if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
-                return result
-            KnowledgeData = KnowledgeEntity()
-            KnowledgeData.KnowledgeName = KnowledgeName
-            KnowledgeData.SubjectID = SubjectID
-            result: Result = self._knowledgeModel.Insert(_dbsession, KnowledgeData)
+            SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, SubjectID)
+            if SubjectData is None:
+                result.Memo = 'subject data error'
+            elif SubjectData.SubjectState != 1:
+                result.Memo = 'subject data error'
+            else:
+                Desc = 'new knowledge:' + KnowledgeName
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+                KnowledgeData = KnowledgeEntity()
+                KnowledgeData.KnowledgeName = KnowledgeName
+                KnowledgeData.SubjectID = SubjectID
+                result: Result = self._knowledgeModel.Insert(_dbsession, KnowledgeData)
         return result
 
     def KnowledgeDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -120,7 +124,7 @@ class KnowledgeLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = 'wrong id'
         else:
-            KnowledgeData: ManagerEntity = self._knowledgeModel.Find(_dbsession, ID)
+            KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
                 result.Memo = 'data error'
             else:

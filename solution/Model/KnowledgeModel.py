@@ -92,5 +92,5 @@ class KnowledgeModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def FindKnowledgeName(self, _dbsession: DBsession, KnowledgeName: str) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.KnowledgeName == KnowledgeName.strip()).first()
+    def FindKnowledgeCode(self, _dbsession: DBsession, KnowledgeName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.KnowledgeCode == self._common.StrMD5(KnowledgeName.strip())).first()

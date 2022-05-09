@@ -101,7 +101,6 @@ class BaseLogic:
         LogData.Description = Description
         LogData.IP = IP
         result: Result = self._sysLogModel.Insert(_dbsession, LogData)
-        print(result.Memo)
         if result.Status == True:
             return True
         else:

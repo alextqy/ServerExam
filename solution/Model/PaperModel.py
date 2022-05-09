@@ -25,9 +25,12 @@ class PaperModel(BaseModel):
         if Data.ExamDuration <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.PaperState <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.PaperState <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
+
+        Data.ExamDuration *= 60
+        Data.PaperState = 1
         Data.PaperCode = self._common.StrMD5(Data.PaperName.strip())
         try:
             _dbsession.add(Data)
@@ -102,3 +105,6 @@ class PaperModel(BaseModel):
             sql = sql.filter(self.EType.PaperState == PaperState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindPaperCode(self, _dbsession: DBsession, PaperName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.PaperCode == self._common.StrMD5(PaperName)).first()

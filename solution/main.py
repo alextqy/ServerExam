@@ -41,12 +41,14 @@ async def Test(request: Request, Param: str):
 from Controller.ManagerController import ManagerRouter, ManagerPrefix
 from Controller.SubjectController import SubjectRouter, SubjectPrefix
 from Controller.KnowledgeController import KnowledgeRouter, KnowledgePrefix
-from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
+from Controller.PaperController import PaperRouter, PaperPrefix
+# from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 
 app.include_router(ManagerRouter, prefix=ManagerPrefix)
 app.include_router(SubjectRouter, prefix=SubjectPrefix)
 app.include_router(KnowledgeRouter, prefix=KnowledgePrefix)
-app.include_router(ExamineeRouter, prefix=ExamineePrefix)
+app.include_router(PaperRouter, prefix=PaperPrefix)
+# app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 # app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
