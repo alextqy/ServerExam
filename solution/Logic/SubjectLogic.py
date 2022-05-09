@@ -9,9 +9,10 @@ class SubjectLogic(BaseLogic):
     def NewSubject(self, Token: str, SubjectName: str) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
@@ -26,9 +27,10 @@ class SubjectLogic(BaseLogic):
     def SubjectDisabled(self, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
             result.Memo = 'wrong id'
@@ -53,9 +55,10 @@ class SubjectLogic(BaseLogic):
     def UpdateSubjectInfo(self, Token: str, ID: int, SubjectName: str) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
             result.Memo = 'wrong id'
@@ -78,9 +81,10 @@ class SubjectLogic(BaseLogic):
     def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         else:
             result: ResultList = self._subjectModel.List(_dbsession, Page, PageSize, Stext, SubjectState)
@@ -89,9 +93,10 @@ class SubjectLogic(BaseLogic):
     def SubjectInfo(self, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
             result.Memo = 'wrong id'

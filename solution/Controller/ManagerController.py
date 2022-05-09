@@ -62,6 +62,6 @@ async def ManagerList(request: Request, Token: str = Form(''), Page: int = Form(
 
 # 管理员详情
 @ManagerRouter.post('/Manager/Info')
-async def ManagerInfo(request: Request, Token: str = Form(''), ID: int = Form(0)):
+async def ManagerInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
     return managerLogic.ManagerInfo(Token, ID)

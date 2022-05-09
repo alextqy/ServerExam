@@ -86,10 +86,31 @@ class BaseLogic:
     def __init__(self):
         super().__init__()
 
-    def PermissionValidation(self, _dbsession: DBsession, Token: str) -> bool:
+    def PermissionValidation(self, _dbsession: DBsession, Token: str) -> int:
         ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
         if ManagerData is None:
-            return False
+            return 0
         elif ManagerData.Permission < 9:
+            return 0
+        return ManagerData.ID
+
+    def LogSysAction(self, _dbsession: DBsession, Type: int, ManagerID: int, Description: str, IP: str) -> bool:
+        if Type <= 0:
             return False
-        return True
+        elif ManagerID <= 0:
+            return False
+        elif Description == '':
+            return False
+        elif IP == '':
+            return False
+        else:
+            LogData = SysLogEntity()
+            LogData.Type = Type
+            LogData.ManagerID = ManagerID
+            LogData.Description = Description
+            LogData.IP = IP
+            result: Result = self._sysLogModel.Insert(_dbsession, LogData)
+            if result.Status == True:
+                return True
+            else:
+                return False

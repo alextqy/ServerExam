@@ -7,8 +7,10 @@ from Service.UDPTool import *
 
 from Logic.ManagerLogic import ManagerLogic
 from Logic.SubjectLogic import SubjectLogic
+from Logic.KnowledgeLogic import KnowledgeLogic
 from Logic.ExamineeLogic import ExamineeLogic
 
 managerLogic = ManagerLogic()
 subjectLogic = SubjectLogic()
+knowledgeLogic = KnowledgeLogic()
 examineeLogic = ExamineeLogic()

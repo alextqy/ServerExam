@@ -55,9 +55,10 @@ class ManagerLogic(BaseLogic):
     def NewManager(self, Token: str, Account: str, Password: str, Name: str) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif Account == '':
             result.Memo = 'wrong account'
@@ -86,16 +87,17 @@ class ManagerLogic(BaseLogic):
     def ManagerDisabled(self, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
             result.Memo = 'wrong id'
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = "data error"
+                result.Memo = 'data error'
             else:
                 try:
                     if ManagerData.State == 2:
@@ -113,9 +115,10 @@ class ManagerLogic(BaseLogic):
     def ManagerChangePassword(self, Token: str, NewPassword: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif NewPassword == '':
             result.Memo = 'wrong new password'
@@ -136,9 +139,10 @@ class ManagerLogic(BaseLogic):
     def UpdateManagerInfo(self, Token: str, Name: str, Permission: int, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif Name == '':
             result.Memo = 'wrong name'
@@ -167,9 +171,10 @@ class ManagerLogic(BaseLogic):
     def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         else:
             result: ResultList = self._managerModel.List(_dbsession, Page, PageSize, Stext, State, Permission)
@@ -178,9 +183,10 @@ class ManagerLogic(BaseLogic):
     def ManagerInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = 'wrong token'
-        elif self.PermissionValidation(_dbsession, Token) == False:
+        elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
             result.Memo = 'wrong id'

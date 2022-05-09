@@ -16,9 +16,10 @@ class KnowledgeModel(BaseModel):
         if Data.SubjectID <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.SubjectState <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.KnowledgeState <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
+        Data.KnowledgeState = 1
         Data.KnowledgeCode = self._common.StrMD5(Data.KnowledgeName.strip())
         try:
             _dbsession.add(Data)
@@ -55,7 +56,7 @@ class KnowledgeModel(BaseModel):
                 Data.KnowledgeName = Param.KnowledgeName.strip() if Param.KnowledgeName.strip() != '' else Data.KnowledgeName
                 Data.KnowledgeCode = self._common.StrMD5(Param.KnowledgeName.strip()) if Param.KnowledgeName.strip() != '' and Param.KnowledgeName.strip() != Data.KnowledgeName else Data.KnowledgeCode
                 Data.SubjectID = Param.SubjectID if Param.SubjectID > 0 else Data.SubjectID
-                Data.SubjectState = Param.SubjectState if Param.SubjectState > 0 else Data.SubjectState
+                Data.KnowledgeState = Param.KnowledgeState if Param.KnowledgeState > 0 else Data.KnowledgeState
                 Data.UpdateTime = self._common.Time()
                 _dbsession.commit()
             except Exception as e:
@@ -68,7 +69,7 @@ class KnowledgeModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, SubjectID: int, SubjectState: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, SubjectID: int, KnowledgeState: int) -> ResultList:
         _result = ResultList()
         _result.Status = True
         _result.Page = Page
@@ -86,7 +87,10 @@ class KnowledgeModel(BaseModel):
             sql = sql.filter(or_(self.EType.KnowledgeCode.ilike('%' + Stext.strip() + '%')))
         if SubjectID > 0:
             sql = sql.filter(self.EType.SubjectID == SubjectID)
-        if SubjectState > 0:
-            sql = sql.filter(self.EType.SubjectState == SubjectState)
+        if KnowledgeState > 0:
+            sql = sql.filter(self.EType.KnowledgeState == KnowledgeState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindKnowledgeName(self, _dbsession: DBsession, KnowledgeName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.KnowledgeName == KnowledgeName.strip()).first()
