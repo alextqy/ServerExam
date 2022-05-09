@@ -6,7 +6,7 @@ class ManagerLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ManagerSignIn(self, Account: str, Password: str) -> Result:
+    def ManagerSignIn(self, ClientHost: str, Account: str, Password: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         if Account == '':
@@ -21,6 +21,10 @@ class ManagerLogic(BaseLogic):
                 if ManagerData.PWD != self._common.UserPWD(Password):
                     result.Memo = 'wrong password'
                 else:
+                    Desc = 'manager login account:' + Account
+                    if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
+                        result.Memo = 'logging failed'
+                        return result
                     try:
                         ManagerData.Token = self._common.GenerateToken()
                         _dbsession.commit()
@@ -32,7 +36,7 @@ class ManagerLogic(BaseLogic):
                     result.Data = ManagerData.Token
         return result
 
-    def ManagerSignOut(self, Token: str) -> Result:
+    def ManagerSignOut(self, ClientHost: str, Token: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         if Token == '':
@@ -42,6 +46,10 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data does not exist'
             else:
+                Desc = 'manager logout account:' + ManagerData.Account
+                if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
                 try:
                     ManagerData.Token = ''
                     _dbsession.commit()
@@ -52,7 +60,7 @@ class ManagerLogic(BaseLogic):
                 result.Status = True
         return result
 
-    def NewManager(self, Token: str, Account: str, Password: str, Name: str) -> Result:
+    def NewManager(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -75,6 +83,10 @@ class ManagerLogic(BaseLogic):
         elif self._managerModel.FindAccount(_dbsession, Account) is not None:
             result.Memo = 'data already exists'
         else:
+            Desc = 'new manager account:' + Account
+            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                result.Memo = 'logging failed'
+                return result
             ManagerData = ManagerEntity()
             ManagerData.Account = Account
             ManagerData.PWD = Password
@@ -84,7 +96,7 @@ class ManagerLogic(BaseLogic):
             result: Result = self._managerModel.Insert(_dbsession, ManagerData)
         return result
 
-    def ManagerDisabled(self, Token: str, ID: int) -> Result:
+    def ManagerDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -99,6 +111,10 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
+                Desc = 'disable/enable manager id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
                 try:
                     if ManagerData.State == 2:
                         ManagerData.State = 1
@@ -112,7 +128,7 @@ class ManagerLogic(BaseLogic):
                 result.Status = True
         return result
 
-    def ManagerChangePassword(self, Token: str, NewPassword: str, ID: int) -> Result:
+    def ManagerChangePassword(self, ClientHost: str, Token: str, NewPassword: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -132,11 +148,14 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
-                if self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword) == True:
-                    result.Status = True
+                Desc = 'manager change password account:' + ManagerData.Account
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+                result: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
         return result
 
-    def UpdateManagerInfo(self, Token: str, Name: str, Permission: int, ID: int) -> Result:
+    def UpdateManagerInfo(self, ClientHost: str, Token: str, Name: str, Permission: int, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -156,10 +175,14 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
+                Desc = 'update manager id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
                 try:
                     Data: ManagerEntity = ManagerData
-                    Data.SetName(Name)
-                    Data.SetPermission(Permission)
+                    Data.Name = Name
+                    Data.Permission = Permission
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)

@@ -113,10 +113,13 @@ class ManagerModel(BaseModel):
     def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
 
-    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> bool:
+    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> Result:
+        _result = Result()
         try:
             Data.PWD = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.PWD else Data.PWD
             _dbsession.commit()
         except Exception as e:
-            return False
-        return True
+            _result.Memo = str(e)
+            return _result
+        _result.Status = True
+        return _result

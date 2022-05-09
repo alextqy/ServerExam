@@ -6,7 +6,7 @@ class SubjectLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewSubject(self, Token: str, SubjectName: str) -> Result:
+    def NewSubject(self, ClientHost: str, Token: str, SubjectName: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -19,12 +19,16 @@ class SubjectLogic(BaseLogic):
         elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
             result.Memo = 'data already exists'
         else:
+            Desc = 'new subject:' + SubjectName
+            if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                result.Memo = 'logging failed'
+                return result
             SubjectData = SubjectEntity()
             SubjectData.SubjectName = SubjectName
             result: Result = self._subjectModel.Insert(_dbsession, SubjectData)
         return result
 
-    def SubjectDisabled(self, Token: str, ID: int) -> Result:
+    def SubjectDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -39,6 +43,10 @@ class SubjectLogic(BaseLogic):
             if SubjectData is None:
                 result.Memo = 'data error'
             else:
+                Desc = 'disable/enable subject id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
                 try:
                     if SubjectData.SubjectState == 2:
                         SubjectData.SubjectState = 1
@@ -52,7 +60,7 @@ class SubjectLogic(BaseLogic):
                 result.Status = True
         return result
 
-    def UpdateSubjectInfo(self, Token: str, ID: int, SubjectName: str) -> Result:
+    def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -74,6 +82,10 @@ class SubjectLogic(BaseLogic):
             elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
                 result.Memo = 'data already exists'
             else:
+                Desc = 'update subject id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
                 SubjectData.SubjectName = SubjectName
                 result: Result = self._subjectModel.Update(_dbsession, ID, SubjectData)
         return result

@@ -95,22 +95,14 @@ class BaseLogic:
         return ManagerData.ID
 
     def LogSysAction(self, _dbsession: DBsession, Type: int, ManagerID: int, Description: str, IP: str) -> bool:
-        if Type <= 0:
-            return False
-        elif ManagerID <= 0:
-            return False
-        elif Description == '':
-            return False
-        elif IP == '':
-            return False
+        LogData = SysLogEntity()
+        LogData.Type = Type
+        LogData.ManagerID = ManagerID
+        LogData.Description = Description
+        LogData.IP = IP
+        result: Result = self._sysLogModel.Insert(_dbsession, LogData)
+        print(result.Memo)
+        if result.Status == True:
+            return True
         else:
-            LogData = SysLogEntity()
-            LogData.Type = Type
-            LogData.ManagerID = ManagerID
-            LogData.Description = Description
-            LogData.IP = IP
-            result: Result = self._sysLogModel.Insert(_dbsession, LogData)
-            if result.Status == True:
-                return True
-            else:
-                return False
+            return False

@@ -9,14 +9,14 @@ SubjectPrefix = ''
 async def NewSubject(request: Request, Token: str = Form(''), SubjectName: str = Form('')) -> Result:
     Token = Token.strip()
     SubjectName = SubjectName.strip()
-    return subjectLogic.NewSubject(Token, SubjectName)
+    return subjectLogic.NewSubject(request.client.host, Token, SubjectName)
 
 
 # 禁用/启用 科目
 @SubjectRouter.post('/Subject/Disabled')
 async def SubjectDisabled(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
-    return subjectLogic.SubjectDisabled(Token, ID)
+    return subjectLogic.SubjectDisabled(request.client.host, Token, ID)
 
 
 # 科目详情
@@ -24,7 +24,7 @@ async def SubjectDisabled(request: Request, Token: str = Form(''), ID: int = For
 async def UpdateSubjectInfo(request: Request, Token: str = Form(''), ID: int = Form(0), SubjectName: str = Form('')) -> Result:
     Token = Token.strip()
     SubjectName = SubjectName.strip()
-    return subjectLogic.UpdateSubjectInfo(Token, ID, SubjectName)
+    return subjectLogic.UpdateSubjectInfo(request.client.host, Token, ID, SubjectName)
 
 
 # 科目列表

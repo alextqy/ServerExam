@@ -9,14 +9,14 @@ ManagerPrefix = ''
 async def ManagerSignIn(request: Request, Account: str = Form(''), Password: str = Form('')) -> Result:
     Account = Account.strip()
     Password = Password.strip()
-    return managerLogic.ManagerSignIn(Account, Password)
+    return managerLogic.ManagerSignIn(request.client.host, Account, Password)
 
 
 # 管理员退出
 @ManagerRouter.post('/Manager/Sign/Out')
 async def ManagerSignOut(request: Request, Token: str = Form('')) -> Result:
     Token = Token.strip()
-    return managerLogic.ManagerSignOut(Token)
+    return managerLogic.ManagerSignOut(request.client.host, Token)
 
 
 # 新建管理员
@@ -26,14 +26,14 @@ async def NewManager(request: Request, Token: str = Form(''), Account: str = For
     Account = Account.strip()
     Password = Password.strip()
     Name = Name.strip()
-    return managerLogic.NewManager(Token, Account, Password, Name)
+    return managerLogic.NewManager(request.client.host, Token, Account, Password, Name)
 
 
 # 禁用/启用 管理员
 @ManagerRouter.post('/Manager/Disabled')
 async def ManagerDisabled(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
-    return managerLogic.ManagerDisabled(Token, ID)
+    return managerLogic.ManagerDisabled(request.client.host, Token, ID)
 
 
 # 管理员修改密码
@@ -41,7 +41,7 @@ async def ManagerDisabled(request: Request, Token: str = Form(''), ID: int = For
 async def ManagerChangePassword(request: Request, Token: str = Form(''), NewPassword: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
     NewPassword = NewPassword.strip()
-    return managerLogic.ManagerChangePassword(Token, NewPassword, ID)
+    return managerLogic.ManagerChangePassword(request.client.host, Token, NewPassword, ID)
 
 
 # 更新管理员信息
@@ -49,7 +49,7 @@ async def ManagerChangePassword(request: Request, Token: str = Form(''), NewPass
 async def UpdateManagerInfo(request: Request, Token: str = Form(''), Name: str = Form(''), Permission: int = Form(0), ID: int = Form(0)) -> Result:
     Token = Token.strip()
     Name = Name.strip()
-    return managerLogic.UpdateManagerInfo(Token, Name, Permission, ID)
+    return managerLogic.UpdateManagerInfo(request.client.host, Token, Name, Permission, ID)
 
 
 # 管理员列表
