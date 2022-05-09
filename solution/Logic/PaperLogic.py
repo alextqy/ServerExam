@@ -45,3 +45,34 @@ class PaperLogic(BaseLogic):
                 PaperData.ExamDuration = ExamDuration
                 result: Result = self._paperModel.Insert(_dbsession, PaperData)
         return result
+
+    def PaperDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        else:
+            PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
+            if PaperData is None:
+                result.Memo = 'data error'
+            else:
+                Desc = 'disable/enable paper id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+                try:
+                    if PaperData.PaperState == 2:
+                        PaperData.PaperState = 1
+                    else:
+                        PaperData.PaperState = 2
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+                result.Status = True
+                result: Result = self._paperModel.Update(_dbsession, ID, PaperData)
+        return result
