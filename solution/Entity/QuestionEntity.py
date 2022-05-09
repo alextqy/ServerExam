@@ -17,39 +17,3 @@ class QuestionEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetQuestionTitle(self, Value: str):
-        if isinstance(Value, str):
-            self.QuestionTitle = Value.strip()
-
-    def SetQuestionCode(self, Value: str):
-        if isinstance(Value, str):
-            self.QuestionCode = Value.strip()
-
-    def SetQuestionType(self, Value: int):
-        if isinstance(Value, int):
-            self.QuestionType = Value
-
-    def SetQuestionState(self, Value: int):
-        if isinstance(Value, int):
-            self.QuestionState = Value
-
-    def SetMarking(self, Value: int):
-        if isinstance(Value, int):
-            self.Marking = Value
-
-    def SetKnowledgeID(self, Value: int):
-        if isinstance(Value, int):
-            self.KnowledgeID = Value
-
-    def SetDescription(self, Value: str):
-        if isinstance(Value, str):
-            self.Description = Value.strip()
-
-    def SetAttachment(self, Value: str):
-        if isinstance(Value, str):
-            self.Attachment = Value.strip()
-
-    def SetUpdateTime(self, Value: int):
-        if isinstance(Value, int):
-            self.UpdateTime = Value

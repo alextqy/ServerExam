@@ -12,19 +12,3 @@ class SysLogEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetType(self, Value: int):
-        if isinstance(Value, int):
-            self.Type = Value
-
-    def SetManagerID(self, Value: int):
-        if isinstance(Value, int):
-            self.ManagerID = Value
-
-    def SetDescription(self, Value: str):
-        if isinstance(Value, str):
-            self.Description = Value.strip()
-
-    def SetIP(self, Value: str):
-        if isinstance(Value, str):
-            self.IP = Value.strip()

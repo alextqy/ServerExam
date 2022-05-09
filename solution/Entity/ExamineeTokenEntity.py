@@ -10,11 +10,3 @@ class ExamineeTokenEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetToken(self, Value: str):
-        if isinstance(Value, str):
-            self.Token = Value.strip()
-
-    def SetExamID(self, Value: int):
-        if isinstance(Value, int):
-            self.ExamID = Value

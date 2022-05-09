@@ -15,31 +15,3 @@ class PaperRuleEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetHeadlineID(self, Value: int):
-        if isinstance(Value, int):
-            self.HeadlineID = Value
-
-    def SetQuestionType(self, Value: int):
-        if isinstance(Value, int):
-            self.QuestionType = Value
-
-    def SetQuestionNum(self, Value: int):
-        if isinstance(Value, int):
-            self.QuestionNum = Value
-
-    def SetSingleScore(self, Value: float):
-        if isinstance(Value, float):
-            self.SingleScore = Value
-
-    def SetPaperID(self, Value: int):
-        if isinstance(Value, int):
-            self.PaperID = Value
-
-    def SetPaperRuleState(self, Value: int):
-        if isinstance(Value, int):
-            self.PaperRuleState = Value
-
-    def SetUpdateTime(self, Value: int):
-        if isinstance(Value, int):
-            self.UpdateTime = Value

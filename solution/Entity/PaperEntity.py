@@ -16,35 +16,3 @@ class PaperEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetPaperName(self, Value: str):
-        if isinstance(Value, str):
-            self.PaperName = Value.strip()
-
-    def SetPaperCode(self, Value: str):
-        if isinstance(Value, str):
-            self.PaperCode = Value.strip()
-
-    def SetSubjectID(self, Value: int):
-        if isinstance(Value, int):
-            self.SubjectID = Value
-
-    def SetTotalScore(self, Value: float):
-        if isinstance(Value, float):
-            self.TotalScore = Value
-
-    def SetPassLine(self, Value: float):
-        if isinstance(Value, float):
-            self.PassLine = Value
-
-    def SetExamDuration(self, Value: int):
-        if isinstance(Value, int):
-            self.ExamDuration = Value
-
-    def SetPaperState(self, Value: int):
-        if isinstance(Value, int):
-            self.PaperState = Value
-
-    def SetUpdateTime(self, Value: int):
-        if isinstance(Value, int):
-            self.UpdateTime = Value

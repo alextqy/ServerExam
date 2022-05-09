@@ -16,35 +16,3 @@ class ScantronSolutionHistoryEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetScantronID(self, Value: int):
-        if isinstance(Value, int):
-            self.ScantronID = Value
-
-    def SetOption(self, Value: str):
-        if isinstance(Value, str):
-            self.Option = Value.strip()
-
-    def SetOptionAttachment(self, Value: str):
-        if isinstance(Value, str):
-            self.OptionAttachment = Value.strip()
-
-    def SetCorrectAnswer(self, Value: str):
-        if isinstance(Value, str):
-            self.CorrectAnswer = Value.strip()
-
-    def SetCandidateAnswer(self, Value: str):
-        if isinstance(Value, str):
-            self.CandidateAnswer = Value.strip()
-
-    def SetScoreRatio(self, Value: float):
-        if isinstance(Value, float):
-            self.ScoreRatio = Value
-
-    def SetPosition(self, Value: int):
-        if isinstance(Value, int):
-            self.Position = Value
-
-    def SetUpdateTime(self, Value: int):
-        if isinstance(Value, int):
-            self.UpdateTime = Value

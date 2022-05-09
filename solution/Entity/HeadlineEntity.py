@@ -11,15 +11,3 @@ class HeadlineEntity(BaseEntity, BaseORM):
 
     def __init__(self):
         super().__init__()
-
-    def SetContent(self, Value: str):
-        if isinstance(Value, str):
-            self.Content = Value.strip()
-
-    def SetContentCode(self, Value: str):
-        if isinstance(Value, str):
-            self.ContentCode = Value.strip()
-
-    def SetUpdateTime(self, Value: int):
-        if isinstance(Value, int):
-            self.UpdateTime = Value
