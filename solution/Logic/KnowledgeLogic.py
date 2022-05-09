@@ -113,7 +113,7 @@ class KnowledgeLogic(BaseLogic):
             result: ResultList = self._knowledgeModel.List(_dbsession, Page, PageSize, Stext, SubjectID, KnowledgeState)
         return result
 
-    def KnowledgeInfo(self, Token: str, ID: int):
+    def KnowledgeInfo(self, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

@@ -17,3 +17,26 @@ async def NewPaper(request: Request, Token: str = Form(''), PaperName: str = For
 async def PaperDisabled(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
     Token = Token.strip()
     return paperLogic.PaperDisabled(request.client.host, Token, ID)
+
+
+# 修改试卷信息
+@PaperRouter.post('/Update/Paper/Info')
+async def UpdatePaperInfo(request: Request, Token: str = Form(''), ID: int = Form(0), PaperName: str = Form(''), TotalScore: float = Form(0), PassLine: float = Form(0), ExamDuration: int = Form(0)) -> Result:
+    Token = Token.strip()
+    PaperName = PaperName.strip()
+    return paperLogic.UpdatePaperInfo(request.client.host, Token, ID, PaperName, TotalScore, PassLine, ExamDuration)
+
+
+# 试卷列表
+@PaperRouter.post('/Paper/List')
+async def PaperList(request: Request, Token: str = Form(''), Page: int = Form(1), PageSize: int = Form(10), Stext: str = Form(''), SubjectID: int = Form(0), PaperState: int = Form(0)) -> Result:
+    Token = Token.strip()
+    Stext = Stext.strip()
+    return paperLogic.PaperList(Token, Page, PageSize, Stext, SubjectID, PaperState)
+
+
+# 试卷详情
+@PaperRouter.post('/Paper/Info')
+async def PaperInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
+    Token = Token.strip()
+    return paperLogic.PaperInfo(Token, ID)
