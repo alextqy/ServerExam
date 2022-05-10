@@ -102,3 +102,44 @@ class QuestionLogic(BaseLogic):
                 result.Status = True
                 result.Data = UploadPath
         return result
+
+    def QuestionDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        else:
+            QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
+            if QuestionData is None:
+                result.Memo = 'data error'
+            else:
+                _dbsession.begin_nested()
+
+                try:
+                    if QuestionData.QuestionState == 2:
+                        QuestionData.QuestionState = 1
+                    else:
+                        QuestionData.QuestionState = 2
+                    QuestionData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                if QuestionData.QuestionState == 1:
+                    Desc = 'enable question id:' + str(ID)
+                if QuestionData.QuestionState == 2:
+                    Desc = 'disable question id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.Status = True
+        return result
