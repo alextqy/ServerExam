@@ -19,13 +19,22 @@ class HeadlineLogic(BaseLogic):
         elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
             result.Memo = 'data already exists'
         else:
+            _dbsession.begin_nested()
+
+            HeadlineData = HeadlineEntity()
+            HeadlineData.Content = Content
+            AddInfo: Result = self._headlineModel.Insert(_dbsession, HeadlineData)
+            if AddInfo.Status == False:
+                result.Memo = AddInfo.Memo
+                return result
+
             Desc = 'new headline:' + Content
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
-            HeadlineData = HeadlineEntity()
-            HeadlineData.Content = Content
-            result: Result = self._headlineModel.Insert(_dbsession, HeadlineData)
+
+            _dbsession.commit()
+            result.Status = True
         return result
 
     def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str) -> Result:
@@ -50,10 +59,8 @@ class HeadlineLogic(BaseLogic):
             elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
                 result.Memo = 'data already exists'
             else:
-                Desc = 'update headline id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     HeadlineData.Content = Content
                     HeadlineData.UpdateTime = self._common.Time()
@@ -62,6 +69,13 @@ class HeadlineLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                Desc = 'update headline id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 

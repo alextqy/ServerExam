@@ -101,6 +101,7 @@ class ManagerModel(BaseModel):
             Data.UpdateTime = self._common.Time()
             _dbsession.commit()
         except Exception as e:
+            _dbsession.rollback()
             _result.Memo = str(e)
             return _result
         _result.Status = True

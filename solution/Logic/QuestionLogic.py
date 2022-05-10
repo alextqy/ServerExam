@@ -6,7 +6,7 @@ class QuestionLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str):
+    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -27,14 +27,78 @@ class QuestionLogic(BaseLogic):
             elif KnowledgeData.KnowledgeState != 1:
                 result.Memo = 'knowledge data error'
             else:
-                Desc = 'new question:' + QuestionTitle
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 QuestionData: QuestionEntity = QuestionEntity()
                 QuestionData.QuestionTitle = QuestionTitle
                 QuestionData.QuestionType = QuestionType
                 QuestionData.KnowledgeID = KnowledgeID
                 QuestionData.Description = Description
-                result: Result = self._questionModel.Insert(_dbsession, QuestionData)
+                AddInfo: Result = self._questionModel.Insert(_dbsession, QuestionData)
+                if AddInfo.Status == False:
+                    result.Memo = AddInfo.Memo
+                    return result
+
+                Desc = 'new question:' + QuestionTitle
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.Status = True
+        return result
+
+    def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        elif FileType == '':
+            result.Memo = 'wrong file type'
+        elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
+            result.Memo = 'too large file'
+        else:
+            QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
+            if QuestionData is None:
+                result.Memo = 'data error'
+            elif QuestionData.QuestionState != 1:
+                result.Memo = 'data error'
+            else:
+                if QuestionData.Attachment != 'none':
+                    self._file.DeleteFile(QuestionData.Attachment)
+
+                _dbsession.begin_nested()
+
+                try:
+                    UploadPath = self._rootPath + 'Resource/Question/' + str(self._common.TimeMS()) + "." + FileType
+                    with open(UploadPath, "wb") as f:
+                        f.write(AttachmentContents)
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                try:
+                    QuestionData.Attachment = UploadPath
+                    QuestionData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                Desc = 'update question attachment id:' + str(ID) + ' file path:' + UploadPath
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+
+                result.Status = True
+                result.Data = UploadPath
         return result

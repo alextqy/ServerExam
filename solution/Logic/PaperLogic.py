@@ -35,17 +35,26 @@ class PaperLogic(BaseLogic):
             elif SubjectData.SubjectState != 1:
                 result.Memo = 'subject data error'
             else:
-                Desc = 'new paper:' + PaperName
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 PaperData = PaperEntity()
                 PaperData.PaperName = PaperName
                 PaperData.SubjectID = SubjectID
                 PaperData.TotalScore = TotalScore
                 PaperData.PassLine = PassLine
                 PaperData.ExamDuration = ExamDuration
-                result: Result = self._paperModel.Insert(_dbsession, PaperData)
+                AddInfo: Result = self._paperModel.Insert(_dbsession, PaperData)
+                if AddInfo.Status == False:
+                    result.Memo - AddInfo.Memo
+                    return result
+
+                Desc = 'new paper:' + PaperName
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.Status = True
         return result
 
     def PaperDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -61,10 +70,8 @@ class PaperLogic(BaseLogic):
             if PaperData is None:
                 result.Memo = 'data error'
             else:
-                Desc = 'disable/enable paper id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     if PaperData.PaperState == 2:
                         PaperData.PaperState = 1
@@ -76,6 +83,16 @@ class PaperLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                if PaperData.PaperState == 1:
+                    Desc = 'enable paper id:' + str(ID)
+                if PaperData.PaperState == 2:
+                    Desc = 'disable paper id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 
@@ -102,10 +119,8 @@ class PaperLogic(BaseLogic):
             if PaperData is None:
                 result.Memo = 'data error'
             else:
-                Desc = 'update paper id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     PaperData.PaperName = PaperName
                     PaperData.TotalScore = TotalScore
@@ -117,6 +132,13 @@ class PaperLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                Desc = 'update paper id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 

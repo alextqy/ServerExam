@@ -19,13 +19,22 @@ class SubjectLogic(BaseLogic):
         elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
             result.Memo = 'data already exists'
         else:
+            _dbsession.begin_nested()
+
+            SubjectData = SubjectEntity()
+            SubjectData.SubjectName = SubjectName
+            AddInfo: Result = self._subjectModel.Insert(_dbsession, SubjectData)
+            if AddInfo.Status == False:
+                result.Memo = AddInfo.Memo
+                return result
+
             Desc = 'new subject:' + SubjectName
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
-            SubjectData = SubjectEntity()
-            SubjectData.SubjectName = SubjectName
-            result: Result = self._subjectModel.Insert(_dbsession, SubjectData)
+
+            _dbsession.commit()
+            result.Status = True
         return result
 
     def SubjectDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -43,10 +52,8 @@ class SubjectLogic(BaseLogic):
             if SubjectData is None:
                 result.Memo = 'data error'
             else:
-                Desc = 'disable/enable subject id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     if SubjectData.SubjectState == 2:
                         SubjectData.SubjectState = 1
@@ -58,6 +65,16 @@ class SubjectLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                if SubjectData.SubjectState == 1:
+                    Desc = 'enable subject id:' + str(ID)
+                if SubjectData.SubjectState == 2:
+                    Desc = 'disable subject id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 
@@ -83,10 +100,8 @@ class SubjectLogic(BaseLogic):
             elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
                 result.Memo = 'data already exists'
             else:
-                Desc = 'update subject id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     SubjectData.SubjectName = SubjectName
                     SubjectData.UpdateTime = self._common.Time()
@@ -95,6 +110,13 @@ class SubjectLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                Desc = 'update subject id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 

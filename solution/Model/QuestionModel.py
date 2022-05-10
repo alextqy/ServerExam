@@ -28,7 +28,6 @@ class QuestionModel(BaseModel):
             return _result
         Data.QuestionState = 1
         Data.Marking = 1
-        Data.Attachment = ''
         Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         try:
             _dbsession.add(Data)

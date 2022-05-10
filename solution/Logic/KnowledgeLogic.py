@@ -27,14 +27,23 @@ class KnowledgeLogic(BaseLogic):
             elif SubjectData.SubjectState != 1:
                 result.Memo = 'subject data error'
             else:
+                _dbsession.begin_nested()
+
+                KnowledgeData = KnowledgeEntity()
+                KnowledgeData.KnowledgeName = KnowledgeName
+                KnowledgeData.SubjectID = SubjectID
+                AddInfo: Result = self._knowledgeModel.Insert(_dbsession, KnowledgeData)
+                if AddInfo.Status == False:
+                    result.Memo = AddInfo.Memo
+                    return result
+
                 Desc = 'new knowledge:' + KnowledgeName
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
-                KnowledgeData = KnowledgeEntity()
-                KnowledgeData.KnowledgeName = KnowledgeName
-                KnowledgeData.SubjectID = SubjectID
-                result: Result = self._knowledgeModel.Insert(_dbsession, KnowledgeData)
+
+                _dbsession.commit()
+                result.Status = True
         return result
 
     def KnowledgeDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -50,20 +59,29 @@ class KnowledgeLogic(BaseLogic):
             if KnowledgeData is None:
                 result.Memo = 'data error'
             else:
-                Desc = 'disable/enable knowledge id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     if KnowledgeData.KnowledgeState == 2:
                         KnowledgeData.KnowledgeState = 1
                     else:
                         KnowledgeData.KnowledgeState = 2
+                    KnowledgeData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                if KnowledgeData.KnowledgeState == 1:
+                    Desc = 'enable knowledge id:' + str(ID)
+                if KnowledgeData.KnowledgeState == 2:
+                    Desc = 'disable knowledge id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 
@@ -87,10 +105,8 @@ class KnowledgeLogic(BaseLogic):
                 result.Status = True
                 return result
             else:
-                Desc = 'update knowledge id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     KnowledgeData.KnowledgeName = KnowledgeName
                     KnowledgeData.UpdateTime = self._common.Time()
@@ -99,6 +115,13 @@ class KnowledgeLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                Desc = 'update knowledge id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 

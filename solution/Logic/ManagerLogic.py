@@ -21,10 +21,8 @@ class ManagerLogic(BaseLogic):
                 if ManagerData.PWD != self._common.UserPWD(Password):
                     result.Memo = 'wrong password'
                 else:
-                    Desc = 'manager login account:' + Account
-                    if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
-                        result.Memo = 'logging failed'
-                        return result
+                    _dbsession.begin_nested()
+
                     try:
                         ManagerData.Token = self._common.GenerateToken()
                         _dbsession.commit()
@@ -32,6 +30,13 @@ class ManagerLogic(BaseLogic):
                         result.Memo = str(e)
                         _dbsession.rollback()
                         return result
+
+                    Desc = 'manager login account:' + Account
+                    if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
+                        result.Memo = 'logging failed'
+                        return result
+
+                    _dbsession.commit()
                     result.Status = True
                     result.Data = ManagerData.Token
         return result
@@ -46,10 +51,8 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data does not exist'
             else:
-                Desc = 'manager logout account:' + ManagerData.Account
-                if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     ManagerData.Token = ''
                     _dbsession.commit()
@@ -57,6 +60,13 @@ class ManagerLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                Desc = 'manager logout account:' + ManagerData.Account
+                if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 
@@ -83,17 +93,26 @@ class ManagerLogic(BaseLogic):
         elif self._managerModel.FindAccount(_dbsession, Account) is not None:
             result.Memo = 'data already exists'
         else:
-            Desc = 'new manager account:' + Account
-            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
-                return result
+            _dbsession.begin_nested()
+
             ManagerData = ManagerEntity()
             ManagerData.Account = Account
             ManagerData.PWD = Password
             ManagerData.Name = Name
             ManagerData.State = 1
             ManagerData.Permission = 9
-            result: Result = self._managerModel.Insert(_dbsession, ManagerData)
+            AddInfo: Result = self._managerModel.Insert(_dbsession, ManagerData)
+            if AddInfo.Status == False:
+                result.Memo = AddInfo.Memo
+                return result
+
+            Desc = 'new manager account:' + Account
+            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                result.Memo = 'logging failed'
+                return result
+
+            _dbsession.commit()
+            result.Status = True
         return result
 
     def ManagerDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -111,10 +130,8 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
-                Desc = 'disable/enable manager id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     if ManagerData.State == 2:
                         ManagerData.State = 1
@@ -126,6 +143,16 @@ class ManagerLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                if ManagerData.State == 1:
+                    Desc = 'enable manager id:' + str(ID)
+                if ManagerData.State == 2:
+                    Desc = 'disable manager id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 
@@ -149,11 +176,20 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
+                _dbsession.begin_nested()
+
+                ChangeInfo: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
+                if ChangeInfo.Status == False:
+                    result.Memo = 'data error'
+                    return result
+
                 Desc = 'manager change password account:' + ManagerData.Account
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
-                result: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
+
+                _dbsession.commit()
+                result.Status = True
         return result
 
     def UpdateManagerInfo(self, ClientHost: str, Token: str, Name: str, Permission: int, ID: int) -> Result:
@@ -176,10 +212,8 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
-                Desc = 'update manager id:' + str(ID)
-                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
-                    return result
+                _dbsession.begin_nested()
+
                 try:
                     ManagerData.Name = Name
                     ManagerData.Permission = Permission
@@ -189,6 +223,13 @@ class ManagerLogic(BaseLogic):
                     result.Memo = str(e)
                     _dbsession.rollback()
                     return result
+
+                Desc = 'update manager id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
                 result.Status = True
         return result
 
