@@ -43,6 +43,7 @@ from Controller.SubjectController import SubjectRouter, SubjectPrefix
 from Controller.KnowledgeController import KnowledgeRouter, KnowledgePrefix
 from Controller.PaperController import PaperRouter, PaperPrefix
 from Controller.HeadlineController import HeadlineRouter, HeadlinePrefix
+from Controller.QuestionController import QuestionRouter, QuestionPrefix
 # from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 
 app.include_router(ManagerRouter, prefix=ManagerPrefix)
@@ -50,6 +51,7 @@ app.include_router(SubjectRouter, prefix=SubjectPrefix)
 app.include_router(KnowledgeRouter, prefix=KnowledgePrefix)
 app.include_router(PaperRouter, prefix=PaperPrefix)
 app.include_router(HeadlineRouter, prefix=HeadlinePrefix)
+app.include_router(QuestionRouter, prefix=QuestionPrefix)
 # app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix

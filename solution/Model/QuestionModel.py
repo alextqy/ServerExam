@@ -11,22 +11,24 @@ class QuestionModel(BaseModel):
         _result = Result()
         Data.QuestionTitle = Data.QuestionTitle.strip()
         Data.Description = Data.Description.strip()
-        Data.Attachment = Data.Attachment.strip()
         if Data.QuestionTitle == '':
             _result.Memo = 'param err'
             return _result
         if Data.QuestionType <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.QuestionState <= 0:
-            _result.Memo = 'param err'
-            return _result
-        if Data.Marking <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.QuestionState <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
+        # if Data.Marking <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
         if Data.KnowledgeID <= 0:
             _result.Memo = 'param err'
             return _result
+        Data.QuestionState = 1
+        Data.Marking = 1
+        Data.Attachment = ''
         Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         try:
             _dbsession.add(Data)

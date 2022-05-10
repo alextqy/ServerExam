@@ -248,8 +248,8 @@ class Common(BaseService):
         return b64decode(Param)
 
     # a-zA-Z1-9随机数
-    def RandomStr(self):
-        return ''.join(random.sample(string.ascii_letters + string.digits, 8))
+    def RandomStr(self, n=10):
+        return ''.join(random.sample(string.ascii_letters + string.digits, n))
 
     # 字符串MD5
     def StrMD5(self, Param):
