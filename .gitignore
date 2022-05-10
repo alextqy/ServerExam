@@ -10,6 +10,8 @@ solution/ActivationFile.conf
 solution/appsettings.json
 solution/Wrapper.sh
 solution/desktop.ini
+solution/Resource/Question/*
+solution/Resource/QuestionSolution/*
 
 solution/__pycache__
 solution/CodeExec/__pycache__
