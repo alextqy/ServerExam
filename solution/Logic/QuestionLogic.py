@@ -143,3 +143,76 @@ class QuestionLogic(BaseLogic):
                 _dbsession.commit()
                 result.Status = True
         return result
+
+    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        elif QuestionTitle == '':
+            result.Memo = 'wrong question title'
+        elif QuestionType <= 0:
+            result.Memo = 'wrong question type'
+        elif Description == '':
+            result.Memo = 'wrong description'
+        else:
+            QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
+            if QuestionData is None:
+                result.Memo = 'data error'
+            else:
+                _dbsession.begin_nested()
+
+                try:
+                    QuestionData.QuestionTitle = QuestionTitle
+                    QuestionData.QuestionType = QuestionType
+                    QuestionData.Description = Description
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                Desc = 'update question id:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.Status = True
+        return result
+
+    def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        else:
+            result: ResultList = self._questionModel.List(_dbsession, Page, PageSize, Stext, QuestionType, QuestionState, 1, KnowledgeID)
+        return result
+
+    def QuestionInfo(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong id'
+        else:
+            QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
+            if QuestionData is None:
+                result.Memo = 'data error'
+            else:
+                result.Status = True
+                result.Data = QuestionData
+        return result
