@@ -3,7 +3,7 @@ from Entity.BaseEntity import *
 
 # 报名
 class ExamInfoHistoryEntity(BaseEntity, BaseORM):
-    __tablename__ = 'ExamInfo'
+    __tablename__ = 'ExamInfoHistory'
 
     SubjectName: str = Column(String(128), comment='科目名称', default='none')
     ExamNo: str = Column(String(128), index=True, comment='准考证号', default='none')
