@@ -10,6 +10,7 @@ from Entity.ClassEntity import ClassEntity
 from Entity.ExamineeEntity import ExamineeEntity
 from Entity.ExamineeTokenEntity import ExamineeTokenEntity
 from Entity.ExamInfoEntity import ExamInfoEntity
+from Entity.ExamInfoHistoryEntity import ExamInfoHistoryEntity
 from Entity.ExamLogEntity import ExamLogEntity
 from Entity.ExerciseEntity import ExerciseEntity
 from Entity.ExerciseSolutionEntity import ExerciseSolutionEntity
@@ -33,6 +34,7 @@ from Model.ClassModel import ClassModel
 from Model.ExamineeModel import ExamineeModel
 from Model.ExamineeTokenModel import ExamineeTokenModel
 from Model.ExamInfoModel import ExamInfoModel
+from Model.ExamInfoHistoryModel import ExamInfoHistoryModel
 from Model.ExamLogModel import ExamLogModel
 from Model.ExerciseModel import ExerciseModel
 from Model.ExerciseSolutionModel import ExerciseSolutionModel
@@ -64,6 +66,7 @@ class BaseLogic:
     _examineeModel = ExamineeModel()
     _examineeTokenModel = ExamineeTokenModel()
     _examInfoModel = ExamInfoModel()
+    _examInfoHistoryModel = ExamInfoHistoryModel()
     _examLogModel = ExamLogModel()
     _exerciseModel = ExerciseModel()
     _exerciseSolutionModel = ExerciseSolutionModel()

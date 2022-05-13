@@ -10,6 +10,7 @@ from Entity.ClassEntity import ClassEntity
 from Entity.ExamineeEntity import ExamineeEntity
 from Entity.ExamineeTokenEntity import ExamineeTokenEntity
 from Entity.ExamInfoEntity import ExamInfoEntity
+from Entity.ExamInfoHistoryEntity import ExamInfoHistoryEntity
 from Entity.ExamLogEntity import ExamLogEntity
 from Entity.ExerciseEntity import ExerciseEntity
 from Entity.ExerciseSolutionEntity import ExerciseSolutionEntity

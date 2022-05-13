@@ -1,8 +1,8 @@
 from Model.BaseModel import *
 
 
-class ExamInfoModel(BaseModel):
-    EType: ExamInfoEntity = ExamInfoEntity
+class ExamInfoHistoryModel(BaseModel):
+    EType: ExamInfoHistoryEntity = ExamInfoHistoryEntity
 
     def __init__(self):
         super().__init__()
