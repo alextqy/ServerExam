@@ -18,7 +18,6 @@ from math import *
 from shutil import *
 from subprocess import *
 from io import *
-from tkinter import *
 from base64 import *
 from requests import *
 from email.mime.text import MIMEText
