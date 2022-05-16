@@ -24,7 +24,7 @@ class HeadlineLogic(BaseLogic):
             HeadlineData = HeadlineEntity()
             HeadlineData.Content = Content
             AddInfo: Result = self._headlineModel.Insert(_dbsession, HeadlineData)
-            if AddInfo.Status == False:
+            if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
                 return result
 
@@ -34,7 +34,7 @@ class HeadlineLogic(BaseLogic):
                 return result
 
             _dbsession.commit()
-            result.Status = True
+            result.State = True
         return result
 
     def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str) -> Result:
@@ -54,7 +54,7 @@ class HeadlineLogic(BaseLogic):
             if HeadlineData is None:
                 result.Memo = 'data error'
             elif HeadlineData.Content == Content:
-                result.Status = True
+                result.State = True
                 return result
             elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
                 result.Memo = 'data already exists'
@@ -76,7 +76,7 @@ class HeadlineLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str) -> Result:
@@ -106,6 +106,6 @@ class HeadlineLogic(BaseLogic):
             if HeadlineData is None:
                 result.Memo = 'data error'
             else:
-                result.Status = True
+                result.State = True
                 result.Data = HeadlineData
         return result

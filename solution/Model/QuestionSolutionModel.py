@@ -11,19 +11,21 @@ class QuestionSolutionModel(BaseModel):
         _result = Result()
         Data.Option = Data.Option.strip()
         Data.OptionAttachment = Data.OptionAttachment.strip()
-        Data.CorrectAnswer = Data.CorrectAnswer.strip()
-        if Data.QuestionID < 0:
+        if Data.QuestionID <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.Option == '':
+        # if Data.Option == '':
+        #     _result.Memo = 'param err'
+        #     return _result
+        # if Data.OptionAttachment == '':
+        #     _result.Memo = 'param err'
+        #     return _result
+        if Data.CorrectAnswer <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.OptionAttachment == '':
-            _result.Memo = 'param err'
-            return _result
-        if Data.CorrectAnswer == '':
-            _result.Memo = 'param err'
-            return _result
+        # if Data.CorrectItem == '':
+        #     _result.Memo = 'param err'
+        #     return _result
         if Data.ScoreRatio <= 0:
             _result.Memo = 'param err'
             return _result
@@ -36,7 +38,7 @@ class QuestionSolutionModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         _result.Data = Data.ID
         return _result
 
@@ -51,7 +53,7 @@ class QuestionSolutionModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
@@ -59,7 +61,7 @@ class QuestionSolutionModel(BaseModel):
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, QuestionID: int) -> ResultList:
         _result = ResultList()
-        _result.Status = True
+        _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)

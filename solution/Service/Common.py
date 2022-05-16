@@ -10,7 +10,7 @@ class Result:
 
     def __init__(self) -> None:
         super().__init__()
-        self.Status = False
+        self.State = False
         self.Memo = ''
         self.Code = 200
         self.Data = None
@@ -27,7 +27,7 @@ class ResultList:
 
     def __init__(self) -> None:
         super().__init__()
-        self.Status = False
+        self.State = False
         self.Memo = ''
         self.Code = 200
         self.Page = 0

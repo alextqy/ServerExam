@@ -43,7 +43,7 @@ class ExerciseModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         _result.Data = Data.ID
         return _result
 
@@ -58,7 +58,7 @@ class ExerciseModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
@@ -66,7 +66,7 @@ class ExerciseModel(BaseModel):
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, ExamineeID: int) -> ResultList:
         _result = ResultList()
-        _result.Status = True
+        _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)

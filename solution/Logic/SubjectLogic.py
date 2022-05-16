@@ -24,7 +24,7 @@ class SubjectLogic(BaseLogic):
             SubjectData = SubjectEntity()
             SubjectData.SubjectName = SubjectName
             AddInfo: Result = self._subjectModel.Insert(_dbsession, SubjectData)
-            if AddInfo.Status == False:
+            if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
                 return result
 
@@ -34,7 +34,7 @@ class SubjectLogic(BaseLogic):
                 return result
 
             _dbsession.commit()
-            result.Status = True
+            result.State = True
         return result
 
     def SubjectDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -75,7 +75,7 @@ class SubjectLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str) -> Result:
@@ -95,7 +95,7 @@ class SubjectLogic(BaseLogic):
             if SubjectData is None:
                 result.Memo = 'data error'
             elif SubjectData.SubjectName == SubjectName:
-                result.Status = True
+                result.State = True
                 return result
             elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
                 result.Memo = 'data already exists'
@@ -117,7 +117,7 @@ class SubjectLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> Result:
@@ -147,6 +147,6 @@ class SubjectLogic(BaseLogic):
             if SubjectData is None:
                 result.Memo = 'data error'
             else:
-                result.Status = True
+                result.State = True
                 result.Data = SubjectData
         return result

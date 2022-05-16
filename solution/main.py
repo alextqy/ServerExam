@@ -31,7 +31,7 @@ async def ProcessTimeHeader(request: Request, call_next):
 async def Test(request: Request, Param: str):
     result = Result()
     # common = Common()
-    result.Status = True
+    result.State = True
     result.Memo = 'Success'
     # result.Data = common.UserPWD('123456')
     # 5f1d7a84db00d2fce00b31a7fc73224f
@@ -44,6 +44,7 @@ from Controller.KnowledgeController import KnowledgeRouter, KnowledgePrefix
 from Controller.PaperController import PaperRouter, PaperPrefix
 from Controller.HeadlineController import HeadlineRouter, HeadlinePrefix
 from Controller.QuestionController import QuestionRouter, QuestionPrefix
+from Controller.QuestionSolutionController import QuestionSolutionRouter, QuestionSolutionPrefix
 # from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 
 app.include_router(ManagerRouter, prefix=ManagerPrefix)
@@ -52,6 +53,7 @@ app.include_router(KnowledgeRouter, prefix=KnowledgePrefix)
 app.include_router(PaperRouter, prefix=PaperPrefix)
 app.include_router(HeadlineRouter, prefix=HeadlinePrefix)
 app.include_router(QuestionRouter, prefix=QuestionPrefix)
+app.include_router(QuestionSolutionRouter, prefix=QuestionSolutionPrefix)
 # app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix

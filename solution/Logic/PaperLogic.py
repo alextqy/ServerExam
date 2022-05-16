@@ -44,7 +44,7 @@ class PaperLogic(BaseLogic):
                 PaperData.PassLine = PassLine
                 PaperData.ExamDuration = ExamDuration
                 AddInfo: Result = self._paperModel.Insert(_dbsession, PaperData)
-                if AddInfo.Status == False:
+                if AddInfo.State == False:
                     result.Memo - AddInfo.Memo
                     return result
 
@@ -54,7 +54,7 @@ class PaperLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def PaperDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -93,7 +93,7 @@ class PaperLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
@@ -139,7 +139,7 @@ class PaperLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> Result:
@@ -169,6 +169,6 @@ class PaperLogic(BaseLogic):
             if PaperData is None:
                 result.Memo = 'data error'
             else:
-                result.Status = True
+                result.State = True
                 result.Data = PaperData
         return result

@@ -35,7 +35,7 @@ class QuestionLogic(BaseLogic):
                 QuestionData.KnowledgeID = KnowledgeID
                 QuestionData.Description = Description
                 AddInfo: Result = self._questionModel.Insert(_dbsession, QuestionData)
-                if AddInfo.Status == False:
+                if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
                     return result
 
@@ -45,7 +45,7 @@ class QuestionLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
@@ -99,7 +99,7 @@ class QuestionLogic(BaseLogic):
 
                 _dbsession.commit()
 
-                result.Status = True
+                result.State = True
                 result.Data = UploadPath
         return result
 
@@ -141,7 +141,7 @@ class QuestionLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str) -> Result:
@@ -183,7 +183,7 @@ class QuestionLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int) -> Result:
@@ -213,6 +213,6 @@ class QuestionLogic(BaseLogic):
             if QuestionData is None:
                 result.Memo = 'data error'
             else:
-                result.Status = True
+                result.State = True
                 result.Data = QuestionData
         return result

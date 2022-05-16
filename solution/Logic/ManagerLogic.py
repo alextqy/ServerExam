@@ -37,7 +37,7 @@ class ManagerLogic(BaseLogic):
                         return result
 
                     _dbsession.commit()
-                    result.Status = True
+                    result.State = True
                     result.Data = ManagerData.Token
         return result
 
@@ -67,7 +67,7 @@ class ManagerLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def NewManager(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str) -> Result:
@@ -102,7 +102,7 @@ class ManagerLogic(BaseLogic):
             ManagerData.State = 1
             ManagerData.Permission = 9
             AddInfo: Result = self._managerModel.Insert(_dbsession, ManagerData)
-            if AddInfo.Status == False:
+            if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
                 return result
 
@@ -112,7 +112,7 @@ class ManagerLogic(BaseLogic):
                 return result
 
             _dbsession.commit()
-            result.Status = True
+            result.State = True
         return result
 
     def ManagerDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -153,7 +153,7 @@ class ManagerLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def ManagerChangePassword(self, ClientHost: str, Token: str, NewPassword: str, ID: int) -> Result:
@@ -179,7 +179,7 @@ class ManagerLogic(BaseLogic):
                 _dbsession.begin_nested()
 
                 ChangeInfo: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
-                if ChangeInfo.Status == False:
+                if ChangeInfo.State == False:
                     result.Memo = 'data error'
                     return result
 
@@ -189,7 +189,7 @@ class ManagerLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def UpdateManagerInfo(self, ClientHost: str, Token: str, Name: str, Permission: int, ID: int) -> Result:
@@ -230,7 +230,7 @@ class ManagerLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
@@ -260,6 +260,6 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'data error'
             else:
-                result.Status = True
+                result.State = True
                 result.Data = ManagerData
         return result

@@ -33,7 +33,7 @@ class KnowledgeLogic(BaseLogic):
                 KnowledgeData.KnowledgeName = KnowledgeName
                 KnowledgeData.SubjectID = SubjectID
                 AddInfo: Result = self._knowledgeModel.Insert(_dbsession, KnowledgeData)
-                if AddInfo.Status == False:
+                if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
                     return result
 
@@ -43,7 +43,7 @@ class KnowledgeLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def KnowledgeDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -82,7 +82,7 @@ class KnowledgeLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def UpdateKnowledgeInfo(self, ClientHost: str, Token: str, ID: int, KnowledgeName: str) -> Result:
@@ -102,7 +102,7 @@ class KnowledgeLogic(BaseLogic):
             if KnowledgeData is None:
                 result.Memo = 'data error'
             elif KnowledgeData.KnowledgeName == KnowledgeName:
-                result.Status = True
+                result.State = True
                 return result
             else:
                 _dbsession.begin_nested()
@@ -122,7 +122,7 @@ class KnowledgeLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-                result.Status = True
+                result.State = True
         return result
 
     def KnowledgeList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, KnowledgeState: int) -> Result:
@@ -152,6 +152,6 @@ class KnowledgeLogic(BaseLogic):
             if KnowledgeData is None:
                 result.Memo = 'data error'
             else:
-                result.Status = True
+                result.State = True
                 result.Data = KnowledgeData
         return result

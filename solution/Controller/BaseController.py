@@ -11,6 +11,7 @@ from Logic.KnowledgeLogic import KnowledgeLogic
 from Logic.PaperLogic import PaperLogic
 from Logic.HeadlineLogic import HeadlineLogic
 from Logic.QuestionLogic import QuestionLogic
+from Logic.QuestionSolutionLogic import QuestionSolutionLogic
 from Logic.ExamineeLogic import ExamineeLogic
 
 managerLogic = ManagerLogic()
@@ -19,4 +20,5 @@ knowledgeLogic = KnowledgeLogic()
 paperLogic = PaperLogic()
 headlineLogic = HeadlineLogic()
 questionLogic = QuestionLogic()
+questionSolutionLogic = QuestionSolutionLogic()
 examineeLogic = ExamineeLogic()
