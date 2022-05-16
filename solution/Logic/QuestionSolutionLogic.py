@@ -31,21 +31,46 @@ class QuestionSolutionLogic(BaseLogic):
             if QuestionData is None:
                 result.Memo = 'question data error'
             else:
-                if QuestionData.QuestionType == 1:
+                if QuestionData.QuestionType == 1:  # 单选
+                    if Option == '':
+                        result.Memo = 'wrong option'
+                        return result
+                    ScoreRatio = 1.00
+                if QuestionData.QuestionType == 2:  # 判断
+                    if Option == '':
+                        result.Memo = 'wrong option'
+                        return result
+                    ScoreRatio = 1.00
+                    QuestionSolutionList: ResultList = self._questionSolutionModel.List(QuestionData.ID)
+                    if len(QuestionSolutionList.Data) > 2:
+                        result.Memo = 'too many options'
+                        return result
+                if QuestionData.QuestionType == 3:  # 多选
+                    if Option == '':
+                        result.Memo = 'wrong option'
+                        return result
+                    if ScoreRatio <= 0:
+                        result.Memo = 'wrong score ratio'
+                        return result
+                    QuestionSolutionList: ResultList = self._questionSolutionModel.List(QuestionData.ID)
+                    if len(QuestionSolutionList.Data) > 0:
+                        CountScoreRatio = 0
+                        SolutionDataList = QuestionSolutionList.Data
+                        for i in SolutionDataList:
+                            SolutionData: QuestionSolutionEntity = i
+                            CountScoreRatio += SolutionData.ScoreRatio
+                        if CountScoreRatio > 1:
+                            result.Memo = 'wrong score ratio'
+                            return result
+                if QuestionData.QuestionType == 4:  # 填空
                     pass
-                if QuestionData.QuestionType == 2:
+                if QuestionData.QuestionType == 5:  # 问答
                     pass
-                if QuestionData.QuestionType == 3:
+                if QuestionData.QuestionType == 6:  # 代码实训
                     pass
-                if QuestionData.QuestionType == 4:
+                if QuestionData.QuestionType == 7:  # 拖拽题
                     pass
-                if QuestionData.QuestionType == 5:
-                    pass
-                if QuestionData.QuestionType == 6:
-                    pass
-                if QuestionData.QuestionType == 7:
-                    pass
-                if QuestionData.QuestionType == 8:
+                if QuestionData.QuestionType == 8:  # 连线题
                     pass
 
                 # _dbsession.begin_nested()
