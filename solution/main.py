@@ -34,6 +34,7 @@ async def Test(request: Request, Param: str):
     result.State = True
     result.Memo = 'Success'
     # result.Data = common.UserPWD('123456')
+    # print(common.CountStr('asdfasdf<->12323432r<-><->234fds234r<-><->', '<->'))
     # 5f1d7a84db00d2fce00b31a7fc73224f
     return result  # json.dumps(result.__dict__)
 

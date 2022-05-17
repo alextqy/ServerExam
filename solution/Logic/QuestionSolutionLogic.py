@@ -18,8 +18,8 @@ class QuestionSolutionLogic(BaseLogic):
             result.Memo = 'wrong question id'
         # elif Option == '':
         #     result.Memo = 'wrong option'
-        elif CorrectAnswer <= 0:
-            result.Memo = 'wrong correct answer'
+        # elif CorrectAnswer <= 0:
+        #     result.Memo = 'wrong correct answer'
         # elif CorrectItem == '':
         #     result.Memo = 'wrong correct item'
         elif ScoreRatio <= 0:
@@ -35,43 +35,81 @@ class QuestionSolutionLogic(BaseLogic):
                     if Option == '':
                         result.Memo = 'wrong option'
                         return result
+                    if CorrectAnswer <= 0:
+                        result.Memo = 'wrong correct answer'
+                        return result
                     ScoreRatio = 1.00
                 if QuestionData.QuestionType == 2:  # 判断
                     if Option == '':
                         result.Memo = 'wrong option'
                         return result
+                    if CorrectAnswer <= 0:
+                        result.Memo = 'wrong correct answer'
+                        return result
                     ScoreRatio = 1.00
+                    # 判断题只能有两个选项
                     QuestionSolutionList: ResultList = self._questionSolutionModel.List(QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 2:
                         result.Memo = 'too many options'
                         return result
-                if QuestionData.QuestionType == 3:  # 多选
+                if QuestionData.QuestionType == 3:  # 多选 必须全对才给分
                     if Option == '':
                         result.Memo = 'wrong option'
+                        return result
+                    if CorrectAnswer <= 0:
+                        result.Memo = 'wrong correct answer'
+                        return result
+                    ScoreRatio = 1.00
+                if QuestionData.QuestionType == 4:  # 填空
+                    if CorrectItem == '':
+                        result.Memo = 'wrong correct item'
                         return result
                     if ScoreRatio <= 0:
                         result.Memo = 'wrong score ratio'
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.List(QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        CountScoreRatio = 0
                         SolutionDataList = QuestionSolutionList.Data
+                        # 答案数量是否超过填空数
+                        if len(SolutionDataList) >= self._common.CountStr(QuestionData.QuestionTitle, "<->"):
+                            result.Memo = 'too many answers'
+                            return result
+                        CountScoreRatio = 0
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             CountScoreRatio += SolutionData.ScoreRatio
+                        # 所有选项得分比例总和为1
                         if CountScoreRatio > 1:
                             result.Memo = 'wrong score ratio'
                             return result
-                if QuestionData.QuestionType == 4:  # 填空
-                    pass
+                    CorrectAnswer = 1
                 if QuestionData.QuestionType == 5:  # 问答
-                    pass
+                    if CorrectItem == '':
+                        result.Memo = 'wrong correct item'
+                        return result
+                    if ScoreRatio <= 0:
+                        result.Memo = 'wrong score ratio'
+                        return result
+                    CountScoreRatio = 0
+                    for i in SolutionDataList:
+                        SolutionData: QuestionSolutionEntity = i
+                        CountScoreRatio += SolutionData.ScoreRatio
+                    # 所有选项得分比例总和为1
+                    if CountScoreRatio > 1:
+                        result.Memo = 'wrong score ratio'
+                        return result
+                    CorrectAnswer = 1
                 if QuestionData.QuestionType == 6:  # 代码实训
-                    pass
+                    if CorrectItem == '':
+                        result.Memo = 'wrong correct item'
+                        return result
+                    ScoreRatio = 1.00
                 if QuestionData.QuestionType == 7:  # 拖拽题
-                    pass
+                    QuestionSolutionList: ResultList = self._questionSolutionModel.List(QuestionData.ID)
+                    ScoreRatio = 1.00
                 if QuestionData.QuestionType == 8:  # 连线题
-                    pass
+                    QuestionSolutionList: ResultList = self._questionSolutionModel.List(QuestionData.ID)
+                    ScoreRatio = 1.00
 
                 # _dbsession.begin_nested()
 

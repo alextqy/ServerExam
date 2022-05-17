@@ -42,7 +42,7 @@ class Common(BaseService):
         super().__init__()
 
     # 判断操作系统类型
-    def OSType(self):
+    def OSType(self) -> str:
         osType = system()
         if osType == 'Windows':
             return osType
@@ -54,7 +54,7 @@ class Common(BaseService):
             return 'Other'
 
     # 获取CPU序列号
-    def CPUID(self):
+    def CPUID(self) -> str:
         osType = self.OSType()
         if osType == 'Windows':
             from wmi import WMI
@@ -69,7 +69,7 @@ class Common(BaseService):
             return ''
 
     # 获取主板序列号
-    def MotherboardID(self):
+    def MotherboardID(self) -> str:
         osType = self.OSType()
         if osType == 'Windows':
             from wmi import WMI
@@ -83,7 +83,7 @@ class Common(BaseService):
             return ''
 
     # 字符串过滤 只匹配大小写字母和数字的组合
-    def MatchAll(self, Param=''):
+    def MatchAll(self, Param: str) -> bool:
         if Param == '':
             return False
         elif search('^[a-zA-Z0-9_]+$', Param) == None:
@@ -92,7 +92,7 @@ class Common(BaseService):
             return True
 
     # 字符串过滤 只匹配小写字母
-    def MatchStr(self, Param=''):
+    def MatchStr(self, Param: str) -> bool:
         if Param == '':
             return False
         elif search('^[a-z_]+$', Param) == None:
@@ -101,7 +101,7 @@ class Common(BaseService):
             return True
 
     # 字符串过滤 只匹配数字
-    def MatchNum(self, Param=''):
+    def MatchNum(self, Param: str) -> bool:
         if Param == '':
             return False
         elif search('^[0-9]+$', Param) == None:
@@ -110,7 +110,7 @@ class Common(BaseService):
             return True
 
     # 大小写字母 中文 数字 下划线 点
-    def MatchSafe(self, Param=''):
+    def MatchSafe(self, Param: str) -> bool:
         if Param == '':
             return False
         elif search('^[\u4E00-\u9FA5A-Za-z0-9_.]+$', Param) == None:
@@ -119,66 +119,70 @@ class Common(BaseService):
             return True
 
     # 年
-    def NowYear(self):
+    def NowYear(self) -> int:
         return datetime.datetime.now().year
 
     # 月
-    def NowMonth(self):
+    def NowMonth(self) -> int:
         return datetime.datetime.now().month
 
     # 日
-    def NowDay(self):
+    def NowDay(self) -> int:
         return datetime.datetime.now().day
 
     # 时间戳转换成时间(接收10位str时间戳)
-    def TimeToStr(self, TimeNum):
+    def TimeToStr(self, TimeNum: int) -> str:
         timeData = localtime(int(str(TimeNum)[:10]))
         return strftime('%Y-%m-%d %H:%M:%S', timeData)
 
     # 时间转换成时间戳
-    def StrToTime(self, TimeStr):
+    def StrToTime(self, TimeStr: str) -> int:
         timeFormat = strptime(TimeStr, '%Y-%m-%d %H:%M:%S')
         return int(mktime(timeFormat))
 
     # 当前时间戳
-    def Time(self):
+    def Time(self) -> int:
         return int(time())
 
     # 当前时间戳(毫秒)
-    def TimeMS(self):
+    def TimeMS(self) -> int:
         return int(round(time() * 1000))
 
     # 获取当天的年月日
-    def TodayStr(self):
+    def TodayStr(self) -> str:
         timeData = localtime(self.Time())
         return strftime('%Y-%m-%d 00:00:00', timeData)
 
     # 过去的时间
-    def TimePast(self, Day=0):
+    def TimePast(self, Day: int) -> int:
         return self.StrToTime(self.TodayStr()) - (Day * (60 * 60 * 24))
 
     # 未来的时间
-    def TimeFuture(self, Day=0):
+    def TimeFuture(self, Day: int) -> int:
         return self.StrToTime(self.TodayStr()) + (Day * (60 * 60 * 24))
 
     # 指定时间的过去天数
-    def TheTimePast(self, Time, Day=0):
+    def TheTimePast(self, Time: int, Day: int) -> int:
         return Time - (Day * (60 * 60 * 24))
 
     # 指定时间的未来天数
-    def TheTimeFuture(self, Time, Day=0):
+    def TheTimeFuture(self, Time: int, Day: int) -> int:
         return Time + (Day * (60 * 60 * 24))
 
     # 按指定字符切割字符串为数组
-    def Explode(self, Separator, StringParam):
+    def Explode(self, Separator: str, StringParam: str) -> list:
         return StringParam.split(Separator)
 
     # 按指定字符组合数组为字符串
-    def Implode(self, Separator, array):
+    def Implode(self, Separator: str, array) -> str:
         return Separator.join(array)
 
+    # 指定字符在字符串中出现的次数
+    def CountStr(self, ParamStr: str, TargetStr: str) -> int:
+        return ParamStr.count(TargetStr)
+
     # 获取本机IP
-    def LocalIP(self):
+    def LocalIP(self) -> str:
         try:
             s = socket(AF_INET, SOCK_DGRAM)
             s.connect(('8.8.8.8', 80))
@@ -188,14 +192,14 @@ class Common(BaseService):
         return ip
 
     # 图片转Base64
-    def IMGToBase64(self, FilePath):
+    def IMGToBase64(self, FilePath: str) -> str:
         with open(FilePath, 'rb') as f:  # 以二进制读取图片
             FileEncode = b64encode(f.read())  # 得到 byte 编码的数据
             FileEncodeStr = str(FileEncode, 'utf-8')  # 重新编码数据
         return FileEncodeStr
 
     # 发送邮件
-    def SendMail(self, Content=''):
+    def SendMail(self, Content: str) -> bool:
         if Content == '':
             return False
 
@@ -232,33 +236,33 @@ class Common(BaseService):
             return False
 
     # str to bytes
-    def StringToBytes(self, Param):
+    def StringToBytes(self, Param: str) -> bytes:
         return bytes(Param, encoding='utf8')
 
     # bytes to str
-    def BytesToString(self, Param):
+    def BytesToString(self, Param: bytes) -> str:
         return str(Param, encoding='utf-8')
 
     # bytes to Base64
-    def BytesToBase64(self, Param):
+    def BytesToBase64(self, Param: bytes) -> bytes:
         return b64encode(Param)
 
     # Base64 to bytes
-    def Base64ToBytes(self, Param):
+    def Base64ToBytes(self, Param: bytes) -> bytes:
         return b64decode(Param)
 
     # a-zA-Z1-9随机数
-    def RandomStr(self, n=10):
+    def RandomStr(self, n=10) -> str:
         return ''.join(random.sample(string.ascii_letters + string.digits, n))
 
     # 字符串MD5
-    def StrMD5(self, Param):
+    def StrMD5(self, Param: str) -> str:
         return md5(Param.encode('utf-8')).hexdigest()
 
     # 生成密码
-    def UserPWD(self, Param):
+    def UserPWD(self, Param: str) -> str:
         return self.StrMD5(self.StrMD5(Param) + Param)
 
     # 生成Token
-    def GenerateToken(self):
+    def GenerateToken(self) -> str:
         return self.StrMD5(self.RandomStr())
