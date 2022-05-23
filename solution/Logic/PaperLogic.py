@@ -32,8 +32,6 @@ class PaperLogic(BaseLogic):
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, SubjectID)
             if SubjectData is None:
                 result.Memo = 'subject data error'
-            elif SubjectData.SubjectState != 1:
-                result.Memo = 'subject data error'
             else:
                 _dbsession.begin_nested()
 

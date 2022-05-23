@@ -10,7 +10,7 @@ class QuestionSolutionModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         Data.Option = Data.Option.strip()
-        Data.OptionAttachment = Data.OptionAttachment.strip()
+        # Data.OptionAttachment = Data.OptionAttachment.strip()
         if Data.QuestionID <= 0:
             _result.Memo = 'param err'
             return _result
@@ -76,4 +76,12 @@ class QuestionSolutionModel(BaseModel):
         if QuestionID > 0:
             sql = sql.filter(self.EType.QuestionID == QuestionID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
+        return _result
+
+    def AllSolutions(self, _dbsession: DBsession, QuestionID: int) -> ResultList:
+        _result = ResultList()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.QuestionID == QuestionID)
+        _result.Data = sql.all()
         return _result

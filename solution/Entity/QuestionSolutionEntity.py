@@ -1,7 +1,7 @@
 from Entity.BaseEntity import *
 
 
-# 试题答案
+# 试题选项
 class QuestionSolutionEntity(BaseEntity, BaseORM):
     __tablename__ = 'QuestionSolution'
 

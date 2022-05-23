@@ -18,13 +18,13 @@ class QuestionLogic(BaseLogic):
             result.Memo = 'wrong question title'
         elif QuestionType <= 0:
             result.Memo = 'wrong question type'
+        elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
+            result.Memo = 'no vacancy'
         elif KnowledgeID <= 0:
             result.Memo = 'wrong knowledge id'
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, KnowledgeID)
             if KnowledgeData is None:
-                result.Memo = 'knowledge data error'
-            elif KnowledgeData.KnowledgeState != 1:
                 result.Memo = 'knowledge data error'
             else:
                 _dbsession.begin_nested()
@@ -66,8 +66,6 @@ class QuestionLogic(BaseLogic):
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
                 result.Memo = 'data error'
-            elif QuestionData.QuestionState != 1:
-                result.Memo = 'data error'
             else:
                 if QuestionData.Attachment != 'none':
                     self._file.DeleteFile(QuestionData.Attachment)
@@ -75,8 +73,8 @@ class QuestionLogic(BaseLogic):
                 _dbsession.begin_nested()
 
                 try:
-                    UploadPath = self._rootPath + 'Resource/Question/' + str(self._common.TimeMS()) + "." + FileType
-                    with open(UploadPath, "wb") as f:
+                    UploadPath = self._rootPath + 'Resource/Question/' + str(self._common.TimeMS()) + '.' + FileType
+                    with open(UploadPath, 'wb') as f:
                         f.write(AttachmentContents)
                 except Exception as e:
                     result.Memo = str(e)
@@ -122,6 +120,8 @@ class QuestionLogic(BaseLogic):
 
                 try:
                     if QuestionData.QuestionState == 2:
+                        # 试卷选项分析
+                        
                         QuestionData.QuestionState = 1
                     else:
                         QuestionData.QuestionState = 2
@@ -156,6 +156,8 @@ class QuestionLogic(BaseLogic):
             result.Memo = 'wrong id'
         elif QuestionTitle == '':
             result.Memo = 'wrong question title'
+        elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
+            result.Memo = 'no vacancy'
         elif QuestionType <= 0:
             result.Memo = 'wrong question type'
         elif Description == '':

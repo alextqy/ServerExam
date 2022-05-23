@@ -26,7 +26,7 @@ class QuestionModel(BaseModel):
         if Data.KnowledgeID <= 0:
             _result.Memo = 'param err'
             return _result
-        Data.QuestionState = 1
+        Data.QuestionState = 2
         Data.Marking = 1
         Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         try:

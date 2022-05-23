@@ -19,7 +19,7 @@ async def NewHeadline(
 async def UpdateHeadlineInfo(
         request: Request,
         Token: str = Form(''),
-        ID: int = Form(''),
+        ID: int = Form(0),
         Content: str = Form(''),
 ) -> Result:
     return headlineLogic.UpdateHeadlineInfo(request.client.host, Token.strip(), ID, Content.strip())

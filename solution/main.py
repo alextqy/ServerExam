@@ -1,5 +1,6 @@
 '''
 pip install python-multipart
+pip install pymysql
 pip install sqlalchemy
 pip install fastapi
 pip install 'uvicorn[standard]'
