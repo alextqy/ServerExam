@@ -254,7 +254,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
             result.Memo = 'too large file'
         else:
-            QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(ID)
+            QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
                 result.Memo = 'data error'
             else:
