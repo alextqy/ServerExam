@@ -120,8 +120,11 @@ class QuestionLogic(BaseLogic):
 
                 try:
                     if QuestionData.QuestionState == 2:
-                        # 试卷选项分析
-                        
+                        # 试卷选项合理性解析
+                        QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                        if len(QuestionSolutionList) == 0:
+                            result.Memo = 'no options'
+                            return result
                         QuestionData.QuestionState = 1
                     else:
                         QuestionData.QuestionState = 2
@@ -160,14 +163,15 @@ class QuestionLogic(BaseLogic):
             result.Memo = 'no vacancy'
         elif QuestionType <= 0:
             result.Memo = 'wrong question type'
-        elif Description == '':
-            result.Memo = 'wrong description'
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
                 result.Memo = 'data error'
             else:
                 _dbsession.begin_nested()
+
+                if Description == '':
+                    Description = 'none'
 
                 try:
                     QuestionData.QuestionTitle = QuestionTitle
