@@ -40,7 +40,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 判断重复选项
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
@@ -63,7 +63,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 判断题只能有两个选项
                         if len(SolutionDataList) >= 2:
                             result.Memo = 'too many options'
@@ -93,7 +93,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 判断重复选项
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
@@ -110,7 +110,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 答案数量是否超过填空数
                         if len(SolutionDataList) >= self._common.CountStr(QuestionData.QuestionTitle, '<->'):
                             result.Memo = 'too many answers'
@@ -139,7 +139,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 判断重复答案
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
@@ -169,15 +169,14 @@ class QuestionSolutionLogic(BaseLogic):
                     if Option == '':
                         result.Memo = 'wrong option'
                         return result
-                    if CorrectItem == '':
-                        result.Memo = 'wrong correct item'
-                        return result
                     if Position <= 0:
                         result.Memo = 'wrong position'
                         return result
+                    if Position == 1:  # 左侧为备选项 不能设置正确答案
+                        CorrectItem = ''
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 判断重复选项
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
@@ -186,9 +185,20 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
-                            if SolutionData.CorrectItem == CorrectItem:
+                            if SolutionData.CorrectItem != '' and SolutionData.CorrectItem == CorrectItem:
                                 result.Memo = 'duplicate correct item'
                                 return result
+                        if CorrectItem != '':
+                            # 答案项是否存在
+                            CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(int(CorrectItem))
+                            if CorrectItemData is None:
+                                result.Memo = 'data error'
+                                return result
+                            # 答案项是否属于当前试题
+                            if CorrectItemData.QuestionID != QuestionData.ID:
+                                result.Memo = 'data error'
+                                return result
+
                     ScoreRatio = 1.00
                 if QuestionData.QuestionType == 8:  # 连线题 ##################################################################
                     if Option == '':
@@ -202,7 +212,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
-                        SolutionDataList = QuestionSolutionList.Data
+                        SolutionDataList: list = QuestionSolutionList.Data
                         # 判断重复选项
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
@@ -214,6 +224,9 @@ class QuestionSolutionLogic(BaseLogic):
                             if SolutionData.CorrectItem == CorrectItem:
                                 result.Memo = 'duplicate correct item'
                                 return result
+                    # 左侧为备选项 不能设置正确答案
+                    if Position == 1:
+                        CorrectItem = ''
                     ScoreRatio = 1.00
 
                 _dbsession.begin_nested()

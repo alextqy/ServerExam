@@ -122,9 +122,126 @@ class QuestionLogic(BaseLogic):
                     if QuestionData.QuestionState == 2:
                         # 试卷选项合理性解析
                         QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
-                        if len(QuestionSolutionList) == 0:
+                        QuestionSolutionDataList: list = QuestionSolutionList.Data
+                        if len(QuestionSolutionDataList) == 0:
                             result.Memo = 'no options'
                             return result
+
+                        if QuestionData.QuestionType == 1:  # 单选题 ##################################################################
+                            # 不能低于两个选项
+                            if len(QuestionSolutionDataList) < 2:
+                                result.Memo = 'need more than two options'
+                                return result
+                            # 答案统计
+                            CorrectAnswerCount: int = 0
+                            WrongAnswerCount: int = 0
+                            for i in QuestionSolutionDataList:
+                                Data: QuestionSolutionEntity = i
+                                if Data.CorrectAnswer == 1:
+                                    WrongAnswerCount += 1
+                                if Data.CorrectAnswer == 2:
+                                    CorrectAnswerCount += 1
+                            # 是否设置唯一正确答案
+                            if CorrectAnswerCount != 1:
+                                result.Memo = 'too many correct answers'
+                                return result
+                            # 是否设置错误答案
+                            if WrongAnswerCount == 0:
+                                result.Memo = 'no wrong answer'
+                                return result
+
+                        if QuestionData.QuestionType == 2:  # 判断题 ##################################################################
+                            # 只需要两个选项
+                            if len(QuestionSolutionDataList) != 2:
+                                result.Memo = 'just need two options'
+                                return result
+                            # 答案统计
+                            CorrectAnswerCount: int = 0
+                            WrongAnswerCount: int = 0
+                            for i in QuestionSolutionDataList:
+                                Data: QuestionSolutionEntity = i
+                                if Data.CorrectAnswer == 1:
+                                    WrongAnswerCount += 1
+                                if Data.CorrectAnswer == 2:
+                                    CorrectAnswerCount += 1
+                            if CorrectAnswerCount != 1:
+                                result.Memo = 'just need one correct answer'
+                                return result
+                            if WrongAnswerCount != 1:
+                                result.Memo = 'just need one wrong answer'
+                                return result
+
+                        if QuestionData.QuestionType == 3:  # 多选题 ##################################################################
+                            # 不能低于两个选项
+                            if len(QuestionSolutionDataList) < 2:
+                                result.Memo = 'need more than two options'
+                                return result
+                            # 答案统计
+                            CorrectAnswerCount: int = 0
+                            for i in QuestionSolutionDataList:
+                                Data: QuestionSolutionEntity = i
+                                if Data.CorrectAnswer == 2:
+                                    CorrectAnswerCount += 1
+                            if CorrectAnswerCount < 2:
+                                result.Memo = 'at least two correct answers'
+                                return result
+
+                        if QuestionData.QuestionType == 4:  # 填空题 ##################################################################
+                            # 答案数量是否超过填空数
+                            if len(QuestionSolutionDataList) != self._common.CountStr(QuestionData.QuestionTitle, '<->'):
+                                result.Memo = 'wrong number of options'
+                                return result
+                            # 得分比例统计
+                            ScoreRatioCount: float = 0
+                            for i in QuestionSolutionDataList:
+                                Data: QuestionSolutionEntity = i
+                                ScoreRatioCount += Data.ScoreRatio
+                            if ScoreRatioCount != 1:
+                                result.Memo = 'the sum of the score ratios is not 1'
+                                return result
+
+                        if QuestionData.QuestionType == 5:  # 问答题 ##################################################################
+                            # 得分比例统计
+                            ScoreRatioCount: float = 0
+                            for i in QuestionSolutionDataList:
+                                Data: QuestionSolutionEntity = i
+                                ScoreRatioCount += Data.ScoreRatio
+                            if ScoreRatioCount != 1:
+                                result.Memo = 'the sum of the score ratios is not 1'
+                                return result
+
+                        if QuestionData.QuestionType == 6:  # 代码实训 ##################################################################
+                            # 只需要一个答案
+                            if len(QuestionSolutionDataList) != 1:
+                                result.Memo = 'just need an answer'
+                                return result
+
+                        if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽题 连线题 ##################################################################
+                            # 不能低于四个选项
+                            if len(QuestionSolutionDataList) < 4:
+                                result.Memo = 'need more than four options'
+                                return result
+                            # 选项解析
+                            EmptyAnswer: bool = True
+                            LeftPositionCount: int = 0
+                            RightPositionCount: int = 0
+                            for i in QuestionSolutionDataList:
+                                Data: QuestionSolutionEntity = i
+                                if Data.Position == 1:
+                                    LeftPositionCount += 1
+                                if Data.Position == 2:
+                                    RightPositionCount += 1
+                                if Data.CorrectItem != '':
+                                    EmptyAnswer = False
+                            # 两侧选项数量是否一致
+                            if LeftPositionCount != RightPositionCount:
+                                result.Memo = 'inconsistent number of options on both sides'
+                                return result
+                            # 是否设置答案
+                            if EmptyAnswer == True:
+                                result.Memo = 'no answer set'
+                                return result
+
                         QuestionData.QuestionState = 1
                     else:
                         QuestionData.QuestionState = 2
