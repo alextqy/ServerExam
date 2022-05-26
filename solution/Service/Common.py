@@ -266,3 +266,10 @@ class Common(BaseService):
     # 生成Token
     def GenerateToken(self) -> str:
         return self.StrMD5(self.RandomStr())
+
+    # 解析json文件
+    def ReadJsonFile(self, FilePath: str) -> dict:
+        f = open(FilePath, "r")
+        Data = f.read()
+        f.close()
+        return json.loads(Data)
