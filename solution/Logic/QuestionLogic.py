@@ -73,10 +73,13 @@ class QuestionLogic(BaseLogic):
                 if QuestionData.Attachment != 'none':
                     self._file.DeleteFile(QuestionData.Attachment)
 
+                ResourcePath: str = self._rootPath + 'Resource/Question/'
+                self._file.MkDirs(ResourcePath)
+
                 _dbsession.begin_nested()
 
                 try:
-                    UploadPath = self._rootPath + 'Resource/Question/' + str(self._common.TimeMS()) + '.' + FileType
+                    UploadPath = ResourcePath + str(self._common.TimeMS()) + '.' + FileType
                     with open(UploadPath, 'wb') as f:
                         f.write(AttachmentContents)
                 except Exception as e:
