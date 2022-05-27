@@ -219,6 +219,9 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     if Position == 1:  # 左侧为备选项 不能设置正确答案
                         CorrectItem = ''
+                    CorrectAnswer = 1
+                    if CorrectItem != '':
+                        CorrectAnswer = 2
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
                         SolutionDataList: list = QuestionSolutionList.Data
@@ -244,13 +247,21 @@ class QuestionSolutionLogic(BaseLogic):
                                         result.Memo = 'duplicate answer'
                                         return result
                                 # 答案项是否存在
-                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(int(SolutionID))
+                                try:
+                                    CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, int(SolutionID))
+                                except Exception as e:
+                                    result.Memo = str(e)
+                                    return result
                                 if CorrectItemData is None:
                                     result.Memo = 'data error'
                                     return result
                                 # 答案项是否属于当前试题
                                 if CorrectItemData.QuestionID != QuestionData.ID:
                                     result.Memo = 'data error'
+                                    return result
+                                # 答案必须为左侧选项ID
+                                if CorrectItemData.Position == 2:
+                                    result.Memo = 'the answer must be the left option id'
                                     return result
                     ScoreRatio = 1.00
 

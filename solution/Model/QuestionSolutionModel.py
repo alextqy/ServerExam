@@ -12,7 +12,7 @@ class QuestionSolutionModel(BaseModel):
         Data.Option = Data.Option.strip()
         # Data.OptionAttachment = Data.OptionAttachment.strip()
         if Data.QuestionID <= 0:
-            _result.Memo = 'param err1'
+            _result.Memo = 'param err'
             return _result
         # if Data.Option == '':
         #     _result.Memo = 'param err'
@@ -21,13 +21,13 @@ class QuestionSolutionModel(BaseModel):
         #     _result.Memo = 'param err'
         #     return _result
         if Data.CorrectAnswer <= 0:
-            _result.Memo = 'param err2'
+            _result.Memo = 'param err'
             return _result
         # if Data.CorrectItem == '':
         #     _result.Memo = 'param err'
         #     return _result
         if Data.ScoreRatio <= 0:
-            _result.Memo = 'param err3'
+            _result.Memo = 'param err'
             return _result
         try:
             _dbsession.add(Data)
