@@ -50,7 +50,7 @@ class QuestionSolutionLogic(BaseLogic):
                         # 单个正确答案
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
-                            if CorrectAnswer == 1 and SolutionData.CorrectAnswer == CorrectAnswer:
+                            if CorrectAnswer == 2 and SolutionData.CorrectAnswer == CorrectAnswer:
                                 result.Memo = 'too many correct answer'
                                 return result
                     ScoreRatio = 1.00
@@ -174,6 +174,9 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     if Position == 1:  # 左侧为备选项 不能设置正确答案
                         CorrectItem = ''
+                    CorrectAnswer = 1
+                    if CorrectItem != '':
+                        CorrectAnswer = 2
                     QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList.Data) > 0:
                         SolutionDataList: list = QuestionSolutionList.Data
@@ -189,14 +192,22 @@ class QuestionSolutionLogic(BaseLogic):
                                 result.Memo = 'duplicate correct item'
                                 return result
                         if CorrectItem != '':
+                            try:
+                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, int(CorrectItem))
+                            except Exception as e:
+                                result.Memo = str(e)
+                                return result
                             # 答案项是否存在
-                            CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(int(CorrectItem))
                             if CorrectItemData is None:
                                 result.Memo = 'data error'
                                 return result
                             # 答案项是否属于当前试题
                             if CorrectItemData.QuestionID != QuestionData.ID:
                                 result.Memo = 'data error'
+                                return result
+                            # 答案必须为左侧选项ID
+                            if CorrectItemData.Position == 2:
+                                result.Memo = 'the answer must be the left option id'
                                 return result
                     ScoreRatio = 1.00
                 if QuestionData.QuestionType == 8:  # 连线题 ##################################################################
@@ -223,11 +234,17 @@ class QuestionSolutionLogic(BaseLogic):
                                 result.Memo = 'duplicate correct item'
                                 return result
                         if CorrectItem != '':
-                            CorrectItemList: list = CorrectItem.split(",")
+                            CorrectItemList: list = CorrectItem.split(',')
                             for i in CorrectItemList:
-                                SolutionID: int = int(i)
+                                SolutionID: str = i
+                                # 答案是否存在于其他选项中
+                                for j in SolutionDataList:
+                                    SolutionData: QuestionSolutionEntity = j
+                                    if SolutionID in SolutionData.CorrectItem:
+                                        result.Memo = 'duplicate answer'
+                                        return result
                                 # 答案项是否存在
-                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(SolutionID)
+                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(int(SolutionID))
                                 if CorrectItemData is None:
                                     result.Memo = 'data error'
                                     return result
@@ -343,6 +360,17 @@ class QuestionSolutionLogic(BaseLogic):
                 if QuestionSolutionData.OptionAttachment != 'none':
                     try:
                         self._file.DeleteFile(QuestionSolutionData.OptionAttachment)
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _dbsession.rollback()
+                        return result
+
+                QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, QuestionSolutionData.QuestionID)
+                # 所属试题设置为禁用状态
+                if QuestionData is not None:
+                    try:
+                        QuestionData.QuestionState = 2
+                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()

@@ -27,6 +27,9 @@ class QuestionLogic(BaseLogic):
             if KnowledgeData is None:
                 result.Memo = 'knowledge data error'
             else:
+                if Description == '':
+                    Description = 'none'
+
                 _dbsession.begin_nested()
 
                 QuestionData: QuestionEntity = QuestionEntity()
@@ -143,7 +146,7 @@ class QuestionLogic(BaseLogic):
                                     CorrectAnswerCount += 1
                             # 是否设置唯一正确答案
                             if CorrectAnswerCount != 1:
-                                result.Memo = 'too many correct answers'
+                                result.Memo = 'need a correct answer'
                                 return result
                             # 是否设置错误答案
                             if WrongAnswerCount == 0:
@@ -239,7 +242,7 @@ class QuestionLogic(BaseLogic):
                                 return result
                             # 是否设置答案
                             if EmptyAnswer == True:
-                                result.Memo = 'no answer set'
+                                result.Memo = 'no set answer'
                                 return result
 
                         QuestionData.QuestionState = 1
