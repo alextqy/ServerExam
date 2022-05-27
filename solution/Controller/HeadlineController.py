@@ -33,7 +33,7 @@ async def HeadlineList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         Stext: str = Form(''),
-) -> Result:
+) -> ResultList:
     return headlineLogic.HeadlineList(Token.strip(), Page, PageSize, Stext.strip())
 
 

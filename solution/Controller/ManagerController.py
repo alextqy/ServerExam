@@ -78,7 +78,7 @@ async def ManagerList(
         Stext: str = Form(''),
         State: int = Form(0),
         Permission: int = Form(0),
-) -> Result:
+) -> ResultList:
     return managerLogic.ManagerList(Token.strip(), Page, PageSize, Stext.strip(), State, Permission)
 
 

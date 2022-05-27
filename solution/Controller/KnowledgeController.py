@@ -46,7 +46,7 @@ async def KnowledgeList(
         Stext: str = Form(''),
         SubjectID: int = Form(0),
         KnowledgeState: int = Form(0),
-) -> Result:
+) -> ResultList:
     return knowledgeLogic.KnowledgeList(Token.strip(), Page, PageSize, Stext.strip(), SubjectID, KnowledgeState)
 
 

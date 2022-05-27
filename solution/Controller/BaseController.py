@@ -9,6 +9,7 @@ from Logic.ManagerLogic import ManagerLogic
 from Logic.SubjectLogic import SubjectLogic
 from Logic.KnowledgeLogic import KnowledgeLogic
 from Logic.PaperLogic import PaperLogic
+from Logic.PaperRuleLogic import PaperRuleLogic
 from Logic.HeadlineLogic import HeadlineLogic
 from Logic.QuestionLogic import QuestionLogic
 from Logic.QuestionSolutionLogic import QuestionSolutionLogic
@@ -18,6 +19,7 @@ managerLogic = ManagerLogic()
 subjectLogic = SubjectLogic()
 knowledgeLogic = KnowledgeLogic()
 paperLogic = PaperLogic()
+paperRuleLogic = PaperRuleLogic()
 headlineLogic = HeadlineLogic()
 questionLogic = QuestionLogic()
 questionSolutionLogic = QuestionSolutionLogic()

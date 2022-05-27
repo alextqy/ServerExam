@@ -42,6 +42,7 @@ from Controller.ManagerController import ManagerRouter, ManagerPrefix
 from Controller.SubjectController import SubjectRouter, SubjectPrefix
 from Controller.KnowledgeController import KnowledgeRouter, KnowledgePrefix
 from Controller.PaperController import PaperRouter, PaperPrefix
+from Controller.PaperRuleController import PaperRuleRouter, PaperRulePrefix
 from Controller.HeadlineController import HeadlineRouter, HeadlinePrefix
 from Controller.QuestionController import QuestionRouter, QuestionPrefix
 from Controller.QuestionSolutionController import QuestionSolutionRouter, QuestionSolutionPrefix
@@ -51,6 +52,7 @@ app.include_router(ManagerRouter, prefix=ManagerPrefix)
 app.include_router(SubjectRouter, prefix=SubjectPrefix)
 app.include_router(KnowledgeRouter, prefix=KnowledgePrefix)
 app.include_router(PaperRouter, prefix=PaperPrefix)
+app.include_router(PaperRuleRouter, prefix=PaperRulePrefix)
 app.include_router(HeadlineRouter, prefix=HeadlinePrefix)
 app.include_router(QuestionRouter, prefix=QuestionPrefix)
 app.include_router(QuestionSolutionRouter, prefix=QuestionSolutionPrefix)

@@ -140,7 +140,7 @@ class PaperLogic(BaseLogic):
                 result.State = True
         return result
 
-    def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> Result:
+    def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

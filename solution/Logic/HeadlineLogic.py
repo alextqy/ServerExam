@@ -79,7 +79,7 @@ class HeadlineLogic(BaseLogic):
                 result.State = True
         return result
 
-    def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str) -> Result:
+    def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

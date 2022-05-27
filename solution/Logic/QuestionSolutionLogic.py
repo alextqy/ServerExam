@@ -394,7 +394,7 @@ class QuestionSolutionLogic(BaseLogic):
                 result.State = True
         return result
 
-    def QuestionSolutionList(self, Token: str, Page: int, PageSize: int, QuestionID: int) -> Result:
+    def QuestionSolutionList(self, Token: str, Page: int, PageSize: int, QuestionID: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

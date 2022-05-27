@@ -49,5 +49,5 @@ async def QuestionSolutionList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         QuestionID: int = Form(0),
-) -> Result:
+) -> ResultList:
     return questionSolutionLogic.QuestionSolutionList(Token.strip(), Page, PageSize, QuestionID)

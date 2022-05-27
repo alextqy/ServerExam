@@ -63,7 +63,7 @@ async def QuestionList(
         QuestionType: int = Form(0),
         QuestionState: int = Form(0),
         KnowledgeID: int = Form(0),
-) -> Result:
+) -> ResultList:
     return questionLogic.QuestionList(Token.strip(), Page, PageSize, Stext.strip(), QuestionType, QuestionState, KnowledgeID)
 
 

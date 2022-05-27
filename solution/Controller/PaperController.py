@@ -52,7 +52,7 @@ async def PaperList(
         Stext: str = Form(''),
         SubjectID: int = Form(0),
         PaperState: int = Form(0),
-) -> Result:
+) -> ResultList:
     return paperLogic.PaperList(Token.strip(), Page, PageSize, Stext.strip(), SubjectID, PaperState)
 
 

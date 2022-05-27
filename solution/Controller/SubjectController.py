@@ -44,7 +44,7 @@ async def SubjectList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         SubjectState: int = Form(0),
-) -> Result:
+) -> ResultList:
     return subjectLogic.SubjectList(Token.strip(), Page, PageSize, Stext.strip(), SubjectState)
 
 

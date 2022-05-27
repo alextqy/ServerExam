@@ -120,7 +120,7 @@ class SubjectLogic(BaseLogic):
                 result.State = True
         return result
 
-    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> Result:
+    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

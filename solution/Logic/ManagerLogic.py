@@ -233,7 +233,7 @@ class ManagerLogic(BaseLogic):
                 result.State = True
         return result
 
-    def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> Result:
+    def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
