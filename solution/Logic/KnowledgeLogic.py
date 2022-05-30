@@ -19,7 +19,7 @@ class KnowledgeLogic(BaseLogic):
         elif SubjectID <= 0:
             result.Memo = 'wrong subject id'
         elif self._knowledgeModel.FindKnowledgeCode(_dbsession, KnowledgeName) is not None:
-            result.Memo = 'data already exists'
+            result.Memo = 'knowledge data already exists'
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, SubjectID)
             if SubjectData is None:
@@ -55,7 +55,7 @@ class KnowledgeLogic(BaseLogic):
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
-                result.Memo = 'data error'
+                result.Memo = 'knowledge data error'
             else:
                 _dbsession.begin_nested()
 
@@ -98,7 +98,7 @@ class KnowledgeLogic(BaseLogic):
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
-                result.Memo = 'data error'
+                result.Memo = 'knowledge data error'
             elif KnowledgeData.KnowledgeName == KnowledgeName:
                 result.State = True
                 return result
@@ -148,7 +148,7 @@ class KnowledgeLogic(BaseLogic):
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
-                result.Memo = 'data error'
+                result.Memo = 'knowledge data error'
             else:
                 result.State = True
                 result.Data = KnowledgeData

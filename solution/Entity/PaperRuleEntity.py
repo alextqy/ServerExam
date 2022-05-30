@@ -6,6 +6,7 @@ class PaperRuleEntity(BaseEntity, BaseORM):
     __tablename__ = 'PaperRule'
 
     HeadlineID: int = Column(INTEGER, comment='大标题ID', default=0)
+    KnowledgeID: int = Column(INTEGER, comment='知识点', default=0)
     QuestionType: int = Column(INTEGER, comment='试题类型 1单选 2判断 3多选 4填空 5问答', default=0)
     QuestionNum: int = Column(INTEGER, comment='抽题数量', default=0)
     SingleScore: float = Column(DECIMAL(10, 2), comment='单题分数', default=0.00)

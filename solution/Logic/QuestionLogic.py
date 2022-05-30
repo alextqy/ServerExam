@@ -68,7 +68,7 @@ class QuestionLogic(BaseLogic):
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'data error'
+                result.Memo = 'question data error'
             else:
                 if QuestionData.Attachment != 'none':
                     self._file.DeleteFile(QuestionData.Attachment)
@@ -120,7 +120,7 @@ class QuestionLogic(BaseLogic):
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'data error'
+                result.Memo = 'question data error'
             else:
                 _dbsession.begin_nested()
 
@@ -289,7 +289,7 @@ class QuestionLogic(BaseLogic):
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'data error'
+                result.Memo = 'question data error'
             else:
                 _dbsession.begin_nested()
 
@@ -340,7 +340,7 @@ class QuestionLogic(BaseLogic):
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'data error'
+                result.Memo = 'question data error'
             else:
                 result.State = True
                 result.Data = QuestionData

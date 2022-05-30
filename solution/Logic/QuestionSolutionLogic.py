@@ -199,11 +199,11 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                             # 答案项是否存在
                             if CorrectItemData is None:
-                                result.Memo = 'data error'
+                                result.Memo = 'correct item data error'
                                 return result
                             # 答案项是否属于当前试题
                             if CorrectItemData.QuestionID != QuestionData.ID:
-                                result.Memo = 'data error'
+                                result.Memo = 'question id error'
                                 return result
                             # 答案必须为左侧选项ID
                             if CorrectItemData.Position == 2:
@@ -253,11 +253,11 @@ class QuestionSolutionLogic(BaseLogic):
                                     result.Memo = str(e)
                                     return result
                                 if CorrectItemData is None:
-                                    result.Memo = 'data error'
+                                    result.Memo = 'correct item data error'
                                     return result
                                 # 答案项是否属于当前试题
                                 if CorrectItemData.QuestionID != QuestionData.ID:
-                                    result.Memo = 'data error'
+                                    result.Memo = 'question id data error'
                                     return result
                                 # 答案必须为左侧选项ID
                                 if CorrectItemData.Position == 2:
@@ -305,7 +305,7 @@ class QuestionSolutionLogic(BaseLogic):
         else:
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
-                result.Memo = 'data error'
+                result.Memo = 'question solution data error'
             else:
                 if QuestionSolutionData.OptionAttachment != 'none':
                     self._file.DeleteFile(QuestionSolutionData.OptionAttachment)
@@ -357,7 +357,7 @@ class QuestionSolutionLogic(BaseLogic):
         else:
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
-                result.Memo = 'data error'
+                result.Memo = 'question solution data error'
             else:
                 _dbsession.begin_nested()
 
@@ -405,7 +405,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif QuestionID <= 0:
             result.Memo = 'wrong question id'
         elif self._questionSolutionModel.Find(_dbsession, QuestionID) is None:
-            result.Memo = 'question data error'
+            result.Memo = 'question solution data error'
         else:
             result: ResultList = self._questionSolutionModel.List(_dbsession, Page, PageSize, QuestionID)
         return result

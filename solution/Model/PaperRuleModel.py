@@ -10,6 +10,9 @@ class PaperRuleModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         if Data.HeadlineID <= 0:
+            if Data.KnowledgeID <= 0:
+                _result.Memo = 'param err'
+                return _result
             if Data.QuestionType <= 0:
                 _result.Memo = 'param err'
                 return _result
@@ -19,16 +22,15 @@ class PaperRuleModel(BaseModel):
             if Data.SingleScore <= 0:
                 _result.Memo = 'param err'
                 return _result
-            if Data.PaperID <= 0:
-                _result.Memo = 'param err'
-                return _result
-        if Data.QuestionType <= 0:
+        if Data.KnowledgeID <= 0:
             if Data.HeadlineID <= 0:
                 _result.Memo = 'param err'
                 return _result
-        if Data.PaperRuleState <= 0:
+        if Data.PaperID <= 0:
             _result.Memo = 'param err'
             return _result
+
+        Data.PaperRuleState = 1
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -77,3 +79,9 @@ class PaperRuleModel(BaseModel):
         sql = sql.filter(self.EType.PaperRuleState == PaperRuleState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def AllPaperRule(self, _dbsession: DBsession, PaperID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.PaperRuleState == 1).all()
+
+    def CheckPaperRule(self, _dbsession: DBsession, PaperID: int, KnowledgeID: int, QuestionType: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.PaperRuleState == 1).first()

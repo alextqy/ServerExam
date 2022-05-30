@@ -30,7 +30,7 @@ class PaperModel(BaseModel):
         #     return _result
 
         Data.ExamDuration *= 60
-        Data.PaperState = 1
+        Data.PaperState = 2
         Data.PaperCode = self._common.StrMD5(Data.PaperName.strip())
         try:
             _dbsession.add(Data)
@@ -87,3 +87,6 @@ class PaperModel(BaseModel):
 
     def FindPaperCode(self, _dbsession: DBsession, PaperName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.PaperCode == self._common.StrMD5(PaperName)).first()
+
+    def SubjectPaper(self, _dbsession: DBsession, SubjectID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.SubjectID == SubjectID).all()

@@ -269,7 +269,7 @@ class Common(BaseService):
 
     # 解析json文件
     def ReadJsonFile(self, FilePath: str) -> dict:
-        f = open(FilePath, "r")
+        f = open(FilePath, 'r')
         Data = f.read()
         f.close()
         return json.loads(Data)

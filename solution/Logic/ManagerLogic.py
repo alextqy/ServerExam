@@ -16,7 +16,7 @@ class ManagerLogic(BaseLogic):
         else:
             ManagerData: ManagerEntity = self._managerModel.FindAccount(_dbsession, Account)
             if ManagerData is None:
-                result.Memo = 'data does not exist'
+                result.Memo = 'manager data does not exist'
             else:
                 if ManagerData.PWD != self._common.UserPWD(Password):
                     result.Memo = 'wrong password'
@@ -49,7 +49,7 @@ class ManagerLogic(BaseLogic):
         else:
             ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             if ManagerData is None:
-                result.Memo = 'data does not exist'
+                result.Memo = 'manager data does not exist'
             else:
                 _dbsession.begin_nested()
 
@@ -91,7 +91,7 @@ class ManagerLogic(BaseLogic):
         elif Name == '':
             result.Memo = 'wrong name'
         elif self._managerModel.FindAccount(_dbsession, Account) is not None:
-            result.Memo = 'data already exists'
+            result.Memo = 'manager data already exists'
         else:
             _dbsession.begin_nested()
 
@@ -128,7 +128,7 @@ class ManagerLogic(BaseLogic):
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'data error'
+                result.Memo = 'manager data error'
             else:
                 _dbsession.begin_nested()
 
@@ -174,13 +174,13 @@ class ManagerLogic(BaseLogic):
             else:
                 ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'data error'
+                result.Memo = 'manager data error'
             else:
                 _dbsession.begin_nested()
 
                 ChangeInfo: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
                 if ChangeInfo.State == False:
-                    result.Memo = 'data error'
+                    result.Memo = 'fail to edit'
                     return result
 
                 Desc = 'manager change password account:' + ManagerData.Account
@@ -210,7 +210,7 @@ class ManagerLogic(BaseLogic):
             else:
                 ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'data error'
+                result.Memo = 'manager data error'
             else:
                 _dbsession.begin_nested()
 
@@ -258,7 +258,7 @@ class ManagerLogic(BaseLogic):
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'data error'
+                result.Memo = 'manager data error'
             else:
                 result.State = True
                 result.Data = ManagerData

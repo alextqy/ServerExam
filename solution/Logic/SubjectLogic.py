@@ -17,7 +17,7 @@ class SubjectLogic(BaseLogic):
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
         elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
-            result.Memo = 'data already exists'
+            result.Memo = 'subject data already exists'
         else:
             _dbsession.begin_nested()
 
@@ -50,7 +50,7 @@ class SubjectLogic(BaseLogic):
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
-                result.Memo = 'data error'
+                result.Memo = 'subject data error'
             else:
                 _dbsession.begin_nested()
 
@@ -93,12 +93,12 @@ class SubjectLogic(BaseLogic):
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
-                result.Memo = 'data error'
+                result.Memo = 'subject data error'
             elif SubjectData.SubjectName == SubjectName:
                 result.State = True
                 return result
             elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
-                result.Memo = 'data already exists'
+                result.Memo = 'subject data already exists'
             else:
                 _dbsession.begin_nested()
 
@@ -145,7 +145,7 @@ class SubjectLogic(BaseLogic):
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
-                result.Memo = 'data error'
+                result.Memo = 'subject data error'
             else:
                 result.State = True
                 result.Data = SubjectData

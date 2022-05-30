@@ -17,7 +17,7 @@ class HeadlineLogic(BaseLogic):
         elif Content == '':
             result.Memo = 'wrong content'
         elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
-            result.Memo = 'data already exists'
+            result.Memo = 'headline data already exists'
         else:
             _dbsession.begin_nested()
 
@@ -52,12 +52,12 @@ class HeadlineLogic(BaseLogic):
         else:
             HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, ID)
             if HeadlineData is None:
-                result.Memo = 'data error'
+                result.Memo = 'headline data error'
             elif HeadlineData.Content == Content:
                 result.State = True
                 return result
             elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
-                result.Memo = 'data already exists'
+                result.Memo = 'headline data already exists'
             else:
                 _dbsession.begin_nested()
 
@@ -104,7 +104,7 @@ class HeadlineLogic(BaseLogic):
         else:
             HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, ID)
             if HeadlineData is None:
-                result.Memo = 'data error'
+                result.Memo = 'headline data error'
             else:
                 result.State = True
                 result.Data = HeadlineData

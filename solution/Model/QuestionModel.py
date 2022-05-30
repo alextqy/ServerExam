@@ -85,3 +85,6 @@ class QuestionModel(BaseModel):
             sql = sql.filter(self.EType.KnowledgeID == KnowledgeID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def CountType(self, _dbsession: DBsession, KnowledgeID: int, QuestionType: int) -> int:
+        return _dbsession.query(self.EType).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.QuestionState == 1).count()

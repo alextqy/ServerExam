@@ -27,7 +27,7 @@ class PaperLogic(BaseLogic):
         elif ExamDuration <= 0:
             result.Memo = 'wrong exam duration'
         elif self._paperModel.FindPaperCode(_dbsession, PaperName) is not None:
-            result.Memo = 'data already exists'
+            result.Memo = 'paper data already exists'
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, SubjectID)
             if SubjectData is None:
@@ -66,12 +66,32 @@ class PaperLogic(BaseLogic):
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:
-                result.Memo = 'data error'
+                result.Memo = 'paper data error'
             else:
                 _dbsession.begin_nested()
 
                 try:
                     if PaperData.PaperState == 2:
+                        # 当前试卷下是否有对应的试卷规则
+                        PaperRuleList: list = self._paperRuleModel.AllPaperRule(_dbsession, ID)
+                        if len(PaperRuleList) == 0:
+                            result.Memo = 'paper rule data does not exist'
+                            return result
+                        # 当前试卷下的试卷规则是否和当前试卷总分相匹配
+                        if len(PaperRuleList) > 0:
+                            TotalScore: float = 0
+                            for i in PaperRuleList:
+                                PaperRuleData: PaperRuleEntity = i
+                                TotalScore += float(PaperRuleData.SingleScore) * PaperRuleData.QuestionNum
+                            if TotalScore != PaperData.TotalScore:
+                                result.Memo = 'score is set incorrectly'
+                                return result
+                        # 当前科目只能有一个试卷被启用
+                        PaperList: list = self._paperModel.SubjectPaper(_dbsession, PaperData.SubjectID)
+                        if len(PaperList) > 0:
+                            for i in PaperList:
+                                Data: PaperEntity = i
+                                Data.PaperState = 2
                         PaperData.PaperState = 1
                     else:
                         PaperData.PaperState = 2
@@ -115,7 +135,7 @@ class PaperLogic(BaseLogic):
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:
-                result.Memo = 'data error'
+                result.Memo = 'paper data error'
             else:
                 _dbsession.begin_nested()
 
@@ -165,7 +185,7 @@ class PaperLogic(BaseLogic):
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:
-                result.Memo = 'data error'
+                result.Memo = 'paper data error'
             else:
                 result.State = True
                 result.Data = PaperData
