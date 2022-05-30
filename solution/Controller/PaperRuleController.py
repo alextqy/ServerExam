@@ -17,3 +17,23 @@ async def NewPaperRule(
         PaperID: int = Form(0),
 ) -> Result:
     return paperRuleLogic.NewPaperRule(request.client.host, Token.strip(), HeadlineID, QuestionType, KnowledgeID, QuestionNum, SingleScore, PaperID)
+
+
+# 禁用试题规则
+@PaperRuleRouter.post('/Paper/Rule/Disabled')
+async def PaperRuleDisabled(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return paperRuleLogic.PaperRuleDisabled(request.client.host, Token.strip(), ID)
+
+
+# 删除试题规则
+@PaperRuleRouter.post('/Paper/Rule/Delete')
+async def PaperRuleDelete(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return paperRuleLogic.PaperRuleDelete(request.client.host, Token.strip(), ID)

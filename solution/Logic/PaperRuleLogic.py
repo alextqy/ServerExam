@@ -16,7 +16,9 @@ class PaperRuleLogic(BaseLogic):
             result.Memo = 'permission denied'
         elif PaperID <= 0:
             result.Memo = 'wrong paper id'
-        elif HeadlineID > 0 and QuestionType > 0:
+        elif HeadlineID > 0 and KnowledgeID > 0:
+            result.Memo = 'wrong data'
+        elif HeadlineID == 0 and KnowledgeID == 0:
             result.Memo = 'wrong data'
         else:
             if HeadlineID > 0:
@@ -97,3 +99,48 @@ class PaperRuleLogic(BaseLogic):
             _dbsession.commit()
             result.State = True
         return result
+
+    def PaperRuleDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong paper rule id'
+        else:
+            PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
+            if PaperRuleData is None:
+                result.Memo = 'paper rule data error'
+                return result
+
+            _dbsession.begin_nested()
+
+            try:
+                if PaperRuleData.PaperRuleState == 2:
+                    PaperRuleData.PaperRuleState = 1
+                else:
+                    PaperRuleData.PaperRuleState = 2
+                PaperRuleData.UpdateTime = self._common.Time()
+                _dbsession.commit()
+            except Exception as e:
+                result.Memo = str(e)
+                _dbsession.rollback()
+                return result
+
+            if PaperRuleData.PaperRuleState == 1:
+                Desc = 'enable paper rule id:' + str(ID)
+            if PaperRuleData.PaperRuleState == 2:
+                Desc = 'disable paper rule id:' + str(ID)
+            if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                result.Memo = 'logging failed'
+                return result
+
+            _dbsession.commit()
+            result.State = True
+        return result
+
+    def PaperRuleDelete(self, ClientHost: str, Token: str, ID: int) -> Result:
+        pass
