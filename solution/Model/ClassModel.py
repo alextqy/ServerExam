@@ -14,9 +14,8 @@ class ClassModel(BaseModel):
         if Data.ClassName == '':
             _result.Memo = 'param err'
             return _result
-        # if Data.Description == '':
-        #     _result.Memo = 'param err'
-        #     return _result
+        if Data.Description == '':
+            Data.Description = 'none'
         Data.ClassCode = self._common.StrMD5(Data.ClassName.strip())
         try:
             _dbsession.add(Data)
@@ -66,3 +65,6 @@ class ClassModel(BaseModel):
             sql = sql.filter(or_(self.EType.ClassCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindName(self, _dbsession: DBsession, ClassName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ClassName == ClassName.strip()).first()
