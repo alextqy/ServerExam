@@ -37,3 +37,13 @@ async def PaperRuleDelete(
         ID: int = Form(0),
 ) -> Result:
     return paperRuleLogic.PaperRuleDelete(request.client.host, Token.strip(), ID)
+
+
+# 试题规则详情
+@PaperRuleRouter.post('/Paper/Rule/Info')
+async def PaperRuleInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return paperRuleLogic.PaperRuleInfo(request.client.host, Token.strip(), ID)
