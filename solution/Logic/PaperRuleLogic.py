@@ -174,7 +174,21 @@ class PaperRuleLogic(BaseLogic):
             result.State = True
         return result
 
-    def PaperRuleInfo(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif PaperID <= 0:
+            result.Memo = 'wrong paper id'
+        else:
+            result: ResultList = self._paperRuleModel.List(_dbsession, Page, PageSize, PaperID, PaperRuleState)
+        return result
+
+    def PaperRuleInfo(self, Token: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

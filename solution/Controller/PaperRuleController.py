@@ -39,6 +39,19 @@ async def PaperRuleDelete(
     return paperRuleLogic.PaperRuleDelete(request.client.host, Token.strip(), ID)
 
 
+# 试卷规则列表
+@PaperRuleRouter.post('/Paper/Rule/List')
+async def PaperRuleList(
+        request: Request,
+        Token: str = Form(''),
+        Page: int = Form(1),
+        PageSize: int = Form(10),
+        PaperID: int = Form(0),
+        PaperRuleState: int = Form(0),
+) -> Result:
+    return paperRuleLogic.PaperRuleList(Token.strip(), Page, PageSize, PaperID, PaperRuleState)
+
+
 # 试题规则详情
 @PaperRuleRouter.post('/Paper/Rule/Info')
 async def PaperRuleInfo(
@@ -46,4 +59,4 @@ async def PaperRuleInfo(
         Token: str = Form(''),
         ID: int = Form(0),
 ) -> Result:
-    return paperRuleLogic.PaperRuleInfo(request.client.host, Token.strip(), ID)
+    return paperRuleLogic.PaperRuleInfo(Token.strip(), ID)

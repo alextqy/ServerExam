@@ -404,8 +404,6 @@ class QuestionSolutionLogic(BaseLogic):
             result.Memo = 'permission denied'
         elif QuestionID <= 0:
             result.Memo = 'wrong question id'
-        elif self._questionSolutionModel.Find(_dbsession, QuestionID) is None:
-            result.Memo = 'question solution data error'
         else:
             result: ResultList = self._questionSolutionModel.List(_dbsession, Page, PageSize, QuestionID)
         return result
