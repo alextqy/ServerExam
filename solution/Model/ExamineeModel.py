@@ -18,9 +18,6 @@ class ExamineeModel(BaseModel):
         if Data.ExamineeNo == '':
             _result.Memo = 'param err'
             return _result
-        # if Data.Contact == '':
-        #     _result.Memo = 'param err'
-        #     return _result
         if Data.ClassID <= 0:
             _result.Memo = 'param err'
             return _result
@@ -74,3 +71,6 @@ class ExamineeModel(BaseModel):
             sql = sql.filter(self.EType.ClassID == ClassID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindExamineeNo(self, _dbsession: DBsession, ExamineeNo: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ExamineeNo == ExamineeNo).first()

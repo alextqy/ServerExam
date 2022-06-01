@@ -27,5 +27,4 @@ questionLogic = QuestionLogic()
 questionSolutionLogic = QuestionSolutionLogic()
 classLogic = ClassLogic()
 teacherLogic = TeacherLogic()
-
 examineeLogic = ExamineeLogic()

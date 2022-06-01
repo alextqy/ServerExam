@@ -48,8 +48,8 @@ from Controller.QuestionController import QuestionRouter, QuestionPrefix
 from Controller.QuestionSolutionController import QuestionSolutionRouter, QuestionSolutionPrefix
 from Controller.ClassController import ClassRouter, ClassPrefix
 from Controller.TeacherController import TeacherRouter, TeacherPrefix
+from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 
-# from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
 app.include_router(ManagerRouter, prefix=ManagerPrefix)
@@ -62,6 +62,6 @@ app.include_router(QuestionRouter, prefix=QuestionPrefix)
 app.include_router(QuestionSolutionRouter, prefix=QuestionSolutionPrefix)
 app.include_router(ClassRouter, prefix=ClassPrefix)
 app.include_router(TeacherRouter, prefix=TeacherPrefix)
+app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 
-# app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 # app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
