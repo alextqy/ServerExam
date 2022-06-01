@@ -57,9 +57,6 @@ class ManagerModel(BaseModel):
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            Data.Password = ''
-            Data.Token = ''
         return Data
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
