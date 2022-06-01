@@ -17,7 +17,7 @@ class ClassLogic(BaseLogic):
         elif ClassName == '':
             result.Memo = 'wrong class name'
         elif self._classModel.FindName(_dbsession, ClassName) is not None:
-            result.Memo = 'class name already exists'
+            result.Memo = 'class data already exists'
         else:
             _dbsession.begin_nested()
 
@@ -55,7 +55,7 @@ class ClassLogic(BaseLogic):
         else:
             CheckData: ClassEntity = self._classModel.FindName(_dbsession, ClassName)
             if CheckData is not None and CheckData.ID != ID:
-                result.Memo = 'class name already exists'
+                result.Memo = 'class data already exists'
                 return result
             ClassData: ClassEntity = self._classModel.Find(_dbsession, ID)
             if ClassData is None:

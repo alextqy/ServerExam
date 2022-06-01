@@ -18,7 +18,7 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'manager data does not exist'
             else:
-                if ManagerData.PWD != self._common.UserPWD(Password):
+                if ManagerData.Password != self._common.UserPWD(Password):
                     result.Memo = 'wrong password'
                 else:
                     _dbsession.begin_nested()
@@ -97,7 +97,7 @@ class ManagerLogic(BaseLogic):
 
             ManagerData = ManagerEntity()
             ManagerData.Account = Account
-            ManagerData.PWD = Password
+            ManagerData.Password = Password
             ManagerData.Name = Name
             ManagerData.State = 1
             ManagerData.Permission = 9

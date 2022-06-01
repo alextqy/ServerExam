@@ -10,12 +10,12 @@ class TeacherModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         Data.Account = Data.Account.strip()
-        Data.PWD = Data.PWD.strip()
+        Data.Password = Data.Password.strip()
         Data.Name = Data.Name.strip()
         if Data.Account == '':
             _result.Memo = 'param err'
             return _result
-        if Data.PWD == '':
+        if Data.Password == '':
             _result.Memo = 'param err'
             return _result
         if Data.Name == '':
@@ -27,7 +27,7 @@ class TeacherModel(BaseModel):
         if Data.ClassID <= 0:
             _result.Memo = 'param err'
             return _result
-        Data.PWD = self._common.UserPWD(Data.PWD.strip())
+        Data.Password = self._common.UserPWD(Data.Password.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -57,8 +57,9 @@ class TeacherModel(BaseModel):
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        Data.PWD = ''
-        Data.Token = ''
+        if Data is not None:
+            Data.Password = ''
+            Data.Token = ''
         return Data
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> ResultList:
@@ -83,15 +84,19 @@ class TeacherModel(BaseModel):
             sql = sql.filter(self.EType.ClassID == ClassID)
         DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         for i in DataList:
-            i.PWD = ''
+            i.Password = ''
             i.Token = ''
         _result.Data = DataList
         return _result
 
     def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> bool:
         try:
-            Data.PWD = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.PWD else Data.PWD
+            Data.Password = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.Password else Data.Password
             _dbsession.commit()
         except Exception as e:
             return False
         return True
+
+    def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
+        Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.Account == Account).first()
+        return Data
