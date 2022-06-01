@@ -99,6 +99,12 @@ class BaseLogic:
             return 0
         return ManagerData.ID
 
+    def TeacherPermissionValidation(self, _dbsession: DBsession, Token: str) -> int:
+        TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
+        if TeacherData is None:
+            return 0
+        return TeacherData.ID
+
     def LogSysAction(self, _dbsession: DBsession, Type: int, ManagerID: int, Description: str, IP: str) -> bool:
         LogData = SysLogEntity()
         LogData.Type = Type

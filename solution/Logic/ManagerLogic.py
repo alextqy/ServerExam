@@ -18,7 +18,9 @@ class ManagerLogic(BaseLogic):
             if ManagerData is None:
                 result.Memo = 'manager data does not exist'
             else:
-                if ManagerData.Password != self._common.UserPWD(Password):
+                if ManagerData.State != 1:
+                    result.Memo = 'manager is disabled'
+                elif ManagerData.Password != self._common.UserPWD(Password):
                     result.Memo = 'wrong password'
                 else:
                     _dbsession.begin_nested()
@@ -125,6 +127,8 @@ class ManagerLogic(BaseLogic):
             result.Memo = 'permission denied'
         elif ID <= 0:
             result.Memo = 'wrong id'
+        elif ID == 1:
+            result.Memo = 'operation failed'
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:

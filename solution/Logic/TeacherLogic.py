@@ -169,3 +169,102 @@ class TeacherLogic(BaseLogic):
                 result.State = True
                 result.Data = TeacherData
         return result
+
+    def TeacherSignIn(self, ClientHost: str, Account: str, Password: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Account == '':
+            result.Memo = 'wrong account'
+        elif Password == '':
+            result.Memo = 'wrong password'
+        else:
+            TeacherData: TeacherEntity = self._teacherModel.FindAccount(_dbsession, Account)
+            if TeacherData is None:
+                result.Memo = 'teacher data does not exist'
+            else:
+                if TeacherData.State != 1:
+                    result.Memo = 'teacher is disabled'
+                elif TeacherData.Password != self._common.UserPWD(Password):
+                    result.Memo = 'wrong password'
+                else:
+                    _dbsession.begin_nested()
+
+                    try:
+                        TeacherData.Token = self._common.GenerateToken()
+                        _dbsession.commit()
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _dbsession.rollback()
+                        return result
+
+                    Desc = 'teacher login account:' + Account
+                    if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
+                        result.Memo = 'logging failed'
+                        return result
+
+                    _dbsession.commit()
+                    result.State = True
+                    result.Data = TeacherData.Token
+        return result
+
+    def TeacherSignOut(self, ClientHost: str, Token: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if Token == '':
+            result.Memo = 'wrong token'
+        else:
+            TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
+            if TeacherData is None:
+                result.Memo = 'teacher data does not exist'
+            else:
+                _dbsession.begin_nested()
+
+                try:
+                    TeacherData.Token = ''
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                Desc = 'teacher logout account:' + TeacherData.Account
+                if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        return result
+
+    def TeacherChangePassword(self, ClientHost: str, Token: str, NewPassword: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif TeacherID == 0:
+            result.Memo = 'permission denied'
+        elif NewPassword == '':
+            result.Memo = 'wrong new password'
+        elif len(NewPassword) < 6:
+            result.Memo = 'password length is not enough'
+        else:
+            TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
+            if TeacherData is None:
+                result.Memo = 'teacher data error'
+            else:
+                _dbsession.begin_nested()
+
+                ChangeInfo: Result = self._teacherModel.ChangePassword(_dbsession, TeacherData, NewPassword)
+                if ChangeInfo.State == False:
+                    result.Memo = 'fail to edit'
+                    return result
+
+                Desc = 'teacher change password account:' + TeacherData.Account
+                if self.LogSysAction(_dbsession, 1, TeacherID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        return result

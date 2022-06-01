@@ -86,14 +86,22 @@ class TeacherModel(BaseModel):
         _result.Data = DataList
         return _result
 
-    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> bool:
-        try:
-            Data.Password = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.Password else Data.Password
-            _dbsession.commit()
-        except Exception as e:
-            return False
-        return True
-
     def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
         Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.Account == Account).first()
         return Data
+
+    def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
+
+    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> Result:
+        _result = Result()
+        try:
+            Data.Password = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.Password else Data.Password
+            Data.UpdateTime = self._common.Time()
+            _dbsession.commit()
+        except Exception as e:
+            _dbsession.rollback()
+            _result.Memo = str(e)
+            return _result
+        _result.State = True
+        return _result

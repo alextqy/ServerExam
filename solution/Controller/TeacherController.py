@@ -62,3 +62,32 @@ async def TeacherInfo(
         ID: int = Form(0),
 ) -> Result:
     return teacherLogic.TeacherInfo(Token.strip(), ID)
+
+
+# 教师登录
+@TeacherRouter.post('/Teacher/Sign/In')
+async def TeacherSignIn(
+        request: Request,
+        Account: str = Form(''),
+        Password: str = Form(''),
+) -> Result:
+    return teacherLogic.TeacherSignIn(request.client.host, Account.strip(), Password.strip())
+
+
+# 教师退出
+@TeacherRouter.post('/Teacher/Sign/Out')
+async def TeacherSignOut(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return teacherLogic.TeacherSignOut(request.client.host, Token.strip())
+
+
+# 教师修改密码
+@TeacherRouter.post('/Teacher/Change/Password')
+async def TeacherChangePassword(
+        request: Request,
+        Token: str = Form(''),
+        NewPassword: str = Form(''),
+) -> Result:
+    return teacherLogic.TeacherChangePassword(request.client.host, Token.strip(), NewPassword.strip())
