@@ -53,3 +53,66 @@ class ExamInfoLogic(BaseLogic):
             _dbsession.commit()
             result.State = True
         return result
+
+    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong ID'
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = 'exam data error'
+            elif ExamInfoData.ExamState == 3:
+                result.Memo = 'exam completed'
+            elif ExamInfoData.ExamState == 4:
+                result.Memo = ''
+                result.State = True
+            else:
+                _dbsession.begin_nested()
+
+                # 待考状态的报名 作废时要删除对应的答题卡和答题卡选项
+                if ExamInfoData.ExamState == 2:
+                    ScantronDataList: list = self._scantronModel.AllInExamID(_dbsession, ID)
+                    if len(ScantronDataList) > 0:
+                        for i in ScantronDataList:
+                            ScantronData: ScantronEntity = i
+                            # 删除答题卡选项
+                            ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                            if len(ScantronSolutionDataList) > 0:
+                                for j in ScantronSolutionDataList:
+                                    ScantronSolutionData: ScantronSolutionEntity = j
+                                    SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
+                                    if SSDelInfo.State == False:
+                                        _dbsession.rollback()
+                                        result.Memo = SSDelInfo.Memo
+                                        return result
+                            # 删除答题卡
+                            SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
+                            if SDelInfo.State == False:
+                                _dbsession.rollback()
+                                result.Memo = SDelInfo.Memo
+                                return result
+
+                try:
+                    ExamInfoData.ExamState = 4
+                    ExamInfoData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                Desc = 'disable exam ID:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        return result

@@ -82,3 +82,6 @@ class ScantronModel(BaseModel):
             sql = sql.filter(self.EType.ExamID == ExamID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def AllInExamID(self, _dbsession: DBsession, ExamID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.ExamID == ExamID).all()

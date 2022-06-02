@@ -14,3 +14,13 @@ async def NewExamInfo(
         ExamineeID: int = Form(0),
 ) -> Result:
     return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeID)
+
+
+# 报名作废
+@ExamInfoRouter.post('/ExamInfo/Disabled')
+async def ExamInfoDisabled(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examInfoLogic.ExamInfoDisabled(request.client.host, Token.strip(), ID)
