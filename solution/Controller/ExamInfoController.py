@@ -24,3 +24,26 @@ async def ExamInfoDisabled(
         ID: int = Form(0),
 ) -> Result:
     return examInfoLogic.ExamInfoDisabled(request.client.host, Token.strip(), ID)
+
+
+# 报名列表
+@ExamInfoRouter.post('/ExamInfo/List')
+async def ExamInfoList(
+        request: Request,
+        Token: str = Form(''),
+        Page: int = Form(1),
+        PageSize: int = Form(10),
+        Stext: str = Form(''),
+        ExamState: int = Form(0),
+) -> ResultList:
+    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState)
+
+
+# 报名详情
+@ExamInfoRouter.post('/ExamInfo')
+async def ExamInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examInfoLogic.ExamInfo(Token.strip(), ID)

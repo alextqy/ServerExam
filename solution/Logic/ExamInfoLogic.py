@@ -116,3 +116,34 @@ class ExamInfoLogic(BaseLogic):
                 _dbsession.commit()
                 result.State = True
         return result
+
+    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int) -> ResultList:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        else:
+            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState)
+        return result
+
+    def ExamInfo(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong ID'
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = 'exam data error'
+            else:
+                result.State = True
+                result.Data = ExamInfoData
+        return result
