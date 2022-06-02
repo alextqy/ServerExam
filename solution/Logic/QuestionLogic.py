@@ -21,7 +21,7 @@ class QuestionLogic(BaseLogic):
         elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
             result.Memo = 'no vacancy'
         elif KnowledgeID <= 0:
-            result.Memo = 'wrong knowledge id'
+            result.Memo = 'wrong knowledge ID'
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, KnowledgeID)
             if KnowledgeData is None:
@@ -60,7 +60,7 @@ class QuestionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif FileType == '':
             result.Memo = 'wrong file type'
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
@@ -96,7 +96,7 @@ class QuestionLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update question attachment id:' + str(ID) + ' file path:' + UploadPath
+                Desc = 'update question attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -116,7 +116,7 @@ class QuestionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
@@ -259,9 +259,9 @@ class QuestionLogic(BaseLogic):
                     return result
 
                 if QuestionData.QuestionState == 1:
-                    Desc = 'enable question id:' + str(ID)
+                    Desc = 'enable question ID:' + str(ID)
                 if QuestionData.QuestionState == 2:
-                    Desc = 'disable question id:' + str(ID)
+                    Desc = 'disable question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -279,7 +279,7 @@ class QuestionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif QuestionTitle == '':
             result.Memo = 'wrong question title'
         elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
@@ -291,6 +291,9 @@ class QuestionLogic(BaseLogic):
             if QuestionData is None:
                 result.Memo = 'question data error'
             else:
+                if QuestionData.QuestionTitle != QuestionTitle:
+                    QuestionData.QuestionCode = self._common.StrMD5(QuestionTitle)
+
                 _dbsession.begin_nested()
 
                 if Description == '':
@@ -306,7 +309,7 @@ class QuestionLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update question id:' + str(ID)
+                Desc = 'update question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -336,7 +339,7 @@ class QuestionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:

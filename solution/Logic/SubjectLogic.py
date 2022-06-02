@@ -16,7 +16,7 @@ class SubjectLogic(BaseLogic):
             result.Memo = 'permission denied'
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
-        elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
+        elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
             result.Memo = 'subject data already exists'
         else:
             _dbsession.begin_nested()
@@ -46,7 +46,7 @@ class SubjectLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
@@ -67,9 +67,9 @@ class SubjectLogic(BaseLogic):
                     return result
 
                 if SubjectData.SubjectState == 1:
-                    Desc = 'enable subject id:' + str(ID)
+                    Desc = 'enable subject ID:' + str(ID)
                 if SubjectData.SubjectState == 2:
-                    Desc = 'disable subject id:' + str(ID)
+                    Desc = 'disable subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -87,7 +87,7 @@ class SubjectLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
         else:
@@ -97,9 +97,12 @@ class SubjectLogic(BaseLogic):
             elif SubjectData.SubjectName == SubjectName:
                 result.State = True
                 return result
-            elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
+            elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
                 result.Memo = 'subject data already exists'
             else:
+                if SubjectData.SubjectName != SubjectName:
+                    SubjectData.SubjectCode = self._common.StrMD5(SubjectName)
+
                 _dbsession.begin_nested()
 
                 try:
@@ -111,7 +114,7 @@ class SubjectLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update subject id:' + str(ID)
+                Desc = 'update subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -141,7 +144,7 @@ class SubjectLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:

@@ -15,7 +15,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif QuestionID <= 0:
-            result.Memo = 'wrong question id'
+            result.Memo = 'wrong question ID'
         # elif Option == '':
         #     result.Memo = 'wrong option'
         # elif CorrectAnswer <= 0:
@@ -207,7 +207,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                             # 答案必须为左侧选项ID
                             if CorrectItemData.Position == 2:
-                                result.Memo = 'the answer must be the left option id'
+                                result.Memo = 'the answer must be the left option ID'
                                 return result
                     ScoreRatio = 1.00
                 if QuestionData.QuestionType == 8:  # 连线题 ##################################################################
@@ -261,7 +261,7 @@ class QuestionSolutionLogic(BaseLogic):
                                     return result
                                 # 答案必须为左侧选项ID
                                 if CorrectItemData.Position == 2:
-                                    result.Memo = 'the answer must be the left option id'
+                                    result.Memo = 'the answer must be the left option ID'
                                     return result
                     ScoreRatio = 1.00
 
@@ -297,7 +297,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif FileType == '':
             result.Memo = 'wrong file type'
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
@@ -333,7 +333,7 @@ class QuestionSolutionLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update question solution attachment id:' + str(ID) + ' file path:' + UploadPath
+                Desc = 'update question solution attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -353,7 +353,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
@@ -403,7 +403,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif QuestionID <= 0:
-            result.Memo = 'wrong question id'
+            result.Memo = 'wrong question ID'
         else:
             result: ResultList = self._questionSolutionModel.List(_dbsession, Page, PageSize, QuestionID)
         return result

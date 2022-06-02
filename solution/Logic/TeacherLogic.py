@@ -27,7 +27,7 @@ class TeacherLogic(BaseLogic):
         elif Name == '':
             result.Memo = 'wrong name'
         elif ClassID <= 0:
-            result.Memo = 'wrong class id'
+            result.Memo = 'wrong class ID'
         elif self._teacherModel.FindAccount(_dbsession, Account) is not None:
             result.Memo = 'teacher data already exists'
         elif self._classModel.Find(_dbsession, ClassID) is None:
@@ -64,7 +64,7 @@ class TeacherLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
@@ -85,9 +85,9 @@ class TeacherLogic(BaseLogic):
                     return result
 
                 if TeacherData.State == 1:
-                    Desc = 'enable Teacher id:' + str(ID)
+                    Desc = 'enable Teacher ID:' + str(ID)
                 if TeacherData.State == 2:
-                    Desc = 'disable Teacher id:' + str(ID)
+                    Desc = 'disable Teacher ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -130,7 +130,7 @@ class TeacherLogic(BaseLogic):
 
             TeacherData.Name = Name
 
-            Desc = 'update teacker info id:' + str(ID)
+            Desc = 'update teacker info ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
@@ -160,7 +160,7 @@ class TeacherLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:

@@ -46,7 +46,7 @@ class HeadlineLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif Content == '':
             result.Memo = 'wrong content'
         else:
@@ -59,6 +59,9 @@ class HeadlineLogic(BaseLogic):
             elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
                 result.Memo = 'headline data already exists'
             else:
+                if HeadlineData.Content != Content:
+                    HeadlineData.ContentCode = self._common.StrMD5(Content)
+
                 _dbsession.begin_nested()
 
                 try:
@@ -70,7 +73,7 @@ class HeadlineLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update headline id:' + str(ID)
+                Desc = 'update headline ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -100,7 +103,7 @@ class HeadlineLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, ID)
             if HeadlineData is None:

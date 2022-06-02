@@ -49,7 +49,7 @@ class ClassLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif ClassName == '':
             result.Memo = 'wrong class name'
         else:
@@ -61,6 +61,9 @@ class ClassLogic(BaseLogic):
             if ClassData is None:
                 result.Memo = 'class data error'
                 return result
+
+            if ClassData.ClassName != ClassName:
+                ClassData.ClassCode = self._common.StrMD5(ClassName)
 
             if Description == '':
                 Description = 'none'
@@ -76,7 +79,7 @@ class ClassLogic(BaseLogic):
                 _dbsession.rollback()
                 return result
 
-            Desc = 'update class id:' + str(ID)
+            Desc = 'update class ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
@@ -106,7 +109,7 @@ class ClassLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             ClassData: ClassEntity = self._classModel.Find(_dbsession, ID)
             if ClassData is None:

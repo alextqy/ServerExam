@@ -17,7 +17,7 @@ class KnowledgeLogic(BaseLogic):
         elif KnowledgeName == '':
             result.Memo = 'wrong knowledge name'
         elif SubjectID <= 0:
-            result.Memo = 'wrong subject id'
+            result.Memo = 'wrong subject ID'
         elif self._knowledgeModel.FindKnowledgeCode(_dbsession, KnowledgeName) is not None:
             result.Memo = 'knowledge data already exists'
         else:
@@ -72,9 +72,9 @@ class KnowledgeLogic(BaseLogic):
                     return result
 
                 if KnowledgeData.KnowledgeState == 1:
-                    Desc = 'enable knowledge id:' + str(ID)
+                    Desc = 'enable knowledge ID:' + str(ID)
                 if KnowledgeData.KnowledgeState == 2:
-                    Desc = 'disable knowledge id:' + str(ID)
+                    Desc = 'disable knowledge ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -92,7 +92,7 @@ class KnowledgeLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif KnowledgeName == '':
             result.Memo = 'wrong knowledge name'
         else:
@@ -103,6 +103,9 @@ class KnowledgeLogic(BaseLogic):
                 result.State = True
                 return result
             else:
+                if KnowledgeData.KnowledgeName != KnowledgeName:
+                    KnowledgeData.KnowledgeCode = self._common.StrMD5(KnowledgeName)
+
                 _dbsession.begin_nested()
 
                 try:
@@ -114,7 +117,7 @@ class KnowledgeLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update knowledge id:' + str(ID)
+                Desc = 'update knowledge ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -144,7 +147,7 @@ class KnowledgeLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:

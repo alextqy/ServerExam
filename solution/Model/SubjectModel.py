@@ -71,3 +71,6 @@ class SubjectModel(BaseModel):
 
     def FindSubjectCode(self, _dbsession: DBsession, SubjectName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.SubjectCode == self._common.StrMD5(SubjectName.strip())).first()
+
+    def FindSubjectName(self, _dbsession: DBsession, SubjectName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.SubjectName == SubjectName.strip()).first()

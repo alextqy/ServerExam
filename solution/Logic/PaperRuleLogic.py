@@ -15,7 +15,7 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif PaperID <= 0:
-            result.Memo = 'wrong paper id'
+            result.Memo = 'wrong paper ID'
         elif HeadlineID > 0 and KnowledgeID > 0:
             result.Memo = 'wrong data'
         elif HeadlineID == 0 and KnowledgeID == 0:
@@ -109,7 +109,7 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
@@ -131,9 +131,9 @@ class PaperRuleLogic(BaseLogic):
                 return result
 
             if PaperRuleData.PaperRuleState == 1:
-                Desc = 'enable paper rule id:' + str(ID)
+                Desc = 'enable paper rule ID:' + str(ID)
             if PaperRuleData.PaperRuleState == 2:
-                Desc = 'disable paper rule id:' + str(ID)
+                Desc = 'disable paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
@@ -151,7 +151,7 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
@@ -165,7 +165,7 @@ class PaperRuleLogic(BaseLogic):
                 result.Memo - DelInfo.Memo
                 return result
 
-            Desc = 'delete paper rule id:' + str(ID)
+            Desc = 'delete paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
@@ -183,7 +183,7 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif PaperID <= 0:
-            result.Memo = 'wrong paper id'
+            result.Memo = 'wrong paper ID'
         else:
             result: ResultList = self._paperRuleModel.List(_dbsession, Page, PageSize, PaperID, PaperRuleState)
         return result
@@ -197,7 +197,7 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:

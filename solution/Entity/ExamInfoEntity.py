@@ -17,7 +17,7 @@ class ExamInfoEntity(BaseEntity, BaseORM):
     Pass: int = Column(INTEGER, comment='是否通过 1否 2是', default=0)
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
     ExamineeID: int = Column(INTEGER, comment='考生ID', default=0)
-    ExamState: int = Column(INTEGER, comment='考试状态 1未考试 2已考试', default=0)
+    ExamState: int = Column(INTEGER, comment='考试状态 1未考试 2待考(已经生成答题卡) 3已考试 4作废', default=0)
 
     def __init__(self):
         super().__init__()

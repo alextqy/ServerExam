@@ -17,18 +17,18 @@ class ExamInfoModel(BaseModel):
         if Data.ExamNo == '':
             _result.Memo = 'param err'
             return _result
-        if Data.TotalScore <= 0:
-            _result.Memo = 'param err'
-            return _result
-        if Data.PassLine <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.TotalScore <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
+        # if Data.PassLine <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
         # if Data.ActualScore <= 0:
         #     _result.Memo = 'param err'
         #     return _result
-        if Data.ExamDuration <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.ExamDuration <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
         # if Data.StartTime <= 0:
         #     _result.Memo = 'param err'
         #     return _result
@@ -38,15 +38,16 @@ class ExamInfoModel(BaseModel):
         # if Data.ActualDuration <= 0:
         #     _result.Memo = 'param err'
         #     return _result
-        if Data.Pass <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.Pass <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
         if Data.ExamineeID <= 0:
             _result.Memo = 'param err'
             return _result
         # if Data.ExamState <= 0:
         #     _result.Memo = 'param err'
         #     return _result
+        Data.Pass = 1
         Data.ExamState = 1
         try:
             _dbsession.add(Data)
@@ -98,3 +99,9 @@ class ExamInfoModel(BaseModel):
             sql = sql.filter(self.EType.ExamState == ExamState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindExamNo(self, _dbsession: DBsession, ExamNo: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ExamNo == ExamNo).first()
+
+    def CheckExam(self, _dbsession: DBsession, ExamineeID: int, SubjectName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ExamineeID == ExamineeID).filter(self.EType.SubjectName == SubjectName.strip()).first()

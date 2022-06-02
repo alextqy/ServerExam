@@ -17,7 +17,7 @@ class PaperLogic(BaseLogic):
         elif PaperName == '':
             result.Memo = 'wrong paper name'
         elif SubjectID <= 0:
-            result.Memo = 'wrong subject id'
+            result.Memo = 'wrong subject ID'
         elif TotalScore <= 0:
             result.Memo = 'wrong total score'
         elif PassLine <= 0:
@@ -103,9 +103,9 @@ class PaperLogic(BaseLogic):
                     return result
 
                 if PaperData.PaperState == 1:
-                    Desc = 'enable paper id:' + str(ID)
+                    Desc = 'enable paper ID:' + str(ID)
                 if PaperData.PaperState == 2:
-                    Desc = 'disable paper id:' + str(ID)
+                    Desc = 'disable paper ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -123,7 +123,7 @@ class PaperLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif PaperName == '':
             result.Memo = 'wrong paper name'
         elif TotalScore <= 0:
@@ -137,6 +137,9 @@ class PaperLogic(BaseLogic):
             if PaperData is None:
                 result.Memo = 'paper data error'
             else:
+                if PaperData.PaperName != PaperName:
+                    PaperData.PaperCode = self._common.StrMD5(PaperName)
+
                 _dbsession.begin_nested()
 
                 try:
@@ -151,7 +154,7 @@ class PaperLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update paper id:' + str(ID)
+                Desc = 'update paper ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -181,7 +184,7 @@ class PaperLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:

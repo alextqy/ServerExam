@@ -126,7 +126,7 @@ class ManagerLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif ID == 1:
             result.Memo = 'operation failed'
         else:
@@ -149,9 +149,9 @@ class ManagerLogic(BaseLogic):
                     return result
 
                 if ManagerData.State == 1:
-                    Desc = 'enable manager id:' + str(ID)
+                    Desc = 'enable manager ID:' + str(ID)
                 if ManagerData.State == 2:
-                    Desc = 'disable manager id:' + str(ID)
+                    Desc = 'disable manager ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -228,7 +228,7 @@ class ManagerLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update manager id:' + str(ID)
+                Desc = 'update manager ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -258,7 +258,7 @@ class ManagerLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:

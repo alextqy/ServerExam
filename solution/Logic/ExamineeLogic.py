@@ -19,7 +19,7 @@ class ExamineeLogic(BaseLogic):
         elif Name == '':
             result.Memo = 'wrong name'
         elif ClassID <= 0:
-            result.Memo = 'wrong class id'
+            result.Memo = 'wrong class ID'
         elif self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo) is not None:
             result.Memo = 'examinee No. data already exists'
         elif self._classModel.Find(_dbsession, ClassID) is None:
@@ -58,7 +58,7 @@ class ExamineeLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         elif Name == '':
             result.Memo = 'wrong name'
         else:
@@ -81,7 +81,7 @@ class ExamineeLogic(BaseLogic):
                 _dbsession.rollback()
                 return result
 
-            Desc = 'update examinee id:' + str(ID)
+            Desc = 'update examinee ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
@@ -111,7 +111,7 @@ class ExamineeLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         elif ID <= 0:
-            result.Memo = 'wrong id'
+            result.Memo = 'wrong ID'
         else:
             ExamineeData: ExamineeEntity = self._examineeModel.Find(_dbsession, ID)
             if ExamineeData is None:

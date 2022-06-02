@@ -16,6 +16,7 @@ from Logic.QuestionSolutionLogic import QuestionSolutionLogic
 from Logic.ClassLogic import ClassLogic
 from Logic.TeacherLogic import TeacherLogic
 from Logic.ExamineeLogic import ExamineeLogic
+from Logic.ExamInfoLogic import ExamInfoLogic
 
 managerLogic = ManagerLogic()
 subjectLogic = SubjectLogic()
@@ -28,3 +29,4 @@ questionSolutionLogic = QuestionSolutionLogic()
 classLogic = ClassLogic()
 teacherLogic = TeacherLogic()
 examineeLogic = ExamineeLogic()
+examInfoLogic = ExamInfoLogic()
