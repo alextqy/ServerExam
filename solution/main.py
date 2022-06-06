@@ -38,6 +38,8 @@ async def Test(request: Request, Param: str):
     return result  # json.dumps(result.__dict__)
 
 
+from Controller.SysLogController import SysLogRouter, SysLogPrefix
+from Controller.ExamLogController import ExamLogRouter, ExamLogPrefix
 from Controller.ManagerController import ManagerRouter, ManagerPrefix
 from Controller.SubjectController import SubjectRouter, SubjectPrefix
 from Controller.PaperController import PaperRouter, PaperPrefix
@@ -53,6 +55,8 @@ from Controller.ExamInfoController import ExamInfoRouter, ExamInfoPrefix
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
+app.include_router(SysLogRouter, prefix=SysLogPrefix)
+app.include_router(ExamLogRouter, prefix=ExamLogPrefix)
 app.include_router(ManagerRouter, prefix=ManagerPrefix)
 app.include_router(SubjectRouter, prefix=SubjectPrefix)
 app.include_router(PaperRouter, prefix=PaperPrefix)

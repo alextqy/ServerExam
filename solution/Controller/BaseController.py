@@ -5,6 +5,8 @@ from Service.FileHelper import *
 from Service.Lang import *
 from Service.UDPTool import *
 
+from Logic.SysLogLogic import SysLogLogic
+from Logic.ExamLogLogic import ExamLogLogic
 from Logic.ManagerLogic import ManagerLogic
 from Logic.SubjectLogic import SubjectLogic
 from Logic.PaperLogic import PaperLogic
@@ -18,6 +20,8 @@ from Logic.TeacherLogic import TeacherLogic
 from Logic.ExamineeLogic import ExamineeLogic
 from Logic.ExamInfoLogic import ExamInfoLogic
 
+sysLogLogic = SysLogLogic()
+examLogLogic = ExamLogLogic()
 managerLogic = ManagerLogic()
 subjectLogic = SubjectLogic()
 paperLogic = PaperLogic()
