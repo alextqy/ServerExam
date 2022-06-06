@@ -18,6 +18,7 @@ from Logic.QuestionSolutionLogic import QuestionSolutionLogic
 from Logic.ClassLogic import ClassLogic
 from Logic.TeacherLogic import TeacherLogic
 from Logic.ExamineeLogic import ExamineeLogic
+from Logic.ExamineeTokenLogic import ExamineeTokenLogic
 from Logic.ExamInfoLogic import ExamInfoLogic
 
 sysLogLogic = SysLogLogic()
@@ -33,4 +34,5 @@ questionSolutionLogic = QuestionSolutionLogic()
 classLogic = ClassLogic()
 teacherLogic = TeacherLogic()
 examineeLogic = ExamineeLogic()
+examineeTokenLogic = ExamineeTokenLogic()
 examInfoLogic = ExamInfoLogic()
