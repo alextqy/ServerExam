@@ -49,3 +49,13 @@ async def ExamInfo(
         ID: int = Form(0),
 ) -> Result:
     return examInfoLogic.ExamInfo(Token.strip(), ID)
+
+
+# 生成试卷
+@ExamInfoRouter.post('/Generate/Test/Paper')
+async def GenerateTestPaper(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examInfoLogic.GenerateTestPaper(Token.strip(), ID)

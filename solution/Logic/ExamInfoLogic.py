@@ -150,3 +150,35 @@ class ExamInfoLogic(BaseLogic):
                 result.State = True
                 result.Data = ExamInfoData
         return result
+
+    def GenerateTestPaper(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        elif ID <= 0:
+            result.Memo = 'wrong ID'
+        else:
+            # 报名是否存在
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = 'registration data does not exist'
+            elif ExamInfoData.ExamState == 4:
+                result.Memo = 'registration data disabled'
+            else:
+                # 是否已经存在相关试题数据
+                ScantronData: list = self._scantronModel.AllInExamID(_dbsession, ID)
+                if len(ScantronData) > 0:
+                    result.Memo = 'question data already exists'
+                else:
+                    pass
+        return result
+
+    def GenerateTestPaperAction(self, ID: int) -> Result:
+        result = Result()
+        if ID > 0:
+            pass
+        return result
