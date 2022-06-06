@@ -12,8 +12,9 @@ async def NewExamInfo(
         SubjectName: str = Form(''),
         ExamNo: str = Form(''),
         ExamineeID: int = Form(0),
+        ExamType: int = Form(0),
 ) -> Result:
-    return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeID)
+    return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeID, ExamType)
 
 
 # 报名作废
@@ -35,8 +36,9 @@ async def ExamInfoList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         ExamState: int = Form(0),
+        ExamType: int = Form(0),
 ) -> ResultList:
-    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState)
+    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType)
 
 
 # 报名详情

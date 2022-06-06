@@ -47,6 +47,9 @@ class ExamInfoModel(BaseModel):
         # if Data.ExamState <= 0:
         #     _result.Memo = 'param err'
         #     return _result
+        if Data.ExamType <= 0:
+            _result.Memo = 'param err'
+            return _result
         Data.Pass = 1
         Data.ExamState = 1
         try:
@@ -79,7 +82,7 @@ class ExamInfoModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ExamState: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -99,6 +102,8 @@ class ExamInfoModel(BaseModel):
             sql = sql.filter(or_(self.EType.SubjectName.ilike('%' + Stext.strip() + '%'), self.EType.ExamNo.ilike('%' + Stext.strip() + '%')))
         if ExamState > 0:
             sql = sql.filter(self.EType.ExamState == ExamState)
+        if ExamType > 0:
+            sql = sql.filter(self.EType.ExamType == ExamType)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 

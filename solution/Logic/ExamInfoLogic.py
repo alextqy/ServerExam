@@ -6,7 +6,7 @@ class ExamInfoLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeID: int) -> Result:
+    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeID: int, ExamType: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -20,6 +20,8 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = 'wrong exam No.'
         elif ExamineeID <= 0:
             result.Memo = 'wrong examinee ID'
+        elif ExamType <= 0:
+            result.Memo = 'wrong exam type'
         elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is None:
             result.Memo = 'subject data error'
         elif self._examInfoModel.FindExamNo(_dbsession, ExamNo) is not None:
@@ -40,6 +42,7 @@ class ExamInfoLogic(BaseLogic):
             ExamInfoData.SubjectName = SubjectName
             ExamInfoData.ExamNo = ExamNo
             ExamInfoData.ExamineeID = ExamineeID
+            ExamInfoData.ExamType = ExamType
             AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
@@ -117,7 +120,7 @@ class ExamInfoLogic(BaseLogic):
                 result.State = True
         return result
 
-    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int) -> ResultList:
+    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -126,7 +129,7 @@ class ExamInfoLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = 'permission denied'
         else:
-            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState)
+            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType)
         return result
 
     def ExamInfo(self, Token: str, ID: int) -> Result:
