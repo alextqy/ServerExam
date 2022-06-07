@@ -162,23 +162,44 @@ class ExamInfoLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = 'wrong ID'
         else:
-            # 报名是否存在
-            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
-            if ExamInfoData is None:
-                result.Memo = 'registration data does not exist'
-            elif ExamInfoData.ExamState == 4:
-                result.Memo = 'registration data disabled'
-            else:
-                # 是否已经存在相关试题数据
-                ScantronData: list = self._scantronModel.AllInExamID(_dbsession, ID)
-                if len(ScantronData) > 0:
-                    result.Memo = 'question data already exists'
-                else:
-                    pass
-        return result
+            return self.GenerateTestPaperAction(ID)
 
     def GenerateTestPaperAction(self, ID: int) -> Result:
         result = Result()
-        if ID > 0:
-            pass
+        _dbsession = DBsession()
+        ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+        if ExamInfoData is None:
+            result.Memo = 'registration data does not exist'
+        elif ExamInfoData.ExamState == 2:
+            result.Memo = 'question data already exists'
+        elif ExamInfoData.ExamState == 3:
+            result.Memo = 'exam completed'
+        elif ExamInfoData.ExamState == 4:
+            result.Memo = 'registration data disabled'
+        elif ExamInfoData.ExamineeID > 0 and self._examineeModel.Find(_dbsession, ExamInfoData.ExamineeID) is None:
+            result.Memo = 'examinee data does not exist'
+        else:
+            SubjectData: SubjectEntity = self._subjectModel.FindSubjectCode(_dbsession, ExamInfoData.SubjectName)
+            if SubjectData is None:
+                result.Memo = 'subject data does not exist'
+            else:
+                PaperData: PaperEntity = self._paperModel.FindSubjectPaper(_dbsession, SubjectData.ID)
+                if PaperData is None:
+                    result.Memo = 'paper data does not exist'
+                else:
+                    PaperRuleListData: list = self._paperRuleModel.AllPaperRule(_dbsession, PaperData.ID)
+                    if len(PaperRuleListData) == 0:
+                        result.Memo = 'paper data does not exist'
+                    else:
+                        for i in PaperRuleListData:
+                            PaperRuleData: PaperRuleEntity = i
+                            if PaperRuleData.HeadlineID > 0:
+                                HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, PaperRuleData.HeadlineID)
+                                if HeadlineData is None:
+                                    result.Memo = 'headline data error'
+                                    return result
+                            if PaperRuleData.KnowledgeID > 0:
+                                if PaperRuleData.QuestionType == 0 or PaperRuleData.QuestionNum == 0:
+                                    result.Memo = 'exam paper rules error'
+                                    return result
         return result

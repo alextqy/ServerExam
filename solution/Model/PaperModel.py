@@ -92,3 +92,6 @@ class PaperModel(BaseModel):
 
     def SubjectPaper(self, _dbsession: DBsession, SubjectID: int) -> list:
         return _dbsession.query(self.EType).filter(self.EType.SubjectID == SubjectID).all()
+
+    def FindSubjectPaper(self, _dbsession: DBsession, SubjectID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.SubjectID == SubjectID).filter(self.EType.PaperState == 1).first()
