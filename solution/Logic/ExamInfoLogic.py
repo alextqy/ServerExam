@@ -162,7 +162,8 @@ class ExamInfoLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = 'wrong ID'
         else:
-            return self.GenerateTestPaperAction(ID)
+            result = self.GenerateTestPaperAction(ID)
+        return result
 
     def GenerateTestPaperAction(self, ID: int) -> Result:
         result = Result()
@@ -170,13 +171,15 @@ class ExamInfoLogic(BaseLogic):
         ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
         if ExamInfoData is None:
             result.Memo = 'registration data does not exist'
-        elif ExamInfoData.ExamState == 2:
+        elif ExamInfoData.ExamState == 2:  # 已有试题
             result.Memo = 'question data already exists'
-        elif ExamInfoData.ExamState == 3:
+        elif ExamInfoData.ExamState == 3:  # 考试已完成
             result.Memo = 'exam completed'
-        elif ExamInfoData.ExamState == 4:
+        elif ExamInfoData.ExamState == 4:  # 报名已禁用
             result.Memo = 'registration data disabled'
-        elif ExamInfoData.ExamineeID > 0 and self._examineeModel.Find(_dbsession, ExamInfoData.ExamineeID) is None:
+        # elif ExamInfoData.ExamineeID <= 0:  # 考生ID有误
+        #     result.Memo = 'wrong examinee ID'
+        elif ExamInfoData.ExamineeID > 0 and self._examineeModel.Find(_dbsession, ExamInfoData.ExamineeID) is None:  # 考生不存在
             result.Memo = 'examinee data does not exist'
         else:
             SubjectData: SubjectEntity = self._subjectModel.FindSubjectCode(_dbsession, ExamInfoData.SubjectName)
@@ -191,15 +194,66 @@ class ExamInfoLogic(BaseLogic):
                     if len(PaperRuleListData) == 0:
                         result.Memo = 'paper data does not exist'
                     else:
+                        _dbsession.begin_nested()
+
+                        # 遍历试卷规则
                         for i in PaperRuleListData:
                             PaperRuleData: PaperRuleEntity = i
-                            if PaperRuleData.HeadlineID > 0:
-                                HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, PaperRuleData.HeadlineID)
-                                if HeadlineData is None:
-                                    result.Memo = 'headline data error'
-                                    return result
+
+                            # 解析大标题数据
+                            # if PaperRuleData.HeadlineID > 0:
+                            #     HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, PaperRuleData.HeadlineID)
+                            #     if HeadlineData is None:
+                            #         result.Memo = 'headline data error'
+                            #         return result
+                            #     if HeadlineData.Content == '':
+                            #         result.Memo = 'headline data error'
+                            #         return result
+                            #     ScantronData = ScantronEntity()
+                            #     ScantronData.HeadlineContent = HeadlineData.Content
+                            #     ScantronData.ExamID = ID
+                            #     AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
+                            #     if AddInfo.State == False:
+                            #         result.Memo = AddInfo.Memo
+                            #         return result
+
+                            # 解析试卷数据
                             if PaperRuleData.KnowledgeID > 0:
-                                if PaperRuleData.QuestionType == 0 or PaperRuleData.QuestionNum == 0:
+                                if PaperRuleData.QuestionType == 0 or PaperRuleData.QuestionNum == 0 or PaperRuleData.SingleScore == 0:
                                     result.Memo = 'exam paper rules error'
                                     return result
+                                # 获取该知识点下对应类型的数据
+                                QuestionDataList: list = self._questionModel.PaperRuleQuestion(_dbsession, PaperRuleData.KnowledgeID, PaperRuleData.QuestionType)
+                                if len(QuestionDataList) < PaperRuleData.QuestionNum:
+                                    result.Memo = 'not enough questions'
+                                    return result
+                                # 试题数量和抽题数量相同 则全部放入答题卡
+                                if len(QuestionDataList) == PaperRuleData.QuestionNum:
+                                    ScantronDataList: list = QuestionDataList
+                                # 试题数量大于抽题数量相同 则随机放入答题卡
+                                if len(QuestionDataList) > PaperRuleData.QuestionNum:
+                                    ScantronDataList: list = self._common.RandomDrawSample(QuestionDataList, PaperRuleData.QuestionNum)
+                                print(len(QuestionDataList))
+                                # print(len(ScantronDataList))
+                                # for j in ScantronDataList:
+                                #     QuestionData: QuestionEntity = j
+                                #     print(QuestionData.ID)
+                                #     ScantronData = ScantronEntity()
+                                #     ScantronData.QuestionTitle = QuestionData.QuestionTitle
+                                #     ScantronData.QuestionType = QuestionData.QuestionType
+                                #     ScantronData.KnowledgeID = QuestionData.KnowledgeID
+                                #     ScantronData.Score = PaperRuleData.SingleScore
+                                #     ScantronData.Marking = QuestionData.Marking
+                                #     ScantronData.Description = QuestionData.Description
+                                #     ScantronData.Attachment = QuestionData.Attachment
+                                #     ScantronData.ExamID = ID
+                                #     AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
+                                #     if AddInfo.State == False:
+                                #         result.Memo = AddInfo.Memo
+                                #         return result
+
+                        # ExamInfoData.ExamState = 2  # 报名状态改为待考
+
+                        _dbsession.commit()
+                        result.State = True
         return result

@@ -273,3 +273,11 @@ class Common(BaseService):
         Data = f.read()
         f.close()
         return json.loads(Data)
+
+    # 随机抽取数组中一个元素
+    def RandomDrawChoice(self, Array: list) -> any:
+        return choice(Array)
+
+    # 随机抽取数组中多个元素
+    def RandomDrawSample(self, Array: list, Quantity: int) -> list:
+        return sample(Array, Quantity)

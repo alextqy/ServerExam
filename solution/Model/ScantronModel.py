@@ -9,10 +9,10 @@ class ScantronModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.QuestionTitle = Data.QuestionTitle.strip()
-        Data.Description = Data.Description.strip()
-        Data.Attachment = Data.Attachment.strip()
-        Data.HeadlineContent = Data.HeadlineContent.strip()
+        # Data.QuestionTitle = Data.QuestionTitle.strip()
+        # Data.Description = Data.Description.strip()
+        # Data.Attachment = Data.Attachment.strip()
+        # Data.HeadlineContent = Data.HeadlineContent.strip()
         if Data.HeadlineContent == '':
             if Data.QuestionTitle == '':
                 _result.Memo = 'param err'
@@ -27,10 +27,11 @@ class ScantronModel(BaseModel):
                 _result.Memo = 'param err'
                 return _result
             Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
-        if Data.QuestionTitle == '':
-            if Data.HeadlineContent == '':
-                _result.Memo = 'param err'
-                return _result
+        if Data.HeadlineContent != '':
+            Data.QuestionTitle = ''
+            Data.QuestionType = 0
+            Data.KnowledgeID = 0
+            Data.Score = 0
         if Data.ExamID <= 0:
             _result.Memo = 'param err'
             return _result

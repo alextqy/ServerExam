@@ -17,11 +17,24 @@ class ScantronHistoryModel(BaseModel):
             if Data.QuestionTitle == '':
                 _result.Memo = 'param err'
                 return _result
-        if Data.QuestionTitle == '':
-            if Data.HeadlineContent == '':
+            if Data.QuestionType <= 0:
                 _result.Memo = 'param err'
                 return _result
-        Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
+            if Data.KnowledgeID <= 0:
+                _result.Memo = 'param err'
+                return _result
+            if Data.Score <= 0:
+                _result.Memo = 'param err'
+                return _result
+            Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
+        if Data.HeadlineContent != '':
+            Data.QuestionTitle = ''
+            Data.QuestionType = 0
+            Data.KnowledgeID = 0
+            Data.Score = 0
+        if Data.ExamID <= 0:
+            _result.Memo = 'param err'
+            return _result
         try:
             _dbsession.add(Data)
             _dbsession.commit()

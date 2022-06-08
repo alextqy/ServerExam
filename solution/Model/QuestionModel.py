@@ -90,3 +90,6 @@ class QuestionModel(BaseModel):
 
     def CountType(self, _dbsession: DBsession, KnowledgeID: int, QuestionType: int) -> int:
         return _dbsession.query(self.EType).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.QuestionState == 1).count()
+
+    def PaperRuleQuestion(self, _dbsession: DBsession, KnowledgeID: int, QuestionType: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.QuestionState == 1).all()
