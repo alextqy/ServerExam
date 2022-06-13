@@ -135,7 +135,7 @@ class QuestionLogic(BaseLogic):
 
                         if QuestionData.QuestionType == 1:  # 单选题 ##################################################################
                             # 不能低于两个选项
-                            if len(QuestionSolutionDataList) < 2:
+                            if len(QuestionSolutionDataList) < 3:
                                 result.Memo = 'need more than two options'
                                 return result
                             # 答案统计
