@@ -228,9 +228,9 @@ class QuestionLogic(BaseLogic):
                                 result.Memo = 'need more than four options'
                                 return result
                             # 选项解析
-                            EmptyAnswer: bool = True
-                            LeftPositionCount: int = 0
-                            RightPositionCount: int = 0
+                            EmptyAnswer: bool = True  # 判断答案是否为空
+                            LeftPositionCount: int = 0  # 左侧选项统计
+                            RightPositionCount: int = 0  # 右侧选项统计
                             for i in QuestionSolutionDataList:
                                 Data: QuestionSolutionEntity = i
                                 if Data.Position == 1:
