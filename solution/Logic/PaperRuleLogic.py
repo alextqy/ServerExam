@@ -21,6 +21,10 @@ class PaperRuleLogic(BaseLogic):
         elif HeadlineID == 0 and KnowledgeID == 0:
             result.Memo = 'wrong data'
         else:
+            PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperID)
+            if PaperData is None:
+                result.Memo = 'paper data error'
+                return result
             if HeadlineID > 0:
                 HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, HeadlineID)
                 if HeadlineData is None:
@@ -40,10 +44,6 @@ class PaperRuleLogic(BaseLogic):
                     return result
                 if SingleScore <= 0:
                     result.Memo = 'wrong single score'
-                    return result
-                PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperID)
-                if PaperData is None:
-                    result.Memo = 'paper data error'
                     return result
                 SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, PaperData.SubjectID)
                 if SubjectData is None:
@@ -174,7 +174,7 @@ class PaperRuleLogic(BaseLogic):
             result.State = True
         return result
 
-    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int) -> Result:
+    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

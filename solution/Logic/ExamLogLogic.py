@@ -6,7 +6,7 @@ class ExamLogLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ExamLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int) -> Result:
+    def ExamLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

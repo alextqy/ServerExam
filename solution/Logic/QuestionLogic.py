@@ -127,15 +127,14 @@ class QuestionLogic(BaseLogic):
                 try:
                     if QuestionData.QuestionState == 2:
                         # 试卷选项合理性解析
-                        QuestionSolutionList: ResultList = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
-                        QuestionSolutionDataList: list = QuestionSolutionList.Data
+                        QuestionSolutionDataList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                         if len(QuestionSolutionDataList) == 0:
                             result.Memo = 'no options'
                             return result
 
                         if QuestionData.QuestionType == 1:  # 单选题 ##################################################################
                             # 不能低于两个选项
-                            if len(QuestionSolutionDataList) < 3:
+                            if len(QuestionSolutionDataList) < 2:
                                 result.Memo = 'need more than two options'
                                 return result
                             # 答案统计
@@ -182,7 +181,7 @@ class QuestionLogic(BaseLogic):
                             if len(QuestionSolutionDataList) < 2:
                                 result.Memo = 'need more than two options'
                                 return result
-                            # 答案统计
+                            # 正确答案统计
                             CorrectAnswerCount: int = 0
                             for i in QuestionSolutionDataList:
                                 Data: QuestionSolutionEntity = i

@@ -6,7 +6,7 @@ class SysLogLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def SysLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int, ManagerID: int) -> Result:
+    def SysLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int, ManagerID: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

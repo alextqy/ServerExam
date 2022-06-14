@@ -80,10 +80,7 @@ class QuestionSolutionModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def AllSolutions(self, _dbsession: DBsession, QuestionID: int) -> ResultList:
-        _result = ResultList()
-        _result.State = True
+    def AllSolutions(self, _dbsession: DBsession, QuestionID: int) -> list:
         sql = _dbsession.query(self.EType)
         sql = sql.filter(self.EType.QuestionID == QuestionID)
-        _result.Data = sql.all()
-        return _result
+        return sql.all()

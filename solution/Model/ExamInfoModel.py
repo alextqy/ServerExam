@@ -41,9 +41,9 @@ class ExamInfoModel(BaseModel):
         # if Data.Pass <= 0:
         #     _result.Memo = 'param err'
         #     return _result
-        if Data.ExamineeID <= 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.ExamineeID <= 0:
+        #     _result.Memo = 'param err'
+        #     return _result
         # if Data.ExamState <= 0:
         #     _result.Memo = 'param err'
         #     return _result

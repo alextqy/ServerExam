@@ -14,9 +14,9 @@ class SysLogModel(BaseModel):
         if Data.Type <= 0:
             _result.Memo = 'param err'
             return _result
-        if Data.ManagerID < 0:
-            _result.Memo = 'param err'
-            return _result
+        # if Data.ManagerID < 0:
+        #     _result.Memo = 'param err'
+        #     return _result
         if Data.Description == '':
             _result.Memo = 'param err'
             return _result

@@ -58,4 +58,14 @@ async def GenerateTestPaper(
         Token: str = Form(''),
         ID: int = Form(0),
 ) -> Result:
-    return examInfoLogic.GenerateTestPaper(Token.strip(), ID)
+    return examInfoLogic.GenerateTestPaper(request.client.host, Token.strip(), ID)
+
+
+# 重置报名试题数据
+@ExamInfoRouter.post('/Reset/Exam/Question/Data')
+async def ResetExamQuestionData(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examInfoLogic.ResetExamQuestionData(request.client.host, Token.strip(), ID)
