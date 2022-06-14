@@ -119,7 +119,7 @@ class ExamInfoLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'disable exam ID:' + str(ID)
+                Desc = 'disable exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
@@ -347,7 +347,7 @@ class ExamInfoLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'reset exam ID:' + str(ID)
+                Desc = 'reset exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
