@@ -178,13 +178,13 @@ class ExamInfoLogic(BaseLogic):
         if ID <= 0:
             result.Memo = 'wrong ID'
         elif ExamInfoData is None:
-            result.Memo = 'registration data does not exist'
+            result.Memo = 'exam data does not exist'
         elif ExamInfoData.ExamState == 2:  # 已有试题
             result.Memo = 'question data already exists'
         elif ExamInfoData.ExamState == 3:  # 考试已完成
             result.Memo = 'exam completed'
         elif ExamInfoData.ExamState == 4:  # 报名已禁用
-            result.Memo = 'registration data disabled'
+            result.Memo = 'exam data disabled'
         elif ExamInfoData.ExamineeID > 0 and self._examineeModel.Find(_dbsession, ExamInfoData.ExamineeID) is None:  # 考生不存在
             result.Memo = 'examinee data does not exist'
         else:
@@ -350,6 +350,98 @@ class ExamInfoLogic(BaseLogic):
                 Desc = 'reset exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        return result
+
+    def ExamIntoHistory(self, ClientHost: str, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = 'wrong token'
+        elif AdminID == 0:
+            result.Memo = 'permission denied'
+        else:
+            result = self.ExamIntoHistoryAction(ClientHost, ID, AdminID)
+        return result
+
+    def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+        if ExamInfoData is None:
+            result.Memo = 'exam data does not exist'
+        elif ID <= 0:
+            result.Memo = 'wrong ID'
+        else:
+            _dbsession.begin_nested()
+
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = 'exam data does not exist'
+            elif ExamInfoData.ExamState == 2:
+                result.Memo = 'it has not yet taken the exam'
+            else:
+                # 获取报名下的答题卡
+                ScantronDataList: list = self._scantronModel.AllInExamID(_dbsession, ID)
+                if len(ScantronDataList) > 0:
+                    for i in ScantronDataList:
+                        ScantronData: ScantronEntity = i
+
+                        # 当前报名下的答题卡转入历史
+                        ScantronHistoryData = ScantronHistoryEntity()
+                        ScantronHistoryData.QuestionTitle = ScantronData.QuestionTitle
+                        ScantronHistoryData.QuestionCode = ScantronData.QuestionCode
+                        ScantronHistoryData.QuestionType = ScantronData.QuestionType
+                        ScantronHistoryData.Marking = ScantronData.Marking
+                        ScantronHistoryData.KnowledgeID = ScantronData.KnowledgeID
+                        ScantronHistoryData.Description = ScantronData.Description
+                        ScantronHistoryData.Attachment = ScantronData.Attachment
+                        ScantronHistoryData.Score = ScantronData.Score
+                        ScantronHistoryData.ExamID = ScantronData.ExamID
+                        ScantronHistoryData.HeadlineContent = ScantronData.HeadlineContent
+
+                        # 删除当前答题卡数据
+                        DelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
+                        if DelInfo.State == False:
+                            result.Memo = DelInfo.Memo
+                            return result
+
+                # 当前报名下的答题卡选项转入历史
+
+                # 添加到历史数据
+                ExamInfoHistoryData = ExamInfoHistoryEntity()
+                ExamInfoHistoryData.SubjectName = ExamInfoData.SubjectName
+                ExamInfoHistoryData.ExamNo = ExamInfoData.ExamNo
+                ExamInfoHistoryData.TotalScore = ExamInfoData.TotalScore
+                ExamInfoHistoryData.PassLine = ExamInfoData.PassLine
+                ExamInfoHistoryData.ActualScore = ExamInfoData.ActualScore
+                ExamInfoHistoryData.ExamDuration = ExamInfoData.ExamDuration
+                ExamInfoHistoryData.StartTime = ExamInfoData.StartTime
+                ExamInfoHistoryData.EndTime = ExamInfoData.EndTime
+                ExamInfoHistoryData.ActualDuration = ExamInfoData.ActualDuration
+                ExamInfoHistoryData.Pass = ExamInfoData.Pass
+                ExamInfoHistoryData.ExamineeID = ExamInfoData.ExamineeID
+                ExamInfoHistoryData.ExamState = ExamInfoData.ExamState
+                ExamInfoHistoryData.ExamType = ExamInfoData.ExamType
+                AddInfo: Result = self._examInfoHistoryModel.Insert(_dbsession, ExamInfoHistoryData)
+                if AddInfo.State == False:
+                    result.Memo = AddInfo.Memo
+                    return result
+
+                # 写入历史
+                Desc = 'exam info history No.:' + ExamInfoData.ExamNo
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = 'logging failed'
+                    return result
+
+                # 删除原有报名数据
+                DelInfo: Result = self._examineeModel.Delete(_dbsession, ExamInfoData.ID)
+                if DelInfo.State == False:
+                    result.Memo = DelInfo.Memo
                     return result
 
                 _dbsession.commit()

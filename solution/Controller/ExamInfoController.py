@@ -69,3 +69,13 @@ async def ResetExamQuestionData(
         ID: int = Form(0),
 ) -> Result:
     return examInfoLogic.ResetExamQuestionData(request.client.host, Token.strip(), ID)
+
+
+# 报名转入历史
+@ExamInfoRouter.post('/Exam/Into/History')
+async def ExamIntoHistory(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examInfoLogic.ExamIntoHistory(request.client.host, Token.strip(), ID)

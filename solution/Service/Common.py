@@ -3,7 +3,7 @@ from Service.BaseService import *
 
 
 class Result:
-    Status: bool
+    State: bool
     Memo: str
     Code: int
     Data: None
@@ -17,7 +17,7 @@ class Result:
 
 
 class ResultList:
-    Status: bool
+    State: bool
     Memo: str
     Code: int
     Page: int
