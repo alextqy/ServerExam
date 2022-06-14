@@ -57,7 +57,7 @@ class ExamInfoLogic(BaseLogic):
                     return result
 
                 Desc = 'new exam No.:' + ExamNo
-                if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
 
@@ -100,14 +100,14 @@ class ExamInfoLogic(BaseLogic):
                                     ScantronSolutionData: ScantronSolutionEntity = j
                                     SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
                                     if SSDelInfo.State == False:
-                                        _dbsession.rollback()
                                         result.Memo = SSDelInfo.Memo
+                                        _dbsession.rollback()
                                         return result
                             # 删除答题卡
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
-                                _dbsession.rollback()
                                 result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
                                 return result
 
                 try:
@@ -315,6 +315,8 @@ class ExamInfoLogic(BaseLogic):
             elif ExamInfoData.ExamState == 4:
                 result.Memo = 'exam data disabled'
             else:
+                _dbsession.begin_nested()
+
                 # 获取对应答题卡列表数据
                 if ExamInfoData.ExamState == 2:
                     ScantronDataList: list = self._scantronModel.AllInExamID(_dbsession, ID)
@@ -328,13 +330,11 @@ class ExamInfoLogic(BaseLogic):
                                     ScantronSolutionData: ScantronSolutionEntity = j
                                     SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
                                     if SSDelInfo.State == False:
-                                        _dbsession.rollback()
                                         result.Memo = SSDelInfo.Memo
                                         return result
                             # 删除答题卡
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
-                                _dbsession.rollback()
                                 result.Memo = SDelInfo.Memo
                                 return result
 

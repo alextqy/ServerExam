@@ -41,7 +41,7 @@ class ExamineeLogic(BaseLogic):
                 return result
 
             Desc = 'new examinee No.:' + ExamineeNo
-            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+            if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
 

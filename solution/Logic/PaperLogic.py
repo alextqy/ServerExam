@@ -76,6 +76,7 @@ class PaperLogic(BaseLogic):
                         PaperRuleList: list = self._paperRuleModel.AllPaperRule(_dbsession, ID)
                         if len(PaperRuleList) == 0:
                             result.Memo = 'paper rule data does not exist'
+                            _dbsession.rollback()
                             return result
                         # 当前试卷下的试卷规则是否和当前试卷总分相匹配
                         if len(PaperRuleList) > 0:
@@ -85,6 +86,7 @@ class PaperLogic(BaseLogic):
                                 TotalScore += float(PaperRuleData.SingleScore) * PaperRuleData.QuestionNum
                             if TotalScore != PaperData.TotalScore:
                                 result.Memo = 'score is set incorrectly'
+                                _dbsession.rollback()
                                 return result
                         # 当前科目只能有一个试卷被启用
                         PaperList: list = self._paperModel.SubjectPaper(_dbsession, PaperData.SubjectID)

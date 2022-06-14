@@ -130,12 +130,14 @@ class QuestionLogic(BaseLogic):
                         QuestionSolutionDataList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                         if len(QuestionSolutionDataList) == 0:
                             result.Memo = 'no options'
+                            _dbsession.rollback()
                             return result
 
                         if QuestionData.QuestionType == 1:  # 单选题 ##################################################################
                             # 不能低于两个选项
                             if len(QuestionSolutionDataList) < 2:
                                 result.Memo = 'need more than two options'
+                                _dbsession.rollback()
                                 return result
                             # 答案统计
                             CorrectAnswerCount: int = 0
@@ -149,16 +151,19 @@ class QuestionLogic(BaseLogic):
                             # 是否设置唯一正确答案
                             if CorrectAnswerCount != 1:
                                 result.Memo = 'need a correct answer'
+                                _dbsession.rollback()
                                 return result
                             # 是否设置错误答案
                             if WrongAnswerCount == 0:
                                 result.Memo = 'no wrong answer'
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 2:  # 判断题 ##################################################################
                             # 只需要两个选项
                             if len(QuestionSolutionDataList) != 2:
                                 result.Memo = 'just need two options'
+                                _dbsession.rollback()
                                 return result
                             # 答案统计
                             CorrectAnswerCount: int = 0
@@ -171,15 +176,18 @@ class QuestionLogic(BaseLogic):
                                     CorrectAnswerCount += 1
                             if CorrectAnswerCount != 1:
                                 result.Memo = 'just need one correct answer'
+                                _dbsession.rollback()
                                 return result
                             if WrongAnswerCount != 1:
                                 result.Memo = 'just need one wrong answer'
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 3:  # 多选题 ##################################################################
                             # 不能低于两个选项
                             if len(QuestionSolutionDataList) < 2:
                                 result.Memo = 'need more than two options'
+                                _dbsession.rollback()
                                 return result
                             # 正确答案统计
                             CorrectAnswerCount: int = 0
@@ -189,12 +197,14 @@ class QuestionLogic(BaseLogic):
                                     CorrectAnswerCount += 1
                             if CorrectAnswerCount < 2:
                                 result.Memo = 'at least two correct answers'
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 4:  # 填空题 ##################################################################
                             # 答案数量是否超过填空数
                             if len(QuestionSolutionDataList) != self._common.CountStr(QuestionData.QuestionTitle, '<->'):
                                 result.Memo = 'wrong number of options'
+                                _dbsession.rollback()
                                 return result
                             # 得分比例统计
                             ScoreRatioCount: float = 0
@@ -203,6 +213,7 @@ class QuestionLogic(BaseLogic):
                                 ScoreRatioCount += Data.ScoreRatio
                             if ScoreRatioCount != 1:
                                 result.Memo = 'the sum of the score ratios is not 1'
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 5:  # 问答题 ##################################################################
@@ -213,18 +224,21 @@ class QuestionLogic(BaseLogic):
                                 ScoreRatioCount += Data.ScoreRatio
                             if ScoreRatioCount != 1:
                                 result.Memo = 'the sum of the score ratios is not 1'
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 6:  # 代码实训 ##################################################################
                             # 只需要一个答案
                             if len(QuestionSolutionDataList) != 1:
                                 result.Memo = 'just need an answer'
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽题 连线题 ##################################################################
                             # 不能低于四个选项
                             if len(QuestionSolutionDataList) < 4:
                                 result.Memo = 'need more than four options'
+                                _dbsession.rollback()
                                 return result
                             # 选项解析
                             EmptyAnswer: bool = True  # 判断答案是否为空
@@ -241,10 +255,12 @@ class QuestionLogic(BaseLogic):
                             # 两侧选项数量是否一致
                             if LeftPositionCount != RightPositionCount:
                                 result.Memo = 'inconsistent number of options on both sides'
+                                _dbsession.rollback()
                                 return result
                             # 是否设置答案
                             if EmptyAnswer == True:
                                 result.Memo = 'no set answer'
+                                _dbsession.rollback()
                                 return result
 
                         QuestionData.QuestionState = 1

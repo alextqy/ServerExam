@@ -47,7 +47,7 @@ class TeacherLogic(BaseLogic):
                 return result
 
             Desc = 'new teacher account:' + Account
-            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+            if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = 'logging failed'
                 return result
 
@@ -112,11 +112,13 @@ class TeacherLogic(BaseLogic):
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
                 result.Memo = 'teacher data error'
+                _dbsession.rollback()
                 return result
 
             if Password != '':
                 if len(Password) < 6:
                     result.Memo = 'password length is not enough'
+                    _dbsession.rollback()
                     return result
                 else:
                     TeacherData.Password = self._common.UserPWD(Password.strip())
@@ -124,6 +126,7 @@ class TeacherLogic(BaseLogic):
             if ClassID > 0:
                 if self._classModel.Find(_dbsession, ClassID) is None:
                     result.Memo = 'class data error'
+                    _dbsession.rollback()
                     return result
                 else:
                     TeacherData.ClassID = ClassID
