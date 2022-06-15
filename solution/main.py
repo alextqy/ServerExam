@@ -7,6 +7,7 @@ pip install 'uvicorn[standard]'
 uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
 '''
 from Service.Common import *
+from PreOperation.DaoHandler import DaoHandler
 
 app = FastAPI()
 
@@ -73,3 +74,7 @@ app.include_router(ExamineeTokenRouter, prefix=ExamineeTokenPrefix)
 app.include_router(ExamInfoRouter, prefix=ExamInfoPrefix)
 
 # app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
+
+# 修改数据库前置方法
+# daoHandler = DaoHandler()
+# daoHandler.AddFields()

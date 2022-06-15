@@ -11,7 +11,7 @@ class ScantronSolutionHistoryModel(BaseModel):
         _result = Result()
         Data.Option = Data.Option.strip()
         Data.OptionAttachment = Data.OptionAttachment.strip()
-        if Data.ScantronID <= 0:
+        if Data.ScantronHistoryID <= 0:
             _result.Memo = 'param err'
             return _result
         # if Data.Option == '':
@@ -59,7 +59,7 @@ class ScantronSolutionHistoryModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: str, ScantronID: int, Position: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: str, ScantronHistoryID: int, Position: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -75,8 +75,8 @@ class ScantronSolutionHistoryModel(BaseModel):
             Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if ScantronID > 0:
-            sql = sql.filter(self.EType.ScantronID == ScantronID)
+        if ScantronHistoryID > 0:
+            sql = sql.filter(self.EType.ScantronHistoryID == ScantronHistoryID)
         if Position > 0:
             sql = sql.filter(self.EType.Position == Position)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()

@@ -403,6 +403,37 @@ class ExamInfoLogic(BaseLogic):
                         ScantronHistoryData.Score = ScantronData.Score
                         ScantronHistoryData.ExamID = ScantronData.ExamID
                         ScantronHistoryData.HeadlineContent = ScantronData.HeadlineContent
+                        AddInfo: Result = self._scantronHistoryModel.Insert(_dbsession, ScantronHistoryData)
+                        if AddInfo.State == False:
+                            result.Memo = AddInfo.Memo
+                            return result
+
+                        # 当前报名下的答题卡选项转入历史
+                        ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                        if len(ScantronSolutionDataList) > 0:
+                            for s in ScantronSolutionDataList:
+                                ScantronSolutionData: ScantronSolutionEntity = s
+
+                                # 当前答题卡选项转入历史
+                                ScantronSolutionHistoryData = ScantronSolutionHistoryEntity()
+                                ScantronSolutionHistoryData.ScantronHistoryID = ScantronHistoryData.ID
+                                ScantronSolutionHistoryData.Option = ScantronSolutionData.Option
+                                ScantronSolutionHistoryData.OptionAttachment = ScantronSolutionData.OptionAttachment
+                                ScantronSolutionHistoryData.CorrectAnswer = ScantronSolutionData.CorrectAnswer
+                                ScantronSolutionHistoryData.CorrectItem = ScantronSolutionData.CorrectItem
+                                ScantronSolutionHistoryData.ScoreRatio = ScantronSolutionData.ScoreRatio
+                                ScantronSolutionHistoryData.Position = ScantronSolutionData.Position
+                                ScantronSolutionHistoryData.CandidateAnswer = ScantronSolutionData.CandidateAnswer
+                                AddInfo: Result = self._scantronSolutionHistoryModel.Insert(_dbsession, ScantronSolutionHistoryData)
+                                if AddInfo.State == False:
+                                    result.Memo = AddInfo.Memo
+                                    return result
+
+                                # 删除当前答题卡选项
+                                DelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
+                                if DelInfo.State == False:
+                                    result.Memo = DelInfo.Memo
+                                    return result
 
                         # 删除当前答题卡数据
                         DelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
@@ -410,9 +441,7 @@ class ExamInfoLogic(BaseLogic):
                             result.Memo = DelInfo.Memo
                             return result
 
-                # 当前报名下的答题卡选项转入历史
-
-                # 添加到历史数据
+                # 当前报名数据添加到历史
                 ExamInfoHistoryData = ExamInfoHistoryEntity()
                 ExamInfoHistoryData.SubjectName = ExamInfoData.SubjectName
                 ExamInfoHistoryData.ExamNo = ExamInfoData.ExamNo
@@ -432,14 +461,14 @@ class ExamInfoLogic(BaseLogic):
                     result.Memo = AddInfo.Memo
                     return result
 
-                # 写入历史
+                # 写入日志
                 Desc = 'exam info history No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = 'logging failed'
                     return result
 
                 # 删除原有报名数据
-                DelInfo: Result = self._examineeModel.Delete(_dbsession, ExamInfoData.ID)
+                DelInfo: Result = self._examInfoModel.Delete(_dbsession, ExamInfoData.ID)
                 if DelInfo.State == False:
                     result.Memo = DelInfo.Memo
                     return result
