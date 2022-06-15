@@ -11,9 +11,9 @@ class ExamLogLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examLogModel.List(_dbsession, Page, PageSize, Stext, Type)
         return result
@@ -23,15 +23,15 @@ class ExamLogLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             ExamLogData: ExamLogEntity = self._examLogModel.Find(_dbsession, ID)
             if ExamLogData is None:
-                result.Memo = 'exam log data error'
+                result.Memo = self._lang.ExamLogDataError
             else:
                 result.State = True
                 result.Data = ExamLogData

@@ -10,11 +10,11 @@ class ExamineeTokenLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
-            result.Memo = 'wrong account'
+            result.Memo = self._lang.WrongAccount
         else:
             ExamineeData: ExamineeEntity = self._examineeModel.FindExamineeNo(_dbsession, Account)
             if ExamineeData is not None:
-                result.Memo = 'examinee data does not exist'
+                result.Memo = self._lang.ExamineeDataDoesNotExist
             else:
                 pass
         return result
@@ -23,11 +23,11 @@ class ExamineeTokenLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
-            result.Memo = 'wrong account'
+            result.Memo = self._lang.WrongAccount
         else:
             ExamInfoData: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, Account)
             if ExamInfoData is not None:
-                result.Memo = 'exam data does not exist'
+                result.Memo = self._lang.ExamDataDoesNotExist
             else:
                 pass
         return result

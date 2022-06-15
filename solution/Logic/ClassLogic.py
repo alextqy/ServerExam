@@ -11,13 +11,13 @@ class ClassLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ClassName == '':
-            result.Memo = 'wrong class name'
+            result.Memo = self._lang.WrongClassName
         elif self._classModel.FindName(_dbsession, ClassName) is not None:
-            result.Memo = 'class data already exists'
+            result.Memo = self._lang.ClassDataAlreadyExists
         else:
             _dbsession.begin_nested()
 
@@ -32,7 +32,7 @@ class ClassLogic(BaseLogic):
 
             Desc = 'new class name:' + ClassName
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -45,21 +45,21 @@ class ClassLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif ClassName == '':
-            result.Memo = 'wrong class name'
+            result.Memo = self._lang.WrongClassName
         else:
             CheckData: ClassEntity = self._classModel.FindName(_dbsession, ClassName)
             if CheckData is not None and CheckData.ID != ID:
-                result.Memo = 'class data already exists'
+                result.Memo = self._lang.ClassDataAlreadyExists
                 return result
             ClassData: ClassEntity = self._classModel.Find(_dbsession, ID)
             if ClassData is None:
-                result.Memo = 'class data error'
+                result.Memo = self._lang.ClassDataError
                 return result
 
             if ClassData.ClassName != ClassName:
@@ -81,7 +81,7 @@ class ClassLogic(BaseLogic):
 
             Desc = 'update class ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -93,9 +93,9 @@ class ClassLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._classModel.List(_dbsession, Page, PageSize, Stext)
         return result
@@ -105,15 +105,15 @@ class ClassLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             ClassData: ClassEntity = self._classModel.Find(_dbsession, ID)
             if ClassData is None:
-                result.Memo = 'class data error'
+                result.Memo = self._lang.ClassDataError
             else:
                 result.State = True
                 result.Data = ClassData

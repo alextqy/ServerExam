@@ -11,9 +11,9 @@ class KnowledgeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif KnowledgeName == '':
             result.Memo = 'wrong knowledge name'
         elif SubjectID <= 0:
@@ -37,7 +37,7 @@ class KnowledgeLogic(BaseLogic):
 
                 Desc = 'new knowledge:' + KnowledgeName
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -49,9 +49,9 @@ class KnowledgeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
@@ -76,7 +76,7 @@ class KnowledgeLogic(BaseLogic):
                 if KnowledgeData.KnowledgeState == 2:
                     Desc = 'disable knowledge ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -88,11 +88,11 @@ class KnowledgeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif KnowledgeName == '':
             result.Memo = 'wrong knowledge name'
         else:
@@ -119,7 +119,7 @@ class KnowledgeLogic(BaseLogic):
 
                 Desc = 'update knowledge ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -131,9 +131,9 @@ class KnowledgeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._knowledgeModel.List(_dbsession, Page, PageSize, Stext, SubjectID, KnowledgeState)
         return result
@@ -143,11 +143,11 @@ class KnowledgeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:

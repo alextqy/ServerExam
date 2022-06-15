@@ -35,7 +35,7 @@ class ManagerLogic(BaseLogic):
 
                     Desc = 'manager login account:' + Account
                     if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
-                        result.Memo = 'logging failed'
+                        result.Memo = self._lang.LoggingFailed
                         return result
 
                     _dbsession.commit()
@@ -47,7 +47,7 @@ class ManagerLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         else:
             ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             if ManagerData is None:
@@ -65,7 +65,7 @@ class ManagerLogic(BaseLogic):
 
                 Desc = 'manager logout account:' + ManagerData.Account
                 if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -77,9 +77,9 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif Account == '':
             result.Memo = 'wrong account'
         elif len(Account) < 6:
@@ -110,7 +110,7 @@ class ManagerLogic(BaseLogic):
 
             Desc = 'new manager account:' + Account
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -122,11 +122,11 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif ID == 1:
             result.Memo = 'operation failed'
         else:
@@ -153,7 +153,7 @@ class ManagerLogic(BaseLogic):
                 if ManagerData.State == 2:
                     Desc = 'disable manager ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -165,9 +165,9 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif NewPassword == '':
             result.Memo = 'wrong new password'
         elif len(NewPassword) < 6:
@@ -189,7 +189,7 @@ class ManagerLogic(BaseLogic):
 
                 Desc = 'manager change password account:' + ManagerData.Account
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -201,9 +201,9 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif Name == '':
             result.Memo = 'wrong name'
         elif Permission <= 0:
@@ -230,7 +230,7 @@ class ManagerLogic(BaseLogic):
 
                 Desc = 'update manager ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -242,9 +242,9 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._managerModel.List(_dbsession, Page, PageSize, Stext, State, Permission)
         return result
@@ -254,11 +254,11 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:

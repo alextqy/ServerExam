@@ -11,9 +11,9 @@ class SubjectLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
         elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
@@ -30,7 +30,7 @@ class SubjectLogic(BaseLogic):
 
             Desc = 'new subject:' + SubjectName
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -42,11 +42,11 @@ class SubjectLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
@@ -71,7 +71,7 @@ class SubjectLogic(BaseLogic):
                 if SubjectData.SubjectState == 2:
                     Desc = 'disable subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -83,11 +83,11 @@ class SubjectLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif SubjectName == '':
             result.Memo = 'wrong subject name'
         else:
@@ -116,7 +116,7 @@ class SubjectLogic(BaseLogic):
 
                 Desc = 'update subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -128,9 +128,9 @@ class SubjectLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._subjectModel.List(_dbsession, Page, PageSize, Stext, SubjectState)
         return result
@@ -140,11 +140,11 @@ class SubjectLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:

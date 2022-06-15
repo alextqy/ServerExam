@@ -11,19 +11,19 @@ class ExamineeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ExamineeNo == '':
-            result.Memo = 'wrong examinee No.'
+            result.Memo = self._lang.WrongExamineeNo
         elif Name == '':
-            result.Memo = 'wrong name'
+            result.Memo = self._lang.WrongName
         elif ClassID <= 0:
-            result.Memo = 'wrong class ID'
+            result.Memo = self._lang.WrongClassID
         elif self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo) is not None:
-            result.Memo = 'examinee No. data already exists'
+            result.Memo = self._lang.ExamineeNoDataAlreadyExists
         elif self._classModel.Find(_dbsession, ClassID) is None:
-            result.Memo = 'class data does not exist'
+            result.Memo = self._lang.ClassDataDoesNotExist
         else:
             if Contact == '':
                 Contact = 'none'
@@ -42,7 +42,7 @@ class ExamineeLogic(BaseLogic):
 
             Desc = 'new examinee No.:' + ExamineeNo
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -54,20 +54,20 @@ class ExamineeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif Name == '':
-            result.Memo = 'wrong name'
+            result.Memo = self._lang.WrongName
         else:
             if Contact == '':
                 Contact = 'none'
 
             ExamineeData: ExamineeEntity = self._examineeModel.Find(_dbsession, ID)
             if ExamineeData is None:
-                result.Memo = 'examinee data error'
+                result.Memo = self._lang.ExamineeDataError
                 return result
 
             _dbsession.begin_nested()
@@ -83,7 +83,7 @@ class ExamineeLogic(BaseLogic):
 
             Desc = 'update examinee ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -95,9 +95,9 @@ class ExamineeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
         return result
@@ -107,15 +107,15 @@ class ExamineeLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             ExamineeData: ExamineeEntity = self._examineeModel.Find(_dbsession, ID)
             if ExamineeData is None:
-                result.Memo = 'examinee data error'
+                result.Memo = self._lang.ExamineeDataError
             else:
                 result.State = True
                 result.Data = ExamineeData

@@ -11,9 +11,9 @@ class PaperRuleLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif PaperID <= 0:
             result.Memo = 'wrong paper ID'
         elif HeadlineID > 0 and KnowledgeID > 0:
@@ -93,7 +93,7 @@ class PaperRuleLogic(BaseLogic):
 
             Desc = 'new paper rule'
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -105,11 +105,11 @@ class PaperRuleLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
@@ -135,7 +135,7 @@ class PaperRuleLogic(BaseLogic):
             if PaperRuleData.PaperRuleState == 2:
                 Desc = 'disable paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -147,11 +147,11 @@ class PaperRuleLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
@@ -167,7 +167,7 @@ class PaperRuleLogic(BaseLogic):
 
             Desc = 'delete paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -179,9 +179,9 @@ class PaperRuleLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif PaperID <= 0:
             result.Memo = 'wrong paper ID'
         else:
@@ -193,11 +193,11 @@ class PaperRuleLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:

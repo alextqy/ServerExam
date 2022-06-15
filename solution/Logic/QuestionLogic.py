@@ -11,9 +11,9 @@ class QuestionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif QuestionTitle == '':
             result.Memo = 'wrong question title'
         elif QuestionType <= 0:
@@ -44,7 +44,7 @@ class QuestionLogic(BaseLogic):
 
                 Desc = 'new question:' + QuestionTitle
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -56,11 +56,11 @@ class QuestionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif FileType == '':
             result.Memo = 'wrong file type'
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
@@ -98,7 +98,7 @@ class QuestionLogic(BaseLogic):
 
                 Desc = 'update question attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -112,11 +112,11 @@ class QuestionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
@@ -278,7 +278,7 @@ class QuestionLogic(BaseLogic):
                 if QuestionData.QuestionState == 2:
                     Desc = 'disable question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -290,11 +290,11 @@ class QuestionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif QuestionTitle == '':
             result.Memo = 'wrong question title'
         elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
@@ -326,7 +326,7 @@ class QuestionLogic(BaseLogic):
 
                 Desc = 'update question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -338,9 +338,9 @@ class QuestionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._questionModel.List(_dbsession, Page, PageSize, Stext, QuestionType, QuestionState, 1, KnowledgeID)
         return result
@@ -350,11 +350,11 @@ class QuestionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:

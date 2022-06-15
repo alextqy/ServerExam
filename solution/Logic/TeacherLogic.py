@@ -11,9 +11,9 @@ class TeacherLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif Account == '':
             result.Memo = 'wrong account'
         elif len(Account) < 6:
@@ -48,7 +48,7 @@ class TeacherLogic(BaseLogic):
 
             Desc = 'new teacher account:' + Account
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -60,11 +60,11 @@ class TeacherLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
@@ -89,7 +89,7 @@ class TeacherLogic(BaseLogic):
                 if TeacherData.State == 2:
                     Desc = 'disable Teacher ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -101,9 +101,9 @@ class TeacherLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif Name == '':
             result.Memo = 'wrong name'
         else:
@@ -135,7 +135,7 @@ class TeacherLogic(BaseLogic):
 
             Desc = 'update teacker info ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -147,9 +147,9 @@ class TeacherLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._teacherModel.List(_dbsession, Page, PageSize, Stext, State, ClassID)
         return
@@ -159,11 +159,11 @@ class TeacherLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
@@ -202,7 +202,7 @@ class TeacherLogic(BaseLogic):
 
                     Desc = 'teacher login account:' + Account
                     if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
-                        result.Memo = 'logging failed'
+                        result.Memo = self._lang.LoggingFailed
                         return result
 
                     _dbsession.commit()
@@ -214,7 +214,7 @@ class TeacherLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         else:
             TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
             if TeacherData is None:
@@ -232,7 +232,7 @@ class TeacherLogic(BaseLogic):
 
                 Desc = 'teacher logout account:' + TeacherData.Account
                 if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -244,9 +244,9 @@ class TeacherLogic(BaseLogic):
         _dbsession = DBsession()
         TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif TeacherID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif NewPassword == '':
             result.Memo = 'wrong new password'
         elif len(NewPassword) < 6:
@@ -265,7 +265,7 @@ class TeacherLogic(BaseLogic):
 
                 Desc = 'teacher change password account:' + TeacherData.Account
                 if self.LogSysAction(_dbsession, 1, TeacherID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()

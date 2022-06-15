@@ -11,9 +11,9 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif QuestionID <= 0:
             result.Memo = 'wrong question ID'
         # elif Option == '':
@@ -325,7 +325,7 @@ class QuestionSolutionLogic(BaseLogic):
 
                 Desc = 'new question solution:' + Option
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -337,11 +337,11 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif FileType == '':
             result.Memo = 'wrong file type'
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
@@ -379,7 +379,7 @@ class QuestionSolutionLogic(BaseLogic):
 
                 Desc = 'update question solution attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -393,11 +393,11 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
@@ -412,7 +412,7 @@ class QuestionSolutionLogic(BaseLogic):
 
                 Desc = 'delete question solution option&correct item:' + QuestionSolutionData.Option + '&' + QuestionSolutionData.CorrectItem
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 if QuestionSolutionData.OptionAttachment != 'none':
@@ -443,9 +443,9 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif QuestionID <= 0:
             result.Memo = 'wrong question ID'
         else:

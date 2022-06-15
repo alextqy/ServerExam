@@ -11,13 +11,13 @@ class HeadlineLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif Content == '':
-            result.Memo = 'wrong content'
+            result.Memo = self._lang.WrongContent
         elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
-            result.Memo = 'headline data already exists'
+            result.Memo = self._lang.HeadlineDataAlreadyExists
         else:
             _dbsession.begin_nested()
 
@@ -30,7 +30,7 @@ class HeadlineLogic(BaseLogic):
 
             Desc = 'new headline:' + Content
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                result.Memo = 'logging failed'
+                result.Memo = self._lang.LoggingFailed
                 return result
 
             _dbsession.commit()
@@ -42,22 +42,22 @@ class HeadlineLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         elif Content == '':
-            result.Memo = 'wrong content'
+            result.Memo = self._lang.WrongContent
         else:
             HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, ID)
             if HeadlineData is None:
-                result.Memo = 'headline data error'
+                result.Memo = self._lang.HeadlineDataError
             elif HeadlineData.Content == Content:
                 result.State = True
                 return result
             elif self._headlineModel.FindContentCode(_dbsession, Content) is not None:
-                result.Memo = 'headline data already exists'
+                result.Memo = self._lang.HeadlineDataAlreadyExists
             else:
                 if HeadlineData.Content != Content:
                     HeadlineData.ContentCode = self._common.StrMD5(Content)
@@ -75,7 +75,7 @@ class HeadlineLogic(BaseLogic):
 
                 Desc = 'update headline ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                    result.Memo = 'logging failed'
+                    result.Memo = self._lang.LoggingFailed
                     return result
 
                 _dbsession.commit()
@@ -87,9 +87,9 @@ class HeadlineLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._headlineModel.List(_dbsession, Page, PageSize, Stext)
         return result
@@ -99,15 +99,15 @@ class HeadlineLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            result.Memo = 'wrong token'
+            self._lang.WrongToken
         elif AdminID == 0:
-            result.Memo = 'permission denied'
+            result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
-            result.Memo = 'wrong ID'
+            result.Memo = self._lang.WrongID
         else:
             HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, ID)
             if HeadlineData is None:
-                result.Memo = 'headline data error'
+                result.Memo = self._lang.HeadlineDataError
             else:
                 result.State = True
                 result.Data = HeadlineData
