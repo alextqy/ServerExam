@@ -59,7 +59,7 @@ class ScantronSolutionModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: str, ScantronID: int, Position: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, ScantronID: int, Position: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page

@@ -23,6 +23,8 @@ from Logic.ExamInfoLogic import ExamInfoLogic
 from Logic.ExamInfoHistoryLogic import ExamInfoHistoryLogic
 from Logic.ScantronLogic import ScantronLogic
 from Logic.ScantronHistoryLogic import ScantronHistoryLogic
+from Logic.ScantronSolutionLogic import ScantronSolutionLogic
+from Logic.ScantronSolutionHistoryLogic import ScantronSolutionHistoryLogic
 
 sysLogLogic = SysLogLogic()
 examLogLogic = ExamLogLogic()
@@ -42,3 +44,5 @@ examInfoLogic = ExamInfoLogic()
 examInfoHistoryLogic = ExamInfoHistoryLogic()
 scantronLogic = ScantronLogic()
 scantronHistoryLogic = ScantronHistoryLogic()
+scantronSolutionLogic = ScantronSolutionLogic()
+scantronSolutionHistoryLogic = ScantronSolutionHistoryLogic()

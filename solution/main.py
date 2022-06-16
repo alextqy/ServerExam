@@ -57,6 +57,8 @@ from Controller.ExamInfoController import ExamInfoRouter, ExamInfoPrefix
 from Controller.ExamInfoHistoryController import ExamInfoHistoryRouter, ExamInfoHistoryPrefix
 from Controller.ScantronController import ScantronRouter, ScantronPrefix
 from Controller.ScantronHistoryController import ScantronHistoryRouter, ScantronHistoryPrefix
+from Controller.ScantronSolutionController import ScantronSolutionRouter, ScantronSolutionPrefix
+from Controller.ScantronSolutionHistoryController import ScantronSolutionHistoryRouter, ScantronSolutionHistoryPrefix
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
@@ -78,6 +80,8 @@ app.include_router(ExamInfoRouter, prefix=ExamInfoPrefix)
 app.include_router(ExamInfoHistoryRouter, prefix=ExamInfoHistoryPrefix)
 app.include_router(ScantronRouter, prefix=ScantronPrefix)
 app.include_router(ScantronHistoryRouter, prefix=ScantronHistoryPrefix)
+app.include_router(ScantronSolutionRouter, prefix=ScantronSolutionPrefix)
+app.include_router(ScantronSolutionHistoryRouter, prefix=ScantronSolutionHistoryPrefix)
 
 # app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 
