@@ -129,6 +129,7 @@ class Lang(BaseService):
             self.TeacherDataError = 'teacher data error'
             self.TeacherDataDoesNotExist = 'teacher data does not exist'
             self.TeacherIsDisabled = 'teacher is disabled'
+            self.ScantronDataError = 'scantron data error'
 
         # 中文简体
         elif self.Type == "zh-cn":
@@ -247,6 +248,7 @@ class Lang(BaseService):
             self.TeacherDataError = '教师数据错误'
             self.TeacherDataDoesNotExist = '教师数据不存在'
             self.TeacherIsDisabled = '教师被禁用'
+            self.ScantronDataError = '答题卡数据错误'
 
         # 默认
         else:
@@ -365,3 +367,4 @@ class Lang(BaseService):
             self.TeacherDataError = ''
             self.TeacherDataDoesNotExist = ''
             self.TeacherIsDisabled = ''
+            self.ScantronDataError = ''

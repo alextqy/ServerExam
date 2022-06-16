@@ -9,10 +9,10 @@ class ScantronHistoryModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.QuestionTitle = Data.QuestionTitle.strip()
-        Data.Description = Data.Description.strip()
-        Data.Attachment = Data.Attachment.strip()
-        Data.HeadlineContent = Data.HeadlineContent.strip()
+        # Data.QuestionTitle = Data.QuestionTitle.strip()
+        # Data.Description = Data.Description.strip()
+        # Data.Attachment = Data.Attachment.strip()
+        # Data.HeadlineContent = Data.HeadlineContent.strip()
         if Data.HeadlineContent == '':
             if Data.QuestionTitle == '':
                 _result.Memo = self._lang.ParamErr

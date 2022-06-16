@@ -54,6 +54,9 @@ from Controller.TeacherController import TeacherRouter, TeacherPrefix
 from Controller.ExamineeController import ExamineeRouter, ExamineePrefix
 from Controller.ExamineeTokenController import ExamineeTokenRouter, ExamineeTokenPrefix
 from Controller.ExamInfoController import ExamInfoRouter, ExamInfoPrefix
+from Controller.ExamInfoHistoryController import ExamInfoHistoryRouter, ExamInfoHistoryPrefix
+from Controller.ScantronController import ScantronRouter, ScantronPrefix
+from Controller.ScantronHistoryController import ScantronHistoryRouter, ScantronHistoryPrefix
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
@@ -72,6 +75,9 @@ app.include_router(TeacherRouter, prefix=TeacherPrefix)
 app.include_router(ExamineeRouter, prefix=ExamineePrefix)
 app.include_router(ExamineeTokenRouter, prefix=ExamineeTokenPrefix)
 app.include_router(ExamInfoRouter, prefix=ExamInfoPrefix)
+app.include_router(ExamInfoHistoryRouter, prefix=ExamInfoHistoryPrefix)
+app.include_router(ScantronRouter, prefix=ScantronPrefix)
+app.include_router(ScantronHistoryRouter, prefix=ScantronHistoryPrefix)
 
 # app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 

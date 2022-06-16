@@ -20,6 +20,9 @@ from Logic.TeacherLogic import TeacherLogic
 from Logic.ExamineeLogic import ExamineeLogic
 from Logic.ExamineeTokenLogic import ExamineeTokenLogic
 from Logic.ExamInfoLogic import ExamInfoLogic
+from Logic.ExamInfoHistoryLogic import ExamInfoHistoryLogic
+from Logic.ScantronLogic import ScantronLogic
+from Logic.ScantronHistoryLogic import ScantronHistoryLogic
 
 sysLogLogic = SysLogLogic()
 examLogLogic = ExamLogLogic()
@@ -36,3 +39,6 @@ teacherLogic = TeacherLogic()
 examineeLogic = ExamineeLogic()
 examineeTokenLogic = ExamineeTokenLogic()
 examInfoLogic = ExamInfoLogic()
+examInfoHistoryLogic = ExamInfoHistoryLogic()
+scantronLogic = ScantronLogic()
+scantronHistoryLogic = ScantronHistoryLogic()
