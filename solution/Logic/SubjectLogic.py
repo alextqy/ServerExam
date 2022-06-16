@@ -15,9 +15,9 @@ class SubjectLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif SubjectName == '':
-            result.Memo = 'wrong subject name'
+            result.Memo = self._lang.WrongSubjectName
         elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
-            result.Memo = 'subject data already exists'
+            result.Memo = self._lang.SubjectDataAlreadyExists
         else:
             _dbsession.begin_nested()
 
@@ -50,7 +50,7 @@ class SubjectLogic(BaseLogic):
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
-                result.Memo = 'subject data error'
+                result.Memo = self._lang.SubjectDataError
             else:
                 _dbsession.begin_nested()
 
@@ -89,16 +89,16 @@ class SubjectLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif SubjectName == '':
-            result.Memo = 'wrong subject name'
+            result.Memo = self._lang.WrongSubjectName
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
-                result.Memo = 'subject data error'
+                result.Memo = self._lang.SubjectDataError
             elif SubjectData.SubjectName == SubjectName:
                 result.State = True
                 return result
             elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
-                result.Memo = 'subject data already exists'
+                result.Memo = self._lang.SubjectDataAlreadyExists
             else:
                 if SubjectData.SubjectName != SubjectName:
                     SubjectData.SubjectCode = self._common.StrMD5(SubjectName)
@@ -148,7 +148,7 @@ class SubjectLogic(BaseLogic):
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, ID)
             if SubjectData is None:
-                result.Memo = 'subject data error'
+                result.Memo = self._lang.SubjectDataError
             else:
                 result.State = True
                 result.Data = SubjectData

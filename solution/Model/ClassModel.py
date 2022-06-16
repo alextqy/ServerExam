@@ -12,7 +12,7 @@ class ClassModel(BaseModel):
         Data.ClassName = Data.ClassName.strip()
         Data.Description = Data.Description.strip()
         if Data.ClassName == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Description == '':
             Data.Description = 'none'

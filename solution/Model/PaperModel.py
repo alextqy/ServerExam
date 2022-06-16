@@ -11,22 +11,22 @@ class PaperModel(BaseModel):
         _result = Result()
         Data.PaperName = Data.PaperName.strip()
         if Data.PaperName == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.SubjectID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.TotalScore <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.PassLine <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.ExamDuration <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.PaperState <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
 
         Data.ExamDuration *= 60

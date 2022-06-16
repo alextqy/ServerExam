@@ -12,22 +12,22 @@ class ScantronSolutionModel(BaseModel):
         Data.Option = Data.Option.strip()
         Data.OptionAttachment = Data.OptionAttachment.strip()
         if Data.ScantronID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.Option == '':
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.OptionAttachment == '':
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         if Data.CorrectAnswer <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.CorrectItem == '':
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         if Data.ScoreRatio <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)

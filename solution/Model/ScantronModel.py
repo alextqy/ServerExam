@@ -15,16 +15,16 @@ class ScantronModel(BaseModel):
         # Data.HeadlineContent = Data.HeadlineContent.strip()
         if Data.HeadlineContent == '':
             if Data.QuestionTitle == '':
-                _result.Memo = 'param err'
+                _result.Memo = self._lang.ParamErr
                 return _result
             if Data.QuestionType <= 0:
-                _result.Memo = 'param err'
+                _result.Memo = self._lang.ParamErr
                 return _result
             if Data.KnowledgeID <= 0:
-                _result.Memo = 'param err'
+                _result.Memo = self._lang.ParamErr
                 return _result
             if Data.Score <= 0:
-                _result.Memo = 'param err'
+                _result.Memo = self._lang.ParamErr
                 return _result
             Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         if Data.HeadlineContent != '':
@@ -33,7 +33,7 @@ class ScantronModel(BaseModel):
             Data.KnowledgeID = 0
             Data.Score = 0
         if Data.ExamID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)

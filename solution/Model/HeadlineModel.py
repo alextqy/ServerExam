@@ -11,7 +11,7 @@ class HeadlineModel(BaseModel):
         _result = Result()
         Data.Content = Data.Content.strip()
         if Data.Content == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         Data.ContentCode = self._common.StrMD5(Data.Content.strip())
         try:

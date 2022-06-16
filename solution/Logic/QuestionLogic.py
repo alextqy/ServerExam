@@ -15,17 +15,17 @@ class QuestionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif QuestionTitle == '':
-            result.Memo = 'wrong question title'
+            result.Memo = self._lang.WrongQuestionTitle
         elif QuestionType <= 0:
-            result.Memo = 'wrong question type'
+            result.Memo = self._lang.WrongQuestionType
         elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
-            result.Memo = 'no vacancy'
+            result.Memo = self._lang.NoVacancy
         elif KnowledgeID <= 0:
-            result.Memo = 'wrong knowledge ID'
+            result.Memo = self._lang.WrongKnowledgeID
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, KnowledgeID)
             if KnowledgeData is None:
-                result.Memo = 'knowledge data error'
+                result.Memo = self._lang.KnowledgeDataError
             else:
                 if Description == '':
                     Description = 'none'
@@ -62,13 +62,13 @@ class QuestionLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif FileType == '':
-            result.Memo = 'wrong file type'
+            result.Memo = self._lang.WrongFileType
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
-            result.Memo = 'too large file'
+            result.Memo = self._lang.TooLargeFile
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'question data error'
+                result.Memo = self._lang.QuestionDataError
             else:
                 if QuestionData.Attachment != 'none':
                     self._file.DeleteFile(QuestionData.Attachment)
@@ -120,7 +120,7 @@ class QuestionLogic(BaseLogic):
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'question data error'
+                result.Memo = self._lang.QuestionDataError
             else:
                 _dbsession.begin_nested()
 
@@ -129,14 +129,14 @@ class QuestionLogic(BaseLogic):
                         # 试卷选项合理性解析
                         QuestionSolutionDataList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                         if len(QuestionSolutionDataList) == 0:
-                            result.Memo = 'no options'
+                            result.Memo = self._lang.NoOptions
                             _dbsession.rollback()
                             return result
 
                         if QuestionData.QuestionType == 1:  # 单选题 ##################################################################
                             # 不能低于两个选项
                             if len(QuestionSolutionDataList) < 2:
-                                result.Memo = 'need more than two options'
+                                result.Memo = self._lang.NeedMoreThanTwoOptions
                                 _dbsession.rollback()
                                 return result
                             # 答案统计
@@ -150,19 +150,19 @@ class QuestionLogic(BaseLogic):
                                     CorrectAnswerCount += 1
                             # 是否设置唯一正确答案
                             if CorrectAnswerCount != 1:
-                                result.Memo = 'need a correct answer'
+                                result.Memo = self._lang.NeedACorrectAnswer
                                 _dbsession.rollback()
                                 return result
                             # 是否设置错误答案
                             if WrongAnswerCount == 0:
-                                result.Memo = 'no wrong answer'
+                                result.Memo = self._lang.NoWrongAnswer
                                 _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 2:  # 判断题 ##################################################################
                             # 只需要两个选项
                             if len(QuestionSolutionDataList) != 2:
-                                result.Memo = 'just need two options'
+                                result.Memo = self._lang.JustNeedTwoOptions
                                 _dbsession.rollback()
                                 return result
                             # 答案统计
@@ -175,18 +175,18 @@ class QuestionLogic(BaseLogic):
                                 if Data.CorrectAnswer == 2:
                                     CorrectAnswerCount += 1
                             if CorrectAnswerCount != 1:
-                                result.Memo = 'just need one correct answer'
+                                result.Memo = self._lang.JustNeedOneCorrectAnswer
                                 _dbsession.rollback()
                                 return result
                             if WrongAnswerCount != 1:
-                                result.Memo = 'just need one wrong answer'
+                                result.Memo = self._lang.JustNeedOneWrongAnswer
                                 _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 3:  # 多选题 ##################################################################
                             # 不能低于两个选项
                             if len(QuestionSolutionDataList) < 2:
-                                result.Memo = 'need more than two options'
+                                result.Memo = self._lang.NeedMoreThanTwoOptions
                                 _dbsession.rollback()
                                 return result
                             # 正确答案统计
@@ -196,14 +196,14 @@ class QuestionLogic(BaseLogic):
                                 if Data.CorrectAnswer == 2:
                                     CorrectAnswerCount += 1
                             if CorrectAnswerCount < 2:
-                                result.Memo = 'at least two correct answers'
+                                result.Memo = self._lang.AtLeastTwoCorrectAnswers
                                 _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 4:  # 填空题 ##################################################################
                             # 答案数量是否超过填空数
                             if len(QuestionSolutionDataList) != self._common.CountStr(QuestionData.QuestionTitle, '<->'):
-                                result.Memo = 'wrong number of options'
+                                result.Memo = self._lang.WrongNumberOfOptions
                                 _dbsession.rollback()
                                 return result
                             # 得分比例统计
@@ -212,7 +212,7 @@ class QuestionLogic(BaseLogic):
                                 Data: QuestionSolutionEntity = i
                                 ScoreRatioCount += Data.ScoreRatio
                             if ScoreRatioCount != 1:
-                                result.Memo = 'the sum of the score ratios is not 1'
+                                result.Memo = self._lang.TheSumOfTheScoreRatiosIsNotOne
                                 _dbsession.rollback()
                                 return result
 
@@ -223,21 +223,21 @@ class QuestionLogic(BaseLogic):
                                 Data: QuestionSolutionEntity = i
                                 ScoreRatioCount += Data.ScoreRatio
                             if ScoreRatioCount != 1:
-                                result.Memo = 'the sum of the score ratios is not 1'
+                                result.Memo = self._lang.TheSumOfTheScoreRatiosIsNotOne
                                 _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 6:  # 代码实训 ##################################################################
                             # 只需要一个答案
                             if len(QuestionSolutionDataList) != 1:
-                                result.Memo = 'just need an answer'
+                                result.Memo = self._lang.JustNeedAnAnswer
                                 _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽题 连线题 ##################################################################
                             # 不能低于四个选项
                             if len(QuestionSolutionDataList) < 4:
-                                result.Memo = 'need more than four options'
+                                result.Memo = self._lang.NeedMoreThanFourOptions
                                 _dbsession.rollback()
                                 return result
                             # 选项解析
@@ -254,12 +254,12 @@ class QuestionLogic(BaseLogic):
                                     EmptyAnswer = False
                             # 两侧选项数量是否一致
                             if LeftPositionCount != RightPositionCount:
-                                result.Memo = 'inconsistent number of options on both sides'
+                                result.Memo = self._lang.InconsistentNumberOfOptionsOnBothSides
                                 _dbsession.rollback()
                                 return result
                             # 是否设置答案
                             if EmptyAnswer == True:
-                                result.Memo = 'no set answer'
+                                result.Memo = self._lang.NoSetAnswer
                                 _dbsession.rollback()
                                 return result
 
@@ -296,15 +296,15 @@ class QuestionLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif QuestionTitle == '':
-            result.Memo = 'wrong question title'
+            result.Memo = self._lang.WrongQuestionTitle
         elif QuestionType == 4 and QuestionTitle.find('<->') == -1:
-            result.Memo = 'no vacancy'
+            result.Memo = self._lang.NoVacancy
         elif QuestionType <= 0:
-            result.Memo = 'wrong question type'
+            result.Memo = self._lang.WrongQuestionType
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'question data error'
+                result.Memo = self._lang.QuestionDataError
             else:
                 if QuestionData.QuestionTitle != QuestionTitle:
                     QuestionData.QuestionCode = self._common.StrMD5(QuestionTitle)
@@ -358,7 +358,7 @@ class QuestionLogic(BaseLogic):
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
-                result.Memo = 'question data error'
+                result.Memo = self._lang.QuestionDataError
             else:
                 result.State = True
                 result.Data = QuestionData

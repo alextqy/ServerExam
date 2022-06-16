@@ -31,7 +31,7 @@ class SysLogLogic(BaseLogic):
         else:
             SysLogData: SysLogEntity = self._sysLogModel.Find(_dbsession, ID)
             if SysLogData is None:
-                result.Memo = 'sys log data error'
+                result.Memo = self._lang.SysLogDataError
             else:
                 result.State = True
                 result.Data = SysLogData

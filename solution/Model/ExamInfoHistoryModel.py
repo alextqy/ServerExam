@@ -12,43 +12,43 @@ class ExamInfoHistoryModel(BaseModel):
         Data.SubjectName = Data.SubjectName.strip()
         Data.ExamNo = Data.ExamNo.strip()
         if Data.SubjectName == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.ExamNo == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.TotalScore <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.PassLine <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.ActualScore <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.ExamDuration <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.StartTime <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.EndTime <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.ActualDuration <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.Pass <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.ExamineeID <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.ExamState <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         if Data.ExamType <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         Data.Pass = 1
         Data.ExamState = 1

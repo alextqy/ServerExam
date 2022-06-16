@@ -10,18 +10,18 @@ class ManagerLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
-            result.Memo = 'wrong account'
+            result.Memo = self._lang.WrongAccount
         elif Password == '':
-            result.Memo = 'wrong password'
+            result.Memo = self._lang.WrongPassword
         else:
             ManagerData: ManagerEntity = self._managerModel.FindAccount(_dbsession, Account)
             if ManagerData is None:
-                result.Memo = 'manager data does not exist'
+                result.Memo = self._lang.ManagerDataDoesNotExist
             else:
                 if ManagerData.State != 1:
-                    result.Memo = 'manager is disabled'
+                    result.Memo = self._lang.ManagerIsDisabled
                 elif ManagerData.Password != self._common.UserPWD(Password):
-                    result.Memo = 'wrong password'
+                    result.Memo = self._lang.WrongPassword
                 else:
                     _dbsession.begin_nested()
 
@@ -51,7 +51,7 @@ class ManagerLogic(BaseLogic):
         else:
             ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             if ManagerData is None:
-                result.Memo = 'manager data does not exist'
+                result.Memo = self._lang.ManagerDataDoesNotExist
             else:
                 _dbsession.begin_nested()
 
@@ -81,19 +81,19 @@ class ManagerLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif Account == '':
-            result.Memo = 'wrong account'
+            result.Memo = self._lang.WrongAccount
         elif len(Account) < 6:
-            result.Memo = 'account length is not enough'
+            result.Memo = self._lang.AccountLengthIsNotEnough
         elif self._common.MatchAll(Account) == False:
-            result.Memo = 'account format error'
+            result.Memo = self._lang.AccountFormatError
         elif Password == '':
-            result.Memo = 'wrong password'
+            result.Memo = self._lang.WrongPassword
         elif len(Password) < 6:
-            result.Memo = 'password length is not enough'
+            result.Memo = self._lang.PasswordLengthIsNotEnough
         elif Name == '':
-            result.Memo = 'wrong name'
+            result.Memo = self._lang.WrongName
         elif self._managerModel.FindAccount(_dbsession, Account) is not None:
-            result.Memo = 'manager data already exists'
+            result.Memo = self._lang.ManagerDataAlreadyExists
         else:
             _dbsession.begin_nested()
 
@@ -128,11 +128,11 @@ class ManagerLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif ID == 1:
-            result.Memo = 'operation failed'
+            result.Memo = self._lang.OperationFailed
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'manager data error'
+                result.Memo = self._lang.ManagerDataError
             else:
                 _dbsession.begin_nested()
 
@@ -169,22 +169,22 @@ class ManagerLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif NewPassword == '':
-            result.Memo = 'wrong new password'
+            result.Memo = self._lang.WrongNewPassword
         elif len(NewPassword) < 6:
-            result.Memo = 'password length is not enough'
+            result.Memo = self._lang.PasswordLengthIsNotEnough
         else:
             if ID == 0:
                 ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             else:
                 ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'manager data error'
+                result.Memo = self._lang.ManagerDataError
             else:
                 _dbsession.begin_nested()
 
                 ChangeInfo: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
                 if ChangeInfo.State == False:
-                    result.Memo = 'fail to edit'
+                    result.Memo = self._lang.FailToEdit
                     return result
 
                 Desc = 'manager change password account:' + ManagerData.Account
@@ -205,16 +205,16 @@ class ManagerLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif Name == '':
-            result.Memo = 'wrong name'
+            result.Memo = self._lang.WrongName
         elif Permission <= 0:
-            result.Memo = 'wrong permission'
+            result.Memo = self._lang.WrongPermission
         else:
             if ID == 0:
                 ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             else:
                 ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'manager data error'
+                result.Memo = self._lang.ManagerDataError
             else:
                 _dbsession.begin_nested()
 
@@ -262,7 +262,7 @@ class ManagerLogic(BaseLogic):
         else:
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
-                result.Memo = 'manager data error'
+                result.Memo = self._lang.ManagerDataError
             else:
                 result.State = True
                 result.Data = ManagerData

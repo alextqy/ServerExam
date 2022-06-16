@@ -13,19 +13,19 @@ class ManagerModel(BaseModel):
         Data.Password = Data.Password.strip()
         Data.Name = Data.Name.strip()
         if Data.Account == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Password == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Name == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.State <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Permission <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         Data.Password = self._common.UserPWD(Data.Password.strip())
         try:

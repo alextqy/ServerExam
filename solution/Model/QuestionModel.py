@@ -12,19 +12,19 @@ class QuestionModel(BaseModel):
         Data.QuestionTitle = Data.QuestionTitle.strip()
         Data.Description = Data.Description.strip()
         if Data.QuestionTitle == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.QuestionType <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.QuestionState <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         # if Data.Marking <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         if Data.KnowledgeID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         Data.QuestionState = 2
         Data.Marking = 1

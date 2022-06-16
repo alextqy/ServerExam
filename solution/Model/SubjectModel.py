@@ -11,10 +11,10 @@ class SubjectModel(BaseModel):
         _result = Result()
         Data.SubjectName = Data.SubjectName.strip()
         if Data.SubjectName == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.SubjectState <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         Data.SubjectState = 1
         Data.SubjectCode = self._common.StrMD5(Data.SubjectName.strip())

@@ -13,16 +13,16 @@ class SysConfModel(BaseModel):
         Data.Value = Data.Value.strip()
         Data.Description = Data.Description.strip()
         if Data.Type <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Key == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Value == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Description == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)

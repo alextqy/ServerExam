@@ -15,20 +15,20 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif PaperID <= 0:
-            result.Memo = 'wrong paper ID'
+            result.Memo = self._lang.WrongPaperID
         elif HeadlineID > 0 and KnowledgeID > 0:
-            result.Memo = 'wrong data'
+            result.Memo = self._lang.WrongData
         elif HeadlineID == 0 and KnowledgeID == 0:
-            result.Memo = 'wrong data'
+            result.Memo = self._lang.WrongData
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperID)
             if PaperData is None:
-                result.Memo = 'paper data error'
+                result.Memo = self._lang.PaperDataError
                 return result
             if HeadlineID > 0:
                 HeadlineData: HeadlineEntity = self._headlineModel.Find(_dbsession, HeadlineID)
                 if HeadlineData is None:
-                    result.Memo = 'headline data error'
+                    result.Memo = self._lang.HeadlineDataError
                     return result
                 KnowledgeID = 0
                 QuestionType = 0
@@ -37,34 +37,34 @@ class PaperRuleLogic(BaseLogic):
             if KnowledgeID > 0:
                 HeadlineID = 0
                 if QuestionType <= 0:
-                    result.Memo = 'wrong question type'
+                    result.Memo = self._lang.WrongQuestionType
                     return result
                 if QuestionNum <= 0:
-                    result.Memo = 'wrong question num'
+                    result.Memo = self._lang.WrongQuestionNum
                     return result
                 if SingleScore <= 0:
-                    result.Memo = 'wrong single score'
+                    result.Memo = self._lang.WrongSingleScore
                     return result
                 SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, PaperData.SubjectID)
                 if SubjectData is None:
-                    result.Memo = 'subject data error'
+                    result.Memo = self._lang.SubjectDataError
                     return result
                 KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, KnowledgeID)
                 if KnowledgeData is None:
-                    result.Memo = 'knowledge data error'
+                    result.Memo = self._lang.KnowledgeDataError
                     return result
                 if KnowledgeData.ID != SubjectData.ID:
-                    result.Memo = 'knowledge id error'
+                    result.Memo = self._lang.KnowledgeIDError
                     return result
                 # 是否有相同类型的试题规则
                 CheckPaperRule: PaperRuleEntity = self._paperRuleModel.CheckPaperRule(_dbsession, PaperID, KnowledgeData.ID, QuestionType)
                 if CheckPaperRule is not None:
-                    result.Memo = 'paper rule data already exists'
+                    result.Memo = self._lang.PaperRuleDataAlreadyExists
                     return result
                 # 当前题型下是否有足够的试题数量
                 CountType: int = self._questionModel.CountType(_dbsession, KnowledgeData.ID, QuestionType)
                 if CountType < QuestionNum:
-                    result.Memo = 'there are not enough questions'
+                    result.Memo = self._lang.ThereAreNotEnoughQuestions
                     return result
                 # 当前试题规则总分是否超过试卷总分
                 CurrentTotalScore: float = SingleScore * QuestionNum
@@ -74,7 +74,7 @@ class PaperRuleLogic(BaseLogic):
                         Data: PaperRuleEntity = i
                         CurrentTotalScore += float(Data.SingleScore) * Data.QuestionNum
                     if CurrentTotalScore > PaperData.TotalScore:
-                        result.Memo = 'greater than the total score of the test paper'
+                        result.Memo = self._lang.GreaterThanTheTotalScoreOfTheTestPaper
                         return result
 
             _dbsession.begin_nested()
@@ -113,7 +113,7 @@ class PaperRuleLogic(BaseLogic):
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
-                result.Memo = 'paper rule data error'
+                result.Memo = self._lang.PaperRuleDataError
                 return result
 
             _dbsession.begin_nested()
@@ -155,7 +155,7 @@ class PaperRuleLogic(BaseLogic):
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
-                result.Memo = 'paper rule data error'
+                result.Memo = self._lang.PaperRuleDataError
                 return result
 
             _dbsession.begin_nested()
@@ -183,7 +183,7 @@ class PaperRuleLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif PaperID <= 0:
-            result.Memo = 'wrong paper ID'
+            result.Memo = self._lang.WrongPaperID
         else:
             result: ResultList = self._paperRuleModel.List(_dbsession, Page, PageSize, PaperID, PaperRuleState)
         return result
@@ -201,7 +201,7 @@ class PaperRuleLogic(BaseLogic):
         else:
             PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
             if PaperRuleData is None:
-                result.Memo = 'paper rule data error'
+                result.Memo = self._lang.PaperRuleDataError
             else:
                 result.State = True
                 result.Data = PaperRuleData

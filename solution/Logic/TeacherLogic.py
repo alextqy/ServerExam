@@ -15,23 +15,23 @@ class TeacherLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif Account == '':
-            result.Memo = 'wrong account'
+            result.Memo = self._lang.WrongAccount
         elif len(Account) < 6:
-            result.Memo = 'account length is not enough'
+            result.Memo = self._lang.AccountLengthIsNotEnough
         elif self._common.MatchAll(Account) == False:
-            result.Memo = 'account format error'
+            result.Memo = self._lang.AccountFormatError
         elif Password == '':
-            result.Memo = 'wrong password'
+            result.Memo = self._lang.WrongPassword
         elif len(Password) < 6:
-            result.Memo = 'password length is not enough'
+            result.Memo = self._lang.PasswordLengthIsNotEnough
         elif Name == '':
-            result.Memo = 'wrong name'
+            result.Memo = self._lang.WrongName
         elif ClassID <= 0:
-            result.Memo = 'wrong class ID'
+            result.Memo = self._lang.WrongClassID
         elif self._teacherModel.FindAccount(_dbsession, Account) is not None:
-            result.Memo = 'teacher data already exists'
+            result.Memo = self._lang.TeacherDataAlreadyExists
         elif self._classModel.Find(_dbsession, ClassID) is None:
-            result.Memo = 'class data does not exist'
+            result.Memo = self._lang.ClassDataDoesNotExist
         else:
             _dbsession.begin_nested()
 
@@ -68,7 +68,7 @@ class TeacherLogic(BaseLogic):
         else:
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
-                result.Memo = 'teacher data error'
+                result.Memo = self._lang.TeacherDataError
             else:
                 _dbsession.begin_nested()
 
@@ -105,19 +105,19 @@ class TeacherLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif Name == '':
-            result.Memo = 'wrong name'
+            result.Memo = self._lang.WrongName
         else:
             _dbsession.begin_nested()
 
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
-                result.Memo = 'teacher data error'
+                result.Memo = self._lang.TeacherDataError
                 _dbsession.rollback()
                 return result
 
             if Password != '':
                 if len(Password) < 6:
-                    result.Memo = 'password length is not enough'
+                    result.Memo = self._lang.PasswordLengthIsNotEnough
                     _dbsession.rollback()
                     return result
                 else:
@@ -125,7 +125,7 @@ class TeacherLogic(BaseLogic):
 
             if ClassID > 0:
                 if self._classModel.Find(_dbsession, ClassID) is None:
-                    result.Memo = 'class data error'
+                    result.Memo = self._lang.ClassDataError
                     _dbsession.rollback()
                     return result
                 else:
@@ -167,7 +167,7 @@ class TeacherLogic(BaseLogic):
         else:
             TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, ID)
             if TeacherData is None:
-                result.Memo = 'teacher data error'
+                result.Memo = self._lang.TeacherDataError
             else:
                 result.State = True
                 result.Data = TeacherData
@@ -177,18 +177,18 @@ class TeacherLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
-            result.Memo = 'wrong account'
+            result.Memo = self._lang.WrongAccount
         elif Password == '':
-            result.Memo = 'wrong password'
+            result.Memo = self._lang.WrongPassword
         else:
             TeacherData: TeacherEntity = self._teacherModel.FindAccount(_dbsession, Account)
             if TeacherData is None:
-                result.Memo = 'teacher data does not exist'
+                result.Memo = self._lang.TeacherDataDoesNotExist
             else:
                 if TeacherData.State != 1:
-                    result.Memo = 'teacher is disabled'
+                    result.Memo = self._lang.TeacherIsDisabled
                 elif TeacherData.Password != self._common.UserPWD(Password):
-                    result.Memo = 'wrong password'
+                    result.Memo = self._lang.WrongPassword
                 else:
                     _dbsession.begin_nested()
 
@@ -218,7 +218,7 @@ class TeacherLogic(BaseLogic):
         else:
             TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
             if TeacherData is None:
-                result.Memo = 'teacher data does not exist'
+                result.Memo = self._lang.TeacherDataDoesNotExist
             else:
                 _dbsession.begin_nested()
 
@@ -248,19 +248,19 @@ class TeacherLogic(BaseLogic):
         elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         elif NewPassword == '':
-            result.Memo = 'wrong new password'
+            result.Memo = self._lang.WrongNewPassword
         elif len(NewPassword) < 6:
-            result.Memo = 'password length is not enough'
+            result.Memo = self._lang.PasswordLengthIsNotEnough
         else:
             TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
             if TeacherData is None:
-                result.Memo = 'teacher data error'
+                result.Memo = self._lang.TeacherDataError
             else:
                 _dbsession.begin_nested()
 
                 ChangeInfo: Result = self._teacherModel.ChangePassword(_dbsession, TeacherData, NewPassword)
                 if ChangeInfo.State == False:
-                    result.Memo = 'fail to edit'
+                    result.Memo = self._lang.FailToEdit
                     return result
 
                 Desc = 'teacher change password account:' + TeacherData.Account

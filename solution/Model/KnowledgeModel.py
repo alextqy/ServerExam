@@ -11,13 +11,13 @@ class KnowledgeModel(BaseModel):
         _result = Result()
         Data.KnowledgeName = Data.KnowledgeName.strip()
         if Data.KnowledgeName == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.SubjectID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         # if Data.KnowledgeState <= 0:
-        #     _result.Memo = 'param err'
+        #     _result.Memo = self._lang.ParamErr
         #     return _result
         Data.KnowledgeState = 1
         Data.KnowledgeCode = self._common.StrMD5(Data.KnowledgeName.strip())

@@ -15,15 +15,15 @@ class KnowledgeLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif KnowledgeName == '':
-            result.Memo = 'wrong knowledge name'
+            result.Memo = self._lang.WrongKnowledgeName
         elif SubjectID <= 0:
-            result.Memo = 'wrong subject ID'
+            result.Memo = self._lang.WrongSubjectID
         elif self._knowledgeModel.FindKnowledgeCode(_dbsession, KnowledgeName) is not None:
-            result.Memo = 'knowledge data already exists'
+            result.Memo = self._lang.KnowledgeDataAlreadyExists
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, SubjectID)
             if SubjectData is None:
-                result.Memo = 'subject data error'
+                result.Memo = self._lang.SubjectDataError
             else:
                 _dbsession.begin_nested()
 
@@ -55,7 +55,7 @@ class KnowledgeLogic(BaseLogic):
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
-                result.Memo = 'knowledge data error'
+                result.Memo = self._lang.KnowledgeDataError
             else:
                 _dbsession.begin_nested()
 
@@ -94,11 +94,11 @@ class KnowledgeLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif KnowledgeName == '':
-            result.Memo = 'wrong knowledge name'
+            result.Memo = self._lang.WrongKnowledgeName
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
-                result.Memo = 'knowledge data error'
+                result.Memo = self._lang.KnowledgeDataError
             elif KnowledgeData.KnowledgeName == KnowledgeName:
                 result.State = True
                 return result
@@ -151,7 +151,7 @@ class KnowledgeLogic(BaseLogic):
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, ID)
             if KnowledgeData is None:
-                result.Memo = 'knowledge data error'
+                result.Memo = self._lang.KnowledgeDataError
             else:
                 result.State = True
                 result.Data = KnowledgeData

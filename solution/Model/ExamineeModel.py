@@ -13,13 +13,13 @@ class ExamineeModel(BaseModel):
         Data.ExamineeNo = Data.ExamineeNo.strip()
         Data.Contact = Data.Contact.strip()
         if Data.Name == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.ExamineeNo == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.ClassID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)

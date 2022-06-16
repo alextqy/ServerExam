@@ -11,10 +11,10 @@ class ExamineeTokenModel(BaseModel):
         _result = Result()
         Data.Token = Data.Token.strip()
         if Data.Token == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.ExamID <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)

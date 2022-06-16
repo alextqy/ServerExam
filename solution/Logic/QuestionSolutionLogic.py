@@ -15,21 +15,21 @@ class QuestionSolutionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif QuestionID <= 0:
-            result.Memo = 'wrong question ID'
+            result.Memo = self._lang.WrongQuestionID
         # elif Option == '':
-        #     result.Memo = 'wrong option'
+        #     result.Memo = self._lang.WrongOption
         # elif CorrectAnswer <= 0:
-        #     result.Memo = 'wrong correct answer'
+        #     result.Memo = self._lang.WrongCorrectAnswer
         # elif CorrectItem == '':
-        #     result.Memo = 'wrong correct item'
+        #     result.Memo = self._lang.WrongCorrectItem
         # elif ScoreRatio <= 0:
-        #     result.Memo = 'wrong score ratio'
+        #     result.Memo = self._lang.WrongScoreRatio
         # elif Position <= 0:
-        #     result.Memo = 'wrong position'
+        #     result.Memo = self._lang.WrongPosition
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, QuestionID)
             if QuestionData is None:
-                result.Memo = 'question data error'
+                result.Memo = self._lang.QuestionDataError
             else:
                 '''
                 单选 ##################################################################
@@ -38,10 +38,10 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 1:
                     if Option == '':
-                        result.Memo = 'wrong option'
+                        result.Memo = self._lang.WrongOption
                         return result
                     if CorrectAnswer <= 0:
-                        result.Memo = 'wrong correct answer'
+                        result.Memo = self._lang.WrongCorrectAnswer
                         return result
                     QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
@@ -50,13 +50,13 @@ class QuestionSolutionLogic(BaseLogic):
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.Option == Option:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                         # 判断多个正确答案
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if CorrectAnswer == 2 and SolutionData.CorrectAnswer == CorrectAnswer:
-                                result.Memo = 'too many correct answer'
+                                result.Memo = self._lang.TooManyCorrectAnswer
                                 return result
                     ScoreRatio = 1.00
                 '''
@@ -66,32 +66,32 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 2:
                     if Option == '':
-                        result.Memo = 'wrong option'
+                        result.Memo = self._lang.WrongOption
                         return result
                     if CorrectAnswer <= 0:
-                        result.Memo = 'wrong correct answer'
+                        result.Memo = self._lang.WrongCorrectAnswer
                         return result
                     QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断题只能有两个选项
                         if len(SolutionDataList) >= 2:
-                            result.Memo = 'too many options'
+                            result.Memo = self._lang.TooManyOptions
                             return result
                         # 判断重复选项
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.Option == Option:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                         # 单个正确答案
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if CorrectAnswer == 1 and SolutionData.CorrectAnswer == CorrectAnswer:
-                                result.Memo = 'too many wrong answer'
+                                result.Memo = self._lang.TooManyWrongAnswer
                                 return result
                             if CorrectAnswer == 2 and SolutionData.CorrectAnswer == CorrectAnswer:
-                                result.Memo = 'too many correct answer'
+                                result.Memo = self._lang.TooManyCorrectAnswer
                                 return result
                     ScoreRatio = 1.00
                 '''
@@ -101,10 +101,10 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 3:
                     if Option == '':
-                        result.Memo = 'wrong option'
+                        result.Memo = self._lang.WrongOption
                         return result
                     if CorrectAnswer <= 0:
-                        result.Memo = 'wrong correct answer'
+                        result.Memo = self._lang.WrongCorrectAnswer
                         return result
                     QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
@@ -113,7 +113,7 @@ class QuestionSolutionLogic(BaseLogic):
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.Option == Option:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                     ScoreRatio = 1.00
                 '''
@@ -123,10 +123,10 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 4:
                     if CorrectItem == '':
-                        result.Memo = 'wrong correct item'
+                        result.Memo = self._lang.WrongCorrectItem
                         return result
                     if ScoreRatio <= 0:
-                        result.Memo = 'wrong score ratio'
+                        result.Memo = self._lang.WrongScoreRatio
                         return result
                     Option = 'none'
                     QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
@@ -134,13 +134,13 @@ class QuestionSolutionLogic(BaseLogic):
                         SolutionDataList: list = QuestionSolutionList
                         # 答案数量是否超过填空数
                         if len(SolutionDataList) >= self._common.CountStr(QuestionData.QuestionTitle, '<->'):
-                            result.Memo = 'too many answers'
+                            result.Memo = self._lang.TooManyAnswers
                             return result
                         # 判断重复答案
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.CorrectItem == CorrectItem:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                         # 所有选项得分比例总和为1
                         CountScoreRatio = 0
@@ -148,7 +148,7 @@ class QuestionSolutionLogic(BaseLogic):
                             SolutionData: QuestionSolutionEntity = i
                             CountScoreRatio += SolutionData.ScoreRatio
                         if float(CountScoreRatio) + ScoreRatio > 1:
-                            result.Memo = 'wrong score ratio'
+                            result.Memo = self._lang.WrongScoreRatio
                             return result
                     CorrectAnswer = 1
                 '''
@@ -158,10 +158,10 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 5:
                     if CorrectItem == '':
-                        result.Memo = 'wrong correct item'
+                        result.Memo = self._lang.WrongCorrectItem
                         return result
                     if ScoreRatio <= 0:
-                        result.Memo = 'wrong score ratio'
+                        result.Memo = self._lang.WrongScoreRatio
                         return result
                     Option = 'none'
                     QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
@@ -171,7 +171,7 @@ class QuestionSolutionLogic(BaseLogic):
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.CorrectItem == CorrectItem:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                         CountScoreRatio = 0
                         for i in SolutionDataList:
@@ -179,7 +179,7 @@ class QuestionSolutionLogic(BaseLogic):
                             CountScoreRatio += SolutionData.ScoreRatio
                         # 所有选项得分比例总和为1
                         if float(CountScoreRatio) + ScoreRatio > 1:
-                            result.Memo = 'wrong score ratio'
+                            result.Memo = self._lang.WrongScoreRatio
                             return result
                     CorrectAnswer = 1
                 '''
@@ -188,11 +188,11 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 6:
                     if CorrectItem == '':
-                        result.Memo = 'wrong correct item'
+                        result.Memo = self._lang.WrongCorrectItem
                         return result
                     QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) >= 1:
-                        result.Memo = 'too many answers'
+                        result.Memo = self._lang.TooManyAnswers
                         return result
                     Option = 'none'
                     CorrectAnswer = 1
@@ -205,10 +205,10 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 7:
                     if Option == '':
-                        result.Memo = 'wrong option'
+                        result.Memo = self._lang.WrongOption
                         return result
                     if Position <= 0:
-                        result.Memo = 'wrong position'
+                        result.Memo = self._lang.WrongPosition
                         return result
                     if Position == 1:  # 左侧为备选项 不能设置正确答案
                         CorrectItem = ''
@@ -222,12 +222,12 @@ class QuestionSolutionLogic(BaseLogic):
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.Option == Option:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.CorrectItem != '' and SolutionData.CorrectItem == CorrectItem:
-                                result.Memo = 'duplicate correct item'
+                                result.Memo = self._lang.DuplicateCorrectItem
                                 return result
                         if CorrectItem != '':
                             try:
@@ -237,15 +237,15 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                             # 答案项是否存在
                             if CorrectItemData is None:
-                                result.Memo = 'correct item data error'
+                                result.Memo = self._lang.CorrectItemDataError
                                 return result
                             # 答案项是否属于当前试题
                             if CorrectItemData.QuestionID != QuestionData.ID:
-                                result.Memo = 'question id error'
+                                result.Memo = self._lang.QuestionIDError
                                 return result
                             # 答案必须为左侧选项ID
                             if CorrectItemData.Position == 2:
-                                result.Memo = 'the answer must be the left option ID'
+                                result.Memo = self._lang.TheAnswerMustBeTheLeftOptionID
                                 return result
                     ScoreRatio = 1.00
                 '''
@@ -256,10 +256,10 @@ class QuestionSolutionLogic(BaseLogic):
                 '''
                 if QuestionData.QuestionType == 8:
                     if Option == '':
-                        result.Memo = 'wrong option'
+                        result.Memo = self._lang.WrongOption
                         return result
                     if Position <= 0:
-                        result.Memo = 'wrong position'
+                        result.Memo = self._lang.WrongPosition
                         return result
                     if Position == 1:  # 左侧为备选项 不能设置正确答案
                         CorrectItem = ''
@@ -273,12 +273,12 @@ class QuestionSolutionLogic(BaseLogic):
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.Option == Option:
-                                result.Memo = 'duplicate options'
+                                result.Memo = self._lang.DuplicateOptions
                                 return result
                         for i in SolutionDataList:
                             SolutionData: QuestionSolutionEntity = i
                             if SolutionData.CorrectItem != '' and SolutionData.CorrectItem == CorrectItem:
-                                result.Memo = 'duplicate correct item'
+                                result.Memo = self._lang.DuplicateCorrectItem
                                 return result
                         if CorrectItem != '':
                             CorrectItemList: list = CorrectItem.split(',')
@@ -288,7 +288,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 for j in SolutionDataList:
                                     SolutionData: QuestionSolutionEntity = j
                                     if SolutionID in SolutionData.CorrectItem:
-                                        result.Memo = 'duplicate answer'
+                                        result.Memo = self._lang.DuplicateAnswer
                                         return result
                                 # 答案项是否存在
                                 try:
@@ -297,15 +297,15 @@ class QuestionSolutionLogic(BaseLogic):
                                     result.Memo = str(e)
                                     return result
                                 if CorrectItemData is None:
-                                    result.Memo = 'correct item data error'
+                                    result.Memo = self._lang.CorrectItemDataError
                                     return result
                                 # 答案项是否属于当前试题
                                 if CorrectItemData.QuestionID != QuestionData.ID:
-                                    result.Memo = 'question id data error'
+                                    result.Memo = self._lang.QuestionIDError
                                     return result
                                 # 答案必须为左侧选项ID
                                 if CorrectItemData.Position == 2:
-                                    result.Memo = 'the answer must be the left option ID'
+                                    result.Memo = self._lang.TheAnswerMustBeTheLeftOptionID
                                     return result
                     ScoreRatio = 1.00
 
@@ -343,13 +343,13 @@ class QuestionSolutionLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif FileType == '':
-            result.Memo = 'wrong file type'
+            result.Memo = self._lang.WrongFileType
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
-            result.Memo = 'too large file'
+            result.Memo = self._lang.TooLargeFile
         else:
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
-                result.Memo = 'question solution data error'
+                result.Memo = self._lang.QuestionSolutionDataError
             else:
                 if QuestionSolutionData.OptionAttachment != 'none':
                     self._file.DeleteFile(QuestionSolutionData.OptionAttachment)
@@ -401,7 +401,7 @@ class QuestionSolutionLogic(BaseLogic):
         else:
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
-                result.Memo = 'question solution data error'
+                result.Memo = self._lang.QuestionSolutionDataError
             else:
                 _dbsession.begin_nested()
 
@@ -447,7 +447,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif QuestionID <= 0:
-            result.Memo = 'wrong question ID'
+            result.Memo = self._lang.WrongQuestionID
         else:
             result: ResultList = self._questionSolutionModel.List(_dbsession, Page, PageSize, QuestionID)
         return result

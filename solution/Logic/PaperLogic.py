@@ -15,23 +15,23 @@ class PaperLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif PaperName == '':
-            result.Memo = 'wrong paper name'
+            result.Memo = self._lang.WrongPaperName
         elif SubjectID <= 0:
-            result.Memo = 'wrong subject ID'
+            result.Memo = self._lang.WrongSubjectID
         elif TotalScore <= 0:
-            result.Memo = 'wrong total score'
+            result.Memo = self._lang.WrongTotalScore
         elif PassLine <= 0:
-            result.Memo = 'wrong pass line'
+            result.Memo = self._lang.WrongPassLine
         elif PassLine > TotalScore:
-            result.Memo = 'wrong pass line'
+            result.Memo = self._lang.WrongPassLine
         elif ExamDuration <= 0:
-            result.Memo = 'wrong exam duration'
+            result.Memo = self._lang.WrongExamDuration
         elif self._paperModel.FindPaperCode(_dbsession, PaperName) is not None:
-            result.Memo = 'paper data already exists'
+            result.Memo = self._lang.PaperDataAlreadyExists
         else:
             SubjectData: SubjectEntity = self._subjectModel.Find(_dbsession, SubjectID)
             if SubjectData is None:
-                result.Memo = 'subject data error'
+                result.Memo = self._lang.SubjectDataError
             else:
                 _dbsession.begin_nested()
 
@@ -66,7 +66,7 @@ class PaperLogic(BaseLogic):
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:
-                result.Memo = 'paper data error'
+                result.Memo = self._lang.PaperDataError
             else:
                 _dbsession.begin_nested()
 
@@ -75,7 +75,7 @@ class PaperLogic(BaseLogic):
                         # 当前试卷下是否有对应的试卷规则
                         PaperRuleList: list = self._paperRuleModel.AllPaperRule(_dbsession, ID)
                         if len(PaperRuleList) == 0:
-                            result.Memo = 'paper rule data does not exist'
+                            result.Memo = self._lang.PaperRuleDataDoesNotExist
                             _dbsession.rollback()
                             return result
                         # 当前试卷下的试卷规则是否和当前试卷总分相匹配
@@ -85,7 +85,7 @@ class PaperLogic(BaseLogic):
                                 PaperRuleData: PaperRuleEntity = i
                                 TotalScore += float(PaperRuleData.SingleScore) * PaperRuleData.QuestionNum
                             if TotalScore != PaperData.TotalScore:
-                                result.Memo = 'score is set incorrectly'
+                                result.Memo = self._lang.ScoreIsSetIncorrectly
                                 _dbsession.rollback()
                                 return result
                         # 当前科目只能有一个试卷被启用
@@ -127,17 +127,17 @@ class PaperLogic(BaseLogic):
         elif ID <= 0:
             result.Memo = self._lang.WrongID
         elif PaperName == '':
-            result.Memo = 'wrong paper name'
+            result.Memo = self._lang.WrongPaperName
         elif TotalScore <= 0:
-            result.Memo = 'wrong total score'
+            result.Memo = self._lang.WrongTotalScore
         elif PassLine <= 0:
-            result.Memo = 'wrong pass line'
+            result.Memo = self._lang.WrongPassLine
         elif ExamDuration <= 0:
-            result.Memo = 'wrong exam duration'
+            result.Memo = self._lang.WrongExamDuration
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:
-                result.Memo = 'paper data error'
+                result.Memo = self._lang.PaperDataError
             else:
                 if PaperData.PaperName != PaperName:
                     PaperData.PaperCode = self._common.StrMD5(PaperName)
@@ -190,7 +190,7 @@ class PaperLogic(BaseLogic):
         else:
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, ID)
             if PaperData is None:
-                result.Memo = 'paper data error'
+                result.Memo = self._lang.PaperDataError
             else:
                 result.State = True
                 result.Data = PaperData
