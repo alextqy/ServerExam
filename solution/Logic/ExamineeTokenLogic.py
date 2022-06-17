@@ -85,7 +85,6 @@ class ExamineeTokenLogic(BaseLogic):
                 result.State = True
         return result
 
-    # 获取答题卡列表
     def ExamScantronList(self, Token: str) -> Result:
         result = Result()
         _dbsession = DBsession()
@@ -96,4 +95,29 @@ class ExamineeTokenLogic(BaseLogic):
             ScantronData: list = self._scantronModel.AllInExamID(_dbsession, ExamID)
             result.State = True
             result.Data = ScantronData
+        return result
+
+    def ExamScantronSolutionInfo(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
+        if ExamID == 0:
+            result.Memo = self._lang.WrongToken
+        else:
+            ScantronData: ScantronEntity = self._scantronModel.Find(_dbsession, ID)
+            if ScantronData is None:
+                result.Memo = self._lang.WrongData
+            elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6:
+                result.State = True
+                return result
+            else:
+                ScantronSolutionList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                if len(ScantronSolutionList) > 0:
+                    for i in ScantronSolutionList:
+                        ScantronSolutionData: ScantronSolutionEntity = i
+                        ScantronSolutionData.CorrectAnswer = 0
+                        ScantronSolutionData.CorrectItem = ''
+                    ScantronData.ScantronSolutionList = ScantronSolutionList
+                    result.Data = ScantronData
+                result.State = True
         return result

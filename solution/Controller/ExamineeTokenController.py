@@ -29,3 +29,13 @@ async def ExamScantronList(
         Token: str = Form(''),
 ) -> Result:
     return examineeTokenLogic.ExamScantronList(Token.strip())
+
+
+# 获取答题卡选项信息
+@ExamineeTokenRouter.post('/Exam/Scantron/Solution/Info')
+async def ExamScantronSolutionInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examineeTokenLogic.ExamScantronSolutionInfo(Token.strip(), ID)
