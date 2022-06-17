@@ -40,7 +40,7 @@ class ExamInfoLogic(BaseLogic):
                             return result
 
                 CheckExamNo: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
-                if CheckExamNo.ExamState != 4:
+                if CheckExamNo is not None and CheckExamNo.ExamState != 4:
                     result.Memo = self._lang.ExamNoDataAlreadyExists
                     return result
 
@@ -283,6 +283,9 @@ class ExamInfoLogic(BaseLogic):
                                             result.Memo = AddInfo.Memo
                                             return result
 
+                        ExamInfoData.TotalScore = PaperData.TotalScore
+                        ExamInfoData.PassLine = PaperData.PassLine
+                        ExamInfoData.ExamDuration = PaperData.ExamDuration
                         ExamInfoData.ExamState = 2  # 报名状态改为待考
 
                         Desc = 'generate test paper exam No.:' + str(ExamInfoData.ID)

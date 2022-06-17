@@ -116,3 +116,15 @@ class BaseLogic:
             return True
         else:
             return False
+
+    def LogExamAction(self, _dbsession: DBsession, Type: int, ExamNo: str, Description: str, IP: str) -> bool:
+        LogData = ExamLogEntity()
+        LogData.Type = Type
+        LogData.ExamNo = ExamNo
+        LogData.Description = Description
+        LogData.IP = IP
+        result: Result = self._examLogModel.Insert(_dbsession, LogData)
+        if result.State == True:
+            return True
+        else:
+            return False

@@ -112,3 +112,6 @@ class ExamInfoModel(BaseModel):
 
     def CheckExam(self, _dbsession: DBsession, ExamineeID: int, SubjectName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ExamineeID == ExamineeID).filter(self.EType.SubjectName == SubjectName.strip()).first()
+
+    def FindExamineeID(self, _dbsession: DBsession, ExamineeID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.ExamineeID == ExamineeID).filter(self.EType.ExamState == 2).all()

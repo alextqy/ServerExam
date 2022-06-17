@@ -68,3 +68,6 @@ class ExamineeTokenModel(BaseModel):
             sql = sql.filter(self.EType.ExamID == ExamID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindExamID(self, _dbsession: DBsession, ExamID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ExamID == ExamID).first()
