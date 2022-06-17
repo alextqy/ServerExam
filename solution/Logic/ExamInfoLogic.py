@@ -312,6 +312,8 @@ class ExamInfoLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataError
+            elif ExamInfoData.StartTime > 0:
+                result.Memo = self._lang.ExamHasStarted
             elif ExamInfoData.ExamState == 3:
                 result.Memo = self._lang.ExamCompleted
             elif ExamInfoData.ExamState == 4:

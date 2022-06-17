@@ -71,3 +71,6 @@ class ExamineeTokenModel(BaseModel):
 
     def FindExamID(self, _dbsession: DBsession, ExamID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ExamID == ExamID).first()
+
+    def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.Token == Token).first()

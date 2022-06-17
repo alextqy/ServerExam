@@ -20,3 +20,12 @@ async def SignInAdmissionTicket(
         ExamNo: str = Form(''),
 ) -> Result:
     return examineeTokenLogic.SignInAdmissionTicket(request.client.host, ExamNo.strip())
+
+
+# 获取答题卡列表
+@ExamineeTokenRouter.post('/Exam/Scantron/List')
+async def ExamScantronList(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return examineeTokenLogic.ExamScantronList(Token.strip())

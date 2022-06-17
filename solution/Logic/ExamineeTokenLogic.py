@@ -47,6 +47,8 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamDataDoesNotExist
             elif ExamInfoData.ExamState != 2:
                 result.Memo = self._lang.RegistrationDataError
+            elif ExamInfoData.StartTime > 0 and self._common.Time() >= ExamInfoData.StartTime + ExamInfoData.ExamDuration:
+                result.Memo = self._lang.TimeOut
             else:
                 _dbsession.begin_nested()
 
@@ -57,15 +59,20 @@ class ExamineeTokenLogic(BaseLogic):
                     if DelInfo.State == False:
                         return result
 
+                SignInTime: str = self._common.Time()
+
                 # 生成考生Token
                 ExamineeTokenData = ExamineeTokenEntity()
-                ExamineeTokenData.CreateTime = self._common.Time()
+                ExamineeTokenData.CreateTime = SignInTime
                 ExamineeTokenData.ExamID = ExamInfoData.ID
-                ExamineeTokenData.Token = self._common.StrMD5(ExamInfoData.ExamNo + str(self._common.TimeMS()))
+                ExamineeTokenData.Token = self._common.StrMD5(ExamInfoData.ExamNo + str(SignInTime))
                 AddInfo: Result = self._examineeTokenModel.Insert(_dbsession, ExamineeTokenData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
                     return result
+
+                # 修改报名考试时间
+                ExamInfoData.StartTime = SignInTime
 
                 # 记录日志
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo
@@ -76,4 +83,17 @@ class ExamineeTokenLogic(BaseLogic):
                 _dbsession.commit()
                 result.Data = ExamineeTokenData.Token
                 result.State = True
+        return result
+
+    # 获取答题卡列表
+    def ExamScantronList(self, Token: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
+        if ExamID == 0:
+            result.Memo = self._lang.WrongToken
+        else:
+            ScantronData: list = self._scantronModel.AllInExamID(_dbsession, ExamID)
+            result.State = True
+            result.Data = ScantronData
         return result

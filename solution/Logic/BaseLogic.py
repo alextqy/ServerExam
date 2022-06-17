@@ -105,6 +105,24 @@ class BaseLogic:
             return 0
         return TeacherData.ID
 
+    def ExamineeTokenValidation(self, _dbsession: DBsession, Token: str) -> int:
+        ExamineeTokenData: ExamineeTokenEntity = self._examineeTokenModel.FindToken(_dbsession, Token)
+        if ExamineeTokenData is None:
+            return 0
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ExamineeTokenData.ExamID)
+            if ExamInfoData is None:
+                self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
+                return 0
+            elif ExamInfoData.ExamState != 2:
+                self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
+                return 0
+            elif self._common.Time() >= ExamInfoData.StartTime + ExamInfoData.ExamDuration:
+                self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
+                return 0
+            else:
+                return ExamineeTokenData.ExamID
+
     def LogSysAction(self, _dbsession: DBsession, Type: int, ManagerID: int, Description: str, IP: str) -> bool:
         LogData = SysLogEntity()
         LogData.Type = Type

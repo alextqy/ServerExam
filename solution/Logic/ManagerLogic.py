@@ -47,7 +47,7 @@ class ManagerLogic(BaseLogic):
         result = Result()
         _dbsession = DBsession()
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         else:
             ManagerData: ManagerEntity = self._managerModel.FindToken(_dbsession, Token)
             if ManagerData is None:
@@ -77,7 +77,7 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif Account == '':
@@ -122,7 +122,7 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
@@ -165,7 +165,7 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif NewPassword == '':
@@ -201,7 +201,7 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif Name == '':
@@ -242,7 +242,7 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
@@ -254,7 +254,7 @@ class ManagerLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif ID <= 0:

@@ -99,7 +99,7 @@ class HeadlineLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif ID <= 0:

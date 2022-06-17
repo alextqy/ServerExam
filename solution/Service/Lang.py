@@ -132,6 +132,8 @@ class Lang(BaseService):
             self.ScantronDataError = 'scantron data error'
             self.ScantronSolutionDataError = 'scantron solution data error'
             self.RegistrationDataError = 'registration data error'
+            self.TimeOut = 'time out'
+            self.ExamHasStarted = 'exam has started'
 
         # 中文简体
         elif self.Type == "zh-cn":
@@ -253,6 +255,8 @@ class Lang(BaseService):
             self.ScantronDataError = '答题卡数据错误'
             self.ScantronSolutionDataError = '答题卡选项数据错误'
             self.RegistrationDataError = '报名数据错误'
+            self.TimeOut = '超时'
+            self.ExamHasStarted = '考试已经开始'
 
         # 默认
         else:
@@ -374,3 +378,5 @@ class Lang(BaseService):
             self.ScantronDataError = ''
             self.ScantronSolutionDataError = ''
             self.RegistrationDataError = ''
+            self.TimeOut = ''
+            self.ExamHasStarted = ''

@@ -11,7 +11,7 @@ class PaperLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif PaperName == '':
@@ -60,7 +60,7 @@ class PaperLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
@@ -121,7 +121,7 @@ class PaperLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif ID <= 0:
@@ -170,7 +170,7 @@ class PaperLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
@@ -182,7 +182,7 @@ class PaperLogic(BaseLogic):
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
-            self._lang.WrongToken
+            result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         elif ID <= 0:

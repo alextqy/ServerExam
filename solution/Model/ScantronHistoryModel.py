@@ -27,11 +27,6 @@ class ScantronHistoryModel(BaseModel):
                 _result.Memo = self._lang.ParamErr
                 return _result
             Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
-        if Data.HeadlineContent != '':
-            Data.QuestionTitle = ''
-            Data.QuestionType = 0
-            Data.KnowledgeID = 0
-            Data.Score = 0
         if Data.ExamID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
