@@ -39,3 +39,15 @@ async def ExamScantronSolutionInfo(
         ID: int = Form(0),
 ) -> Result:
     return examineeTokenLogic.ExamScantronSolutionInfo(Token.strip(), ID)
+
+
+# 作答
+@ExamineeTokenRouter.post('/Exam/Answer')
+async def ExamAnswer(
+        request: Request,
+        Token: str = Form(''),
+        QuestionType: int = Form(0),
+        ID: int = Form(0),
+        Answer: str = Form(''),
+) -> Result:
+    return examineeTokenLogic.ExamAnswer(Token.strip(), QuestionType, ID, Answer)

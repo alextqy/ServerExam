@@ -121,3 +121,29 @@ class ExamineeTokenLogic(BaseLogic):
                     result.Data = ScantronData
                 result.State = True
         return result
+
+    def ExamAnswer(self, Token: str, QuestionType: int, ID: int, Answer: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
+        if ExamID == 0:
+            result.Memo = self._lang.WrongToken
+        else:
+            if QuestionType <= 0:
+                result.State = True
+            elif ID <= 0:
+                result.State = True
+            elif Answer == '':
+                result.State = True
+            else:
+                ScantronSolutionData: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, ID)
+                if ScantronSolutionData is None:
+                    result.Memo = self._lang.WrongData
+                else:
+                    if QuestionType >= 1 and QuestionType <= 3:
+                        pass
+                    if QuestionType >= 4 and QuestionType <= 6:
+                        pass
+                    if QuestionType >= 7 and QuestionType <= 8:
+                        pass
+        return result
