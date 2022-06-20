@@ -31,8 +31,6 @@ class ExamineeTokenLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataDoesNotExist
-            elif self._common.Time() >= ExamInfoData.EndTime:
-                result.Memo = self._lang.TimeOut
             else:
                 result = self.PostLoginOperationAction(ClientHost, ExamInfoData.ID)
         return result
@@ -51,7 +49,7 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamDataDoesNotExist
             elif ExamInfoData.ExamState != 2:
                 result.Memo = self._lang.RegistrationDataError
-            elif ExamInfoData.StartTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
+            elif ExamInfoData.EndTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
                 result.Memo = self._lang.TimeOut
             else:
                 # 删除相同报名Token
@@ -125,28 +123,56 @@ class ExamineeTokenLogic(BaseLogic):
                 result.State = True
         return result
 
-    def ExamAnswer(self, Token: str, QuestionType: int, ID: int, Answer: str) -> Result:
+    def ExamAnswer(self, Token: str, ScantronID: int, ID: int, Answer: str = '') -> Result:
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
         if ExamID == 0:
             result.Memo = self._lang.WrongToken
         else:
-            if QuestionType <= 0:
-                result.State = True
+            if ScantronID <= 0:
+                result.State = False
             elif ID <= 0:
-                result.State = True
-            elif Answer == '':
-                result.State = True
+                result.State = False
             else:
-                ScantronSolutionData: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, ID)
-                if ScantronSolutionData is None:
+                ScantronData: ScantronEntity = self._scantronModel.Find(_dbsession, ScantronID)
+                if ScantronData is None:
                     result.Memo = self._lang.WrongData
+                elif ScantronData.ExamID != ExamID:
+                    result.Memo = self._lang.PermissionDenied
                 else:
-                    if QuestionType >= 1 and QuestionType <= 3:
-                        pass
-                    if QuestionType >= 4 and QuestionType <= 6:
-                        pass
-                    if QuestionType >= 7 and QuestionType <= 8:
-                        pass
+                    _dbsession.begin_nested()
+
+                    # 获取当前试题选项列表
+                    ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                    if len(ScantronSolutionDataList) == 0:
+                        result.Memo = self._lang.WrongData
+                        return result
+                    for i in ScantronSolutionDataList:
+                        ScantronSolutionData: ScantronSolutionEntity = i
+                        if ScantronData.QuestionType >= 1 and ScantronData.QuestionType <= 2:
+                            if ScantronSolutionData.ID == ID:
+                                ScantronSolutionData.CandidateAnswer = 'True'
+                            else:
+                                ScantronSolutionData.CandidateAnswer = 'False'
+                        elif ScantronData.QuestionType == 3 and ScantronSolutionData.ID == ID:
+                            if Answer != '':
+                                Answer = 'True'
+                            else:
+                                Answer = ''
+                            ScantronSolutionData.CandidateAnswer = Answer
+                        elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6 and ScantronSolutionData.ID == ID:
+                            ScantronSolutionData.CandidateAnswer = Answer
+                        elif ScantronData.QuestionType >= 7 and ScantronData.QuestionType <= 8 and ScantronSolutionData.ID == ID:
+                            if ScantronSolutionData.Position != 2:
+                                result.Memo = self._lang.WrongData
+                                return result
+                            ScantronSolutionData.CandidateAnswer = Answer
+                        else:
+                            continue
+                        ScantronSolutionData.UpdateTime = self._common.Time()
+                        _dbsession.commit()
+
+                    _dbsession.commit()
+                    result.State = True
         return result

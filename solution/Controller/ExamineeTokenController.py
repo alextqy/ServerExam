@@ -46,8 +46,8 @@ async def ExamScantronSolutionInfo(
 async def ExamAnswer(
         request: Request,
         Token: str = Form(''),
-        QuestionType: int = Form(0),
+        ScantronID: int = Form(0),
         ID: int = Form(0),
         Answer: str = Form(''),
 ) -> Result:
-    return examineeTokenLogic.ExamAnswer(Token.strip(), QuestionType, ID, Answer)
+    return examineeTokenLogic.ExamAnswer(Token.strip(), ScantronID, ID, Answer.strip())

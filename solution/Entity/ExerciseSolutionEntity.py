@@ -13,7 +13,7 @@ class ExerciseSolutionEntity(BaseEntity, BaseORM):
     ScoreRatio: float = Column(DECIMAL(10, 2), comment='得分比例', default=0.00)
     Position: int = Column(INTEGER, comment='拖拽题/连线题 展示位置 1左 2右', default=0)
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
-    CandidateAnswer: str = Column(String(128), comment='考生答案', default='none')
+    CandidateAnswer: str = Column(String(128), comment='考生答案', default='')
 
     def __init__(self):
         super().__init__()

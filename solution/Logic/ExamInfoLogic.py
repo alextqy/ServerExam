@@ -388,7 +388,7 @@ class ExamInfoLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataDoesNotExist
-            elif ExamInfoData.ExamState == 2:
+            elif ExamInfoData.ExamState == 2 and self._common.Time() <= ExamInfoData.EndTime:
                 result.Memo = 'ID:' + str(ID) + self._lang.HasNotYetTakenTheExam
             else:
                 # 获取报名下的答题卡

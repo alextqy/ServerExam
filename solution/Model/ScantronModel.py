@@ -31,7 +31,6 @@ class ScantronModel(BaseModel):
             _result.Memo = self._lang.ParamErr
             return _result
         try:
-            print(Data.HeadlineContent)
             _dbsession.add(Data)
             _dbsession.commit()
             _dbsession.flush()
