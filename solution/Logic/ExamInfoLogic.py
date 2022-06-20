@@ -79,10 +79,12 @@ class ExamInfoLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataError
-            elif ExamInfoData.ExamState == 3:
-                result.Memo = self._lang.ExamCompleted
             elif ExamInfoData.ExamState == 4:
                 result.State = True
+            elif ExamInfoData.ExamState == 3:
+                result.Memo = self._lang.ExamCompleted
+            elif ExamInfoData.StartTime > 0:
+                result.Memo = self._lang.DataCannotBeInvalidated
             else:
                 _dbsession.begin_nested()
 

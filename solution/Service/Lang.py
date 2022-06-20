@@ -134,11 +134,12 @@ class Lang(BaseService):
             self.RegistrationDataError = 'registration data error'
             self.TimeOut = 'time out'
             self.ExamHasStarted = 'exam has started'
+            self.DataCannotBeInvalidated = 'data cannot be invalidated'
 
         # 中文简体
         elif self.Type == "zh-cn":
             self.ParamErr = '参数错误'
-            self.WrongToken = '登陆令牌错误'
+            self.WrongToken = '登陆失败'
             self.PermissionDenied = '权限异常'
             self.WrongClassName = '班级名称错误'
             self.ClassDataAlreadyExists = '班级已存在'
@@ -257,6 +258,7 @@ class Lang(BaseService):
             self.RegistrationDataError = '报名数据错误'
             self.TimeOut = '超时'
             self.ExamHasStarted = '考试已经开始'
+            self.DataCannotBeInvalidated = '数据不能被作废'
 
         # 默认
         else:
@@ -380,3 +382,4 @@ class Lang(BaseService):
             self.RegistrationDataError = ''
             self.TimeOut = ''
             self.ExamHasStarted = ''
+            self.DataCannotBeInvalidated = ''

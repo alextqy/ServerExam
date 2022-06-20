@@ -31,27 +31,29 @@ class ExamineeTokenLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataDoesNotExist
+            elif self._common.Time() >= ExamInfoData.EndTime:
+                result.Memo = self._lang.TimeOut
             else:
-                result = self.PostLoginOperation(ClientHost, ExamInfoData.ID)
+                result = self.PostLoginOperationAction(ClientHost, ExamInfoData.ID)
         return result
 
-    def PostLoginOperation(self, ClientHost: str, ExamInfoID: int) -> Result:
+    def PostLoginOperationAction(self, ClientHost: str, ExamInfoID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         if ExamInfoID <= 0:
             result.Memo = self._lang.RegistrationDataError
         else:
+            _dbsession.begin_nested()
+
             # 获取报名数据
             ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ExamInfoID)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataDoesNotExist
             elif ExamInfoData.ExamState != 2:
                 result.Memo = self._lang.RegistrationDataError
-            elif ExamInfoData.StartTime > 0 and self._common.Time() >= ExamInfoData.StartTime + ExamInfoData.ExamDuration:
+            elif ExamInfoData.StartTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
                 result.Memo = self._lang.TimeOut
             else:
-                _dbsession.begin_nested()
-
                 # 删除相同报名Token
                 CheckToken: ExamineeTokenEntity = self._examineeTokenModel.FindExamID(_dbsession, ExamInfoData.ID)
                 if CheckToken is not None:
@@ -71,8 +73,9 @@ class ExamineeTokenLogic(BaseLogic):
                     result.Memo = AddInfo.Memo
                     return result
 
-                # 修改报名考试时间
+                # 修改报名考试起止时间
                 ExamInfoData.StartTime = SignInTime
+                ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
 
                 # 记录日志
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo

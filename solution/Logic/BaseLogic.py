@@ -117,7 +117,7 @@ class BaseLogic:
             elif ExamInfoData.ExamState != 2:
                 self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
                 return 0
-            elif self._common.Time() >= ExamInfoData.StartTime + ExamInfoData.ExamDuration:
+            elif self._common.Time() >= ExamInfoData.EndTime:
                 self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
                 return 0
             else:
