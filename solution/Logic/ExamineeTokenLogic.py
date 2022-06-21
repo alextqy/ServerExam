@@ -18,6 +18,10 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamineeDataDoesNotExist
             else:
                 ExamInfoList: list = self._examInfoModel.FindExamineeID(_dbsession, ExamineeData.ID)
+                for i in ExamInfoList:
+                    ExamInfoData: ExamInfoEntity = i
+                    if ExamInfoData.EndTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
+                        ExamInfoList.remove(ExamInfoData)
                 result.Data = ExamInfoList
                 result.State = True
         return result
@@ -163,11 +167,41 @@ class ExamineeTokenLogic(BaseLogic):
                             ScantronSolutionData.CandidateAnswer = Answer
                         elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6 and ScantronSolutionData.ID == ID:
                             ScantronSolutionData.CandidateAnswer = Answer
-                        elif ScantronData.QuestionType >= 7 and ScantronData.QuestionType <= 8 and ScantronSolutionData.ID == ID:
+                        elif ScantronData.QuestionType == 7 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
                                 return result
-                            ScantronSolutionData.CandidateAnswer = Answer
+                            else:
+                                if Answer != '':
+                                    if int(Answer) == ID:
+                                        result.Memo = self._lang.WrongData
+                                        return result
+                                    ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, int(Answer))
+                                    if ScantronSolutionDataSub is None:
+                                        result.Memo = self._lang.WrongData
+                                        return result
+                                    if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
+                                        result.Memo = self._lang.WrongData
+                                        return result
+                                ScantronSolutionData.CandidateAnswer = Answer
+                        elif ScantronData.QuestionType == 8 and ScantronSolutionData.ID == ID:
+                            if ScantronSolutionData.Position != 2:
+                                result.Memo = self._lang.WrongData
+                                return result
+                            else:
+                                if Answer != '':
+                                    AnswerList: list = list(set(Answer.split(',')))
+                                    if len(AnswerList) > 0:
+                                        for i in AnswerList:
+                                            AnswerID: int = int(i)
+                                            ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, AnswerID)
+                                            if ScantronSolutionDataSub is None:
+                                                result.Memo = self._lang.WrongData
+                                                return result
+                                            if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
+                                                result.Memo = self._lang.WrongData
+                                                return result
+                                        ScantronSolutionData.CandidateAnswer = AnswerList
                         else:
                             continue
                         ScantronSolutionData.UpdateTime = self._common.Time()

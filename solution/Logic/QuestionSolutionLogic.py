@@ -231,7 +231,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                         if CorrectItem != '':
                             try:
-                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, int(CorrectItem))
+                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.FindCorrectItem(_dbsession, CorrectItem)
                             except Exception as e:
                                 result.Memo = str(e)
                                 return result
@@ -281,18 +281,18 @@ class QuestionSolutionLogic(BaseLogic):
                                 result.Memo = self._lang.DuplicateCorrectItem
                                 return result
                         if CorrectItem != '':
-                            CorrectItemList: list = CorrectItem.split(',')
+                            CorrectItemList: list = CorrectItem.split('<->')
                             for i in CorrectItemList:
-                                SolutionID: str = i
+                                CorrectItemStr: str = i
                                 # 答案是否存在于其他选项中
                                 for j in SolutionDataList:
                                     SolutionData: QuestionSolutionEntity = j
-                                    if SolutionID in SolutionData.CorrectItem:
+                                    if CorrectItemStr in SolutionData.CorrectItem:
                                         result.Memo = self._lang.DuplicateAnswer
                                         return result
                                 # 答案项是否存在
                                 try:
-                                    CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, int(SolutionID))
+                                    CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.FindCorrectItem(_dbsession, CorrectItemStr)
                                 except Exception as e:
                                     result.Memo = str(e)
                                     return result
