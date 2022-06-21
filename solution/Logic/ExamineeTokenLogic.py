@@ -162,11 +162,13 @@ class ExamineeTokenLogic(BaseLogic):
                         return result
                     for i in ScantronSolutionDataList:
                         ScantronSolutionData: ScantronSolutionEntity = i
+                        # 单选判断ID不能输入错误 否侧全为False
                         if ScantronData.QuestionType >= 1 and ScantronData.QuestionType <= 2:
                             if ScantronSolutionData.ID == ID:
                                 ScantronSolutionData.CandidateAnswer = 'True'
                             else:
                                 ScantronSolutionData.CandidateAnswer = 'False'
+                        # 多选题Answer不为空则为选择
                         elif ScantronData.QuestionType == 3 and ScantronSolutionData.ID == ID:
                             if Answer != '':
                                 Answer = 'True'
@@ -191,6 +193,9 @@ class ExamineeTokenLogic(BaseLogic):
                                     if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
                                         result.Memo = self._lang.WrongData
                                         return result
+                                    if ScantronSolutionDataSub.Position == 2:
+                                        result.Memo = self._lang.WrongData
+                                        return result
                                 ScantronSolutionData.CandidateAnswer = Answer
                         elif ScantronData.QuestionType == 8 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
@@ -209,7 +214,10 @@ class ExamineeTokenLogic(BaseLogic):
                                             if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
                                                 result.Memo = self._lang.WrongData
                                                 return result
-                                        ScantronSolutionData.CandidateAnswer = AnswerList
+                                            if ScantronSolutionDataSub.Position == 2:
+                                                result.Memo = self._lang.WrongData
+                                                return result
+                                    ScantronSolutionData.CandidateAnswer = ','.join(AnswerList)
                         else:
                             continue
                         ScantronSolutionData.UpdateTime = self._common.Time()

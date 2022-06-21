@@ -85,5 +85,5 @@ class QuestionSolutionModel(BaseModel):
         sql = sql.filter(self.EType.QuestionID == QuestionID)
         return sql.all()
 
-    def FindCorrectItem(self, _dbsession: DBsession, CorrectItem: str) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.CorrectItem == CorrectItem).first()
+    def FindCorrectItem(self, _dbsession: DBsession, QuestionID: int, Option: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.QuestionID == QuestionID).filter(self.EType.Option == Option).first()

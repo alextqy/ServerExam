@@ -242,7 +242,7 @@ class Lang(BaseService):
             self.TooManyWrongAnswer = '错误答案过多'
             self.TooManyAnswers = '答案过多'
             self.DuplicateCorrectItem = '正确答案内容重复'
-            self.CorrectItemDataError = '正确答案错误'
+            self.CorrectItemDataError = '正确答案设置错误'
             self.QuestionIDError = '试题ID错误'
             self.TheAnswerMustBeTheLeftOptionID = '答案必须为左侧选项ID'
             self.DuplicateAnswer = '答案重复'

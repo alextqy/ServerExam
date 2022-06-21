@@ -230,18 +230,10 @@ class QuestionSolutionLogic(BaseLogic):
                                 result.Memo = self._lang.DuplicateCorrectItem
                                 return result
                         if CorrectItem != '':
-                            try:
-                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.FindCorrectItem(_dbsession, CorrectItem)
-                            except Exception as e:
-                                result.Memo = str(e)
-                                return result
+                            CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.FindCorrectItem(_dbsession, QuestionID, CorrectItem)
                             # 答案项是否存在
                             if CorrectItemData is None:
                                 result.Memo = self._lang.CorrectItemDataError
-                                return result
-                            # 答案项是否属于当前试题
-                            if CorrectItemData.QuestionID != QuestionData.ID:
-                                result.Memo = self._lang.QuestionIDError
                                 return result
                             # 答案必须为左侧选项ID
                             if CorrectItemData.Position == 2:
@@ -281,7 +273,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 result.Memo = self._lang.DuplicateCorrectItem
                                 return result
                         if CorrectItem != '':
-                            CorrectItemList: list = CorrectItem.split('<->')
+                            CorrectItemList: list = list(set(CorrectItem.split('<->')))
                             for i in CorrectItemList:
                                 CorrectItemStr: str = i
                                 # 答案是否存在于其他选项中
@@ -291,11 +283,7 @@ class QuestionSolutionLogic(BaseLogic):
                                         result.Memo = self._lang.DuplicateAnswer
                                         return result
                                 # 答案项是否存在
-                                try:
-                                    CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.FindCorrectItem(_dbsession, CorrectItemStr)
-                                except Exception as e:
-                                    result.Memo = str(e)
-                                    return result
+                                CorrectItemData: QuestionSolutionEntity = self._questionSolutionModel.FindCorrectItem(_dbsession, QuestionID, CorrectItemStr)
                                 if CorrectItemData is None:
                                     result.Memo = self._lang.CorrectItemDataError
                                     return result
