@@ -162,12 +162,14 @@ class ExamineeTokenLogic(BaseLogic):
                         return result
                     for i in ScantronSolutionDataList:
                         ScantronSolutionData: ScantronSolutionEntity = i
+                        # 单选/判断题 选项 =======================================================================================
                         # 单选判断ID不能输入错误 否侧全为False
                         if ScantronData.QuestionType >= 1 and ScantronData.QuestionType <= 2:
                             if ScantronSolutionData.ID == ID:
                                 ScantronSolutionData.CandidateAnswer = 'True'
                             else:
                                 ScantronSolutionData.CandidateAnswer = 'False'
+                        # 多选题选项 =======================================================================================
                         # 多选题Answer不为空则为选择
                         elif ScantronData.QuestionType == 3 and ScantronSolutionData.ID == ID:
                             if Answer != '':
@@ -175,8 +177,10 @@ class ExamineeTokenLogic(BaseLogic):
                             else:
                                 Answer = ''
                             ScantronSolutionData.CandidateAnswer = Answer
+                        # 填空/问答/实训 题选项 =======================================================================================
                         elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6 and ScantronSolutionData.ID == ID:
                             ScantronSolutionData.CandidateAnswer = Answer
+                        # 拖拽题选项 =======================================================================================
                         elif ScantronData.QuestionType == 7 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
@@ -197,6 +201,7 @@ class ExamineeTokenLogic(BaseLogic):
                                         result.Memo = self._lang.WrongData
                                         return result
                                 ScantronSolutionData.CandidateAnswer = Answer
+                        # 连线题选项 =======================================================================================
                         elif ScantronData.QuestionType == 8 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
