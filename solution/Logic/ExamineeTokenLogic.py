@@ -76,8 +76,14 @@ class ExamineeTokenLogic(BaseLogic):
                     return result
 
                 # 修改报名考试起止时间
-                ExamInfoData.StartTime = SignInTime
-                ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
+                try:
+                    ExamInfoData.StartTime = SignInTime
+                    ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
 
                 # 记录日志
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo
@@ -107,6 +113,8 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
         if ExamID == 0:
+            result.Memo = self._lang.WrongToken
+        elif ID <= 0:
             result.Memo = self._lang.WrongToken
         else:
             ScantronData: ScantronEntity = self._scantronModel.Find(_dbsession, ID)
@@ -209,4 +217,35 @@ class ExamineeTokenLogic(BaseLogic):
 
                     _dbsession.commit()
                     result.State = True
+        return result
+
+    def EndTheExam(self, ClientHost: str, Token: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
+        if ExamID == 0:
+            result.Memo = self._lang.WrongToken
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ExamID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.WrongData
+            else:
+                # 结束报名
+                try:
+                    ExamInfoData.ExamState = 3
+                    ExamInfoData.ActualDuration = self._common.Time() - ExamInfoData.StartTime
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                # 记录日志
+                Desc = 'examinee end the exam No.:' + ExamInfoData.ExamNo
+                if self.LogExamAction(_dbsession, 2, ExamInfoData.ExamNo, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    return result
+
+                _dbsession.commit()
+                result.State = True
         return result

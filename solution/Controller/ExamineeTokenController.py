@@ -51,3 +51,12 @@ async def ExamAnswer(
         Answer: str = Form(''),
 ) -> Result:
     return examineeTokenLogic.ExamAnswer(Token.strip(), ScantronID, ID, Answer.strip())
+
+
+# 结束考试
+@ExamineeTokenRouter.post('/End/The/Exam')
+async def EndTheExam(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return examineeTokenLogic.EndTheExam(request.client.host, Token.strip())

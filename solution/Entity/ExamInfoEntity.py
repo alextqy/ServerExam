@@ -12,7 +12,7 @@ class ExamInfoEntity(BaseEntity, BaseORM):
     ActualScore: float = Column(DECIMAL(10, 2), comment='真实得分', default=0.00)
     ExamDuration: int = Column(INTEGER, comment='额定考试时长', default=0)
     StartTime: int = Column(INTEGER, comment='实际考试开始时间', default=0)
-    EndTime: int = Column(INTEGER, comment='实际考试结束时间', default=0)
+    EndTime: int = Column(INTEGER, comment='额定考试结束时间', default=0)
     ActualDuration: int = Column(INTEGER, comment='实际考试时长', default=0)
     Pass: int = Column(INTEGER, comment='是否通过 1否 2是', default=0)
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
