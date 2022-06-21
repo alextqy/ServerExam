@@ -90,12 +90,12 @@ class ExamInfoLogic(BaseLogic):
 
                 # 待考状态的报名 作废时要删除对应的答题卡和答题卡选项
                 if ExamInfoData.ExamState == 2:
-                    ScantronDataList: list = self._scantronModel.AllInExamID(_dbsession, ID)
+                    ScantronDataList: list = self._scantronModel.FindExamID(_dbsession, ID)
                     if len(ScantronDataList) > 0:
                         for i in ScantronDataList:
                             ScantronData: ScantronEntity = i
                             # 删除答题卡选项
-                            ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                            ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                             if len(ScantronSolutionDataList) > 0:
                                 for j in ScantronSolutionDataList:
                                     ScantronSolutionData: ScantronSolutionEntity = j
@@ -325,12 +325,12 @@ class ExamInfoLogic(BaseLogic):
 
                 # 获取对应答题卡列表数据
                 if ExamInfoData.ExamState == 2:
-                    ScantronDataList: list = self._scantronModel.AllInExamID(_dbsession, ID)
+                    ScantronDataList: list = self._scantronModel.FindExamID(_dbsession, ID)
                     if len(ScantronDataList) > 0:
                         for i in ScantronDataList:
                             ScantronData: ScantronEntity = i
                             # 删除答题卡选项
-                            ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                            ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                             if len(ScantronSolutionDataList) > 0:
                                 for j in ScantronSolutionDataList:
                                     ScantronSolutionData: ScantronSolutionEntity = j
@@ -392,7 +392,7 @@ class ExamInfoLogic(BaseLogic):
                 result.Memo = 'ID:' + str(ID) + self._lang.HasNotYetTakenTheExam
             else:
                 # 获取报名下的答题卡
-                ScantronDataList: list = self._scantronModel.AllInExamID(_dbsession, ID)
+                ScantronDataList: list = self._scantronModel.FindExamID(_dbsession, ID)
                 if len(ScantronDataList) > 0:
                     for i in ScantronDataList:
                         ScantronData: ScantronEntity = i
@@ -415,7 +415,7 @@ class ExamInfoLogic(BaseLogic):
                             return result
 
                         # 当前报名下的答题卡选项转入历史
-                        ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                        ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                         if len(ScantronSolutionDataList) > 0:
                             for s in ScantronSolutionDataList:
                                 ScantronSolutionData: ScantronSolutionEntity = s
@@ -481,4 +481,67 @@ class ExamInfoLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        return result
+
+    def GradeTheExam(self, ClientHost: str, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result = self.GradeTheExamAction(ClientHost, ID)
+        return result
+
+    def GradeTheExamAction(self, ClientHost: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if ID <= 0:
+            result.Memo = self._lang.WrongID
+        else:
+            # 获取报名数据
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.ExamDataDoesNotExist
+            elif ExamInfoData.ExamState != 3:
+                result.Memo = self._lang.ExamNotCompleted
+            else:
+                # 获取答题卡数据
+                ScantronDataList: list = self._scantronModel.FindExamID(_dbsession, ExamInfoData.ID)
+                if len(ScantronDataList) == 0:
+                    result.Memo = self._lang.WrongData
+                else:
+                    for i in ScantronDataList:
+                        ScantronData: ScantronEntity = i
+                        # print(ScantronData.ID)
+                        if ScantronData.QuestionType > 0:
+                            # 获取答题卡选项数据
+                            ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
+                            # print(len(ScantronSolutionDataList))
+                            if len(ScantronSolutionDataList) == 0:
+                                result.Memo = self._lang.ScantronSolutionDataError
+                                return result
+                            else:
+                                if ScantronData.QuestionType == 1:
+                                    pass
+                                elif ScantronData.QuestionType == 2:
+                                    pass
+                                elif ScantronData.QuestionType == 3:
+                                    pass
+                                elif ScantronData.QuestionType == 4:
+                                    pass
+                                elif ScantronData.QuestionType == 5:
+                                    pass
+                                elif ScantronData.QuestionType == 6:
+                                    pass
+                                elif ScantronData.QuestionType == 7:
+                                    pass
+                                elif ScantronData.QuestionType == 8:
+                                    pass
+                                else:
+                                    continue
+                        else:
+                            continue
         return result

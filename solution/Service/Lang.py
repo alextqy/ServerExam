@@ -135,6 +135,7 @@ class Lang(BaseService):
             self.TimeOut = 'time out'
             self.ExamHasStarted = 'exam has started'
             self.DataCannotBeInvalidated = 'data cannot be invalidated'
+            self.ExamNotCompleted = 'exam not completed'
 
         # 中文简体
         elif self.Type == "zh-cn":
@@ -259,6 +260,7 @@ class Lang(BaseService):
             self.TimeOut = '超时'
             self.ExamHasStarted = '考试已经开始'
             self.DataCannotBeInvalidated = '数据不能被作废'
+            self.ExamNotCompleted = '考试未完成'
 
         # 默认
         else:
@@ -383,3 +385,4 @@ class Lang(BaseService):
             self.TimeOut = ''
             self.ExamHasStarted = ''
             self.DataCannotBeInvalidated = ''
+            self.ExamNotCompleted = ''

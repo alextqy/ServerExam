@@ -79,3 +79,13 @@ async def ExamIntoHistory(
         ID: int = Form(0),
 ) -> Result:
     return examInfoLogic.ExamIntoHistory(request.client.host, Token.strip(), ID)
+
+
+# 打分
+@ExamInfoRouter.post('/Grade/The/Exam')
+async def GradeTheExam(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return examInfoLogic.GradeTheExam(request.client.host, Token.strip(), ID)

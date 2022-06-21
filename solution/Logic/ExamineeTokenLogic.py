@@ -103,7 +103,7 @@ class ExamineeTokenLogic(BaseLogic):
         if ExamID == 0:
             result.Memo = self._lang.WrongToken
         else:
-            ScantronData: list = self._scantronModel.AllInExamID(_dbsession, ExamID)
+            ScantronData: list = self._scantronModel.FindExamID(_dbsession, ExamID)
             result.State = True
             result.Data = ScantronData
         return result
@@ -124,7 +124,7 @@ class ExamineeTokenLogic(BaseLogic):
                 result.State = True
                 return result
             else:
-                ScantronSolutionList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                ScantronSolutionList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                 if len(ScantronSolutionList) > 0:
                     for i in ScantronSolutionList:
                         ScantronSolutionData: ScantronSolutionEntity = i
@@ -156,7 +156,7 @@ class ExamineeTokenLogic(BaseLogic):
                     _dbsession.begin_nested()
 
                     # 获取当前试题选项列表
-                    ScantronSolutionDataList: list = self._scantronSolutionModel.AllInScantronID(_dbsession, ScantronData.ID)
+                    ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                     if len(ScantronSolutionDataList) == 0:
                         result.Memo = self._lang.WrongData
                         return result
