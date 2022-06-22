@@ -6,7 +6,7 @@ class ExamineeTokenEntity(BaseEntity, BaseORM):
     __tablename__ = 'ExamineeToken'
 
     Token: str = Column(String(128), index=True, comment='Token', default='none')
-    ExamID: int = Column(INTEGER, index=True, comment='报名ID', default=0)
+    ExamID: int = Column(INTEGER, index=True, comment='报名ID', default=0)  # 如果为0则为刷题Token
 
     def __init__(self):
         super().__init__()
