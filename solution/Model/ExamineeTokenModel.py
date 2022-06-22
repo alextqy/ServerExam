@@ -74,3 +74,17 @@ class ExamineeTokenModel(BaseModel):
 
     def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.Token == Token).first()
+
+    def DeleteToken(self, _dbsession: DBsession, Token: str) -> Result:
+        _result = Result()
+        try:
+            Data = _dbsession.query(self.EType).filter(self.EType.Token == Token).first()
+            _dbsession.delete(Data)
+            _dbsession.commit()
+        except Exception as e:
+            _result.Memo = str(e)
+            _dbsession.rollback()
+            return _result
+
+        _result.State = True
+        return _result

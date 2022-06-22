@@ -253,6 +253,12 @@ class ExamineeTokenLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
+                # 删除对应Token
+                DelInfo: Result = self._examineeTokenModel.DeleteToken(_dbsession, Token)
+                if DelInfo.State == False:
+                    result.Memo = DelInfo.Memo
+                    return result
+
                 # 记录日志
                 Desc = 'examinee end the exam No.:' + ExamInfoData.ExamNo
                 if self.LogExamAction(_dbsession, 2, ExamInfoData.ExamNo, Desc, ClientHost) == False:
