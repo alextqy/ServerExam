@@ -81,3 +81,6 @@ class ExerciseSolutionModel(BaseModel):
             sql = sql.filter(self.EType.Position == Position)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindExerciseID(self, _dbsession: DBsession, ExerciseID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.ExerciseID == ExerciseID).all()
