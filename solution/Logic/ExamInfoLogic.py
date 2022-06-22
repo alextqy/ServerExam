@@ -513,6 +513,7 @@ class ExamInfoLogic(BaseLogic):
                 if len(ScantronDataList) == 0:
                     result.Memo = self._lang.WrongData
                 else:
+                    TotalScore: float = 0.00
                     for i in ScantronDataList:
                         ScantronData: ScantronEntity = i
                         # print(ScantronData.ID)
@@ -524,24 +525,61 @@ class ExamInfoLogic(BaseLogic):
                                 result.Memo = self._lang.ScantronSolutionDataError
                                 return result
                             else:
-                                if ScantronData.QuestionType == 1:
-                                    pass
-                                elif ScantronData.QuestionType == 2:
-                                    pass
-                                elif ScantronData.QuestionType == 3:
-                                    pass
-                                elif ScantronData.QuestionType == 4:
-                                    pass
-                                elif ScantronData.QuestionType == 5:
-                                    pass
-                                elif ScantronData.QuestionType == 6:
-                                    pass
+                                Correct: bool = True
+                                # 单选 判断 多选
+                                if ScantronData.QuestionType >= 1 and ScantronData.QuestionType <= 3:
+                                    for j in ScantronSolutionDataList:
+                                        ScantronSolutionData: ScantronSolutionEntity = j
+                                        if ScantronSolutionData.CorrectAnswer == 1 and ScantronSolutionData.CandidateAnswer == 'True':
+                                            Correct = False
+                                        if ScantronSolutionData.CorrectAnswer == 2 and ScantronSolutionData.CandidateAnswer == 'False':
+                                            Correct = False
+                                # 填空 问答 实训
+                                elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6:
+                                    for j in ScantronSolutionDataList:
+                                        ScantronSolutionData: ScantronSolutionEntity = j
+                                        if ScantronSolutionData.CorrectItem != ScantronSolutionData.CandidateAnswer:
+                                            Correct = False
+                                # 拖拽
                                 elif ScantronData.QuestionType == 7:
-                                    pass
+                                    for j in ScantronSolutionDataList:
+                                        ScantronSolutionData: ScantronSolutionEntity = j
+                                        if ScantronSolutionData.Position == 2:
+                                            if ScantronSolutionData.CorrectItem != '' and ScantronSolutionData.CandidateAnswer == '':
+                                                Correct = False
+                                            if ScantronSolutionData.CorrectItem == '' and ScantronSolutionData.CandidateAnswer != '':
+                                                Correct = False
+                                            if ScantronSolutionData.CorrectItem != '' and ScantronSolutionData.CandidateAnswer != '':
+                                                SubID: int = int(ScantronSolutionData.CandidateAnswer)
+                                                if SubID > 0:
+                                                    ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, SubID)
+                                                    if ScantronSolutionDataSub is not None and ScantronSolutionData.CorrectItem != ScantronSolutionDataSub.Option:
+                                                        Correct = False
+                                # 连线
                                 elif ScantronData.QuestionType == 8:
-                                    pass
+                                    for j in ScantronSolutionDataList:
+                                        ScantronSolutionData: ScantronSolutionEntity = j
+                                        if ScantronSolutionData.Position == 2:
+                                            if ScantronSolutionData.CorrectItem != '' and ScantronSolutionData.CandidateAnswer == '':
+                                                Correct = False
+                                            if ScantronSolutionData.CorrectItem == '' and ScantronSolutionData.CandidateAnswer != '':
+                                                Correct = False
+                                            if ScantronSolutionData.CorrectItem != '' and ScantronSolutionData.CandidateAnswer != '':
+                                                CandidateAnswerList: list = ScantronSolutionData.CandidateAnswer.split(',')
+                                                # 答案数量是否相同
+                                                if len(ScantronSolutionData.CorrectItem.split('<->')) != len(CandidateAnswerList):
+                                                    Correct = False
+                                                for c in CandidateAnswerList:
+                                                    SubID: int = int(c)
+                                                    if SubID > 0:
+                                                        ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, SubID)
+                                                        if ScantronSolutionDataSub is not None and ScantronSolutionDataSub.Option not in ScantronSolutionData.CorrectItem:
+                                                            Correct = False
                                 else:
                                     continue
+                                if Correct == True:
+                                    TotalScore += float(ScantronData.Score)
+                                print(TotalScore)
                         else:
                             continue
         return result
