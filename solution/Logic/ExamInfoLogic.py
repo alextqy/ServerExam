@@ -492,10 +492,10 @@ class ExamInfoLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result = self.GradeTheExamAction(ClientHost, ID)
+            result = self.GradeTheExamAction(ClientHost, ID, AdminID)
         return result
 
-    def GradeTheExamAction(self, ClientHost: str, ID: int) -> Result:
+    def GradeTheExamAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
         result = Result()
         _dbsession = DBsession()
         if ID <= 0:
@@ -505,6 +505,9 @@ class ExamInfoLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataDoesNotExist
+            elif ExamInfoData.ActualScore > 0:
+                result.Memo = self._lang.ScoringCompleted
+                result.State = True
             elif ExamInfoData.ExamState != 3:
                 result.Memo = self._lang.ExamNotCompleted
             else:
@@ -579,7 +582,25 @@ class ExamInfoLogic(BaseLogic):
                                     continue
                                 if Correct == True:
                                     TotalScore += float(ScantronData.Score)
-                                print(TotalScore)
                         else:
                             continue
+
+                    _dbsession.begin_nested()
+
+                    try:
+                        ExamInfoData.ActualScore = TotalScore
+                        ExamInfoData.UpdateTime = self._common.Time()
+                        _dbsession.commit()
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _dbsession.rollback()
+                        return result
+
+                    Desc = 'grade the exam No.:' + ExamInfoData.ExamNo
+                    if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                        result.Memo = self._lang.LoggingFailed
+                        return result
+
+                    _dbsession.commit()
+                    result.State = True
         return result
