@@ -25,6 +25,7 @@ from Logic.ScantronLogic import ScantronLogic
 from Logic.ScantronHistoryLogic import ScantronHistoryLogic
 from Logic.ScantronSolutionLogic import ScantronSolutionLogic
 from Logic.ScantronSolutionHistoryLogic import ScantronSolutionHistoryLogic
+from Logic.SysConfLogic import SysConfLogic
 
 sysLogLogic = SysLogLogic()
 examLogLogic = ExamLogLogic()
@@ -46,3 +47,4 @@ scantronLogic = ScantronLogic()
 scantronHistoryLogic = ScantronHistoryLogic()
 scantronSolutionLogic = ScantronSolutionLogic()
 scantronSolutionHistoryLogic = ScantronSolutionHistoryLogic()
+sysConfLogic = SysConfLogic()

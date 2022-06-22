@@ -59,6 +59,7 @@ from Controller.ScantronController import ScantronRouter, ScantronPrefix
 from Controller.ScantronHistoryController import ScantronHistoryRouter, ScantronHistoryPrefix
 from Controller.ScantronSolutionController import ScantronSolutionRouter, ScantronSolutionPrefix
 from Controller.ScantronSolutionHistoryController import ScantronSolutionHistoryRouter, ScantronSolutionHistoryPrefix
+from Controller.SysConfController import SysConfRouter, SysConfPrefix
 
 # from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
@@ -82,6 +83,7 @@ app.include_router(ScantronRouter, prefix=ScantronPrefix)
 app.include_router(ScantronHistoryRouter, prefix=ScantronHistoryPrefix)
 app.include_router(ScantronSolutionRouter, prefix=ScantronSolutionPrefix)
 app.include_router(ScantronSolutionHistoryRouter, prefix=ScantronSolutionHistoryPrefix)
+app.include_router(SysConfRouter, prefix=SysConfPrefix)
 
 # app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 

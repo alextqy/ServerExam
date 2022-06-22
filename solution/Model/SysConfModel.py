@@ -76,3 +76,6 @@ class SysConfModel(BaseModel):
             sql = sql.filter(self.EType.Type == Type)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindKey(self, _dbsession: DBsession, Key: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.Key == Key).first()
