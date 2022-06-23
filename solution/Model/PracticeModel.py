@@ -13,7 +13,7 @@ class PracticeModel(BaseModel):
         Data.QuestionCode = Data.QuestionCode.strip()
         Data.Description = Data.Description.strip()
         Data.Attachment = Data.Attachment.strip()
-        Data.HeadlineContent = Data.HeadlineContent.strip()
+        # Data.HeadlineContent = Data.HeadlineContent.strip()
         if Data.HeadlineContent == '':
             if Data.QuestionTitle == '':
                 _result.Memo = self._lang.ParamErr
@@ -31,9 +31,9 @@ class PracticeModel(BaseModel):
             if Data.HeadlineContent == '':
                 _result.Memo = self._lang.ParamErr
                 return _result
-        if Data.ExamineeID <= 0:
-            _result.Memo = self._lang.ParamErr
-            return _result
+        # if Data.ExamineeID <= 0:
+        #     _result.Memo = self._lang.ParamErr
+        #     return _result
         if Data.ExamineeTokenID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result

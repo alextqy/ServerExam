@@ -66,6 +66,25 @@ class PracticeLogic(BaseLogic):
                             QuestionDataList.remove(QuestionData)
 
             # 随机抽取一道题
+            ChoiceData: QuestionEntity = self._common.RandomDrawChoice(QuestionDataList)
+
+            _dbsession.begin_nested()
+
+            PracticeData = PracticeEntity()
+            PracticeData.QuestionTitle = ChoiceData.QuestionTitle
+            PracticeData.QuestionCode = ChoiceData.QuestionCode
+            PracticeData.QuestionType = ChoiceData.QuestionType
+            PracticeData.Marking = ChoiceData.Marking
+            PracticeData.KnowledgeID = ChoiceData.KnowledgeID
+            PracticeData.Description = ChoiceData.Description
+            PracticeData.Attachment = ChoiceData.Attachment
+            PracticeData.ExamineeTokenID = ExamineeTokenID
+            AddInfo: Result = self._practiceModel.Insert(_dbsession, PracticeData)
+            if AddInfo.State == False:
+                result.Memo = AddInfo.Memo
+                return result
+
+            _dbsession.commit()
             result.State = True
-            result.Data = self._common.RandomDrawChoice(QuestionDataList)
+            result.Data = PracticeData.ID
         return result
