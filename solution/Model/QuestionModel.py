@@ -28,7 +28,6 @@ class QuestionModel(BaseModel):
             return _result
         Data.QuestionState = 2
         Data.Marking = 1
-        Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -76,7 +75,7 @@ class QuestionModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.QuestionCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
+            sql = sql.filter(or_(self.EType.QuestionTitle.ilike('%' + Stext.strip() + '%')))
         if QuestionType > 0:
             sql = sql.filter(self.EType.QuestionType == QuestionType)
         if QuestionState > 0:
@@ -93,3 +92,9 @@ class QuestionModel(BaseModel):
 
     def PaperRuleQuestion(self, _dbsession: DBsession, KnowledgeID: int, QuestionType: int) -> list:
         return _dbsession.query(self.EType).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.QuestionState == 1).all()
+
+    def FindQuestionCode(self, _dbsession: DBsession, QuestionCode: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.QuestionCode == QuestionCode).first()
+
+    def FindQuestionType(self, _dbsession: DBsession, QuestionType: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.QuestionState == 1).filter(self.EType.QuestionType == QuestionType).all()

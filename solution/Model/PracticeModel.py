@@ -1,32 +1,40 @@
 from Model.BaseModel import *
 
 
-class ExerciseSolutionModel(BaseModel):
-    EType: ExerciseSolutionEntity = ExerciseSolutionEntity
+class PracticeModel(BaseModel):
+    EType: PracticeEntity = PracticeEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.Option = Data.Option.strip()
-        Data.OptionAttachment = Data.OptionAttachment.strip()
-        if Data.ExerciseID <= 0:
+        Data.QuestionTitle = Data.QuestionTitle.strip()
+        Data.QuestionCode = Data.QuestionCode.strip()
+        Data.Description = Data.Description.strip()
+        Data.Attachment = Data.Attachment.strip()
+        Data.HeadlineContent = Data.HeadlineContent.strip()
+        if Data.HeadlineContent == '':
+            if Data.QuestionTitle == '':
+                _result.Memo = self._lang.ParamErr
+                return _result
+            if Data.QuestionType <= 0:
+                _result.Memo = self._lang.ParamErr
+                return _result
+            if Data.KnowledgeID <= 0:
+                _result.Memo = self._lang.ParamErr
+                return _result
+            if Data.Score <= 0:
+                _result.Memo = self._lang.ParamErr
+                return _result
+        if Data.QuestionTitle == '':
+            if Data.HeadlineContent == '':
+                _result.Memo = self._lang.ParamErr
+                return _result
+        if Data.ExamineeID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        # if Data.Option == '':
-        #     _result.Memo = self._lang.ParamErr
-        #     return _result
-        # if Data.OptionAttachment == '':
-        #     _result.Memo = self._lang.ParamErr
-        #     return _result
-        if Data.CorrectAnswer <= 0:
-            _result.Memo = self._lang.ParamErr
-            return _result
-        # if Data.CorrectItem == '':
-        #     _result.Memo = self._lang.ParamErr
-        #     return _result
-        if Data.ScoreRatio <= 0:
+        if Data.ExamineeTokenID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
         try:
@@ -59,7 +67,7 @@ class ExerciseSolutionModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, ExerciseID: int, Position: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, ExamineeID: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -75,12 +83,10 @@ class ExerciseSolutionModel(BaseModel):
             Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if ExerciseID > 0:
-            sql = sql.filter(self.EType.ExerciseID == ExerciseID)
-        if Position > 0:
-            sql = sql.filter(self.EType.Position == Position)
+        if ExamineeID > 0:
+            sql = sql.filter(self.EType.ExamineeID == ExamineeID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def FindExerciseID(self, _dbsession: DBsession, ExerciseID: int) -> list:
-        return _dbsession.query(self.EType).filter(self.EType.ExerciseID == ExerciseID).all()
+    def FindExamineeTokenID(self, _dbsession: DBsession, ExamineeTokenID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.ExamineeTokenID == ExamineeTokenID).all()

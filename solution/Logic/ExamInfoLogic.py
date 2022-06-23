@@ -253,6 +253,7 @@ class ExamInfoLogic(BaseLogic):
                                     QuestionData: QuestionEntity = j
                                     ScantronData = ScantronEntity()
                                     ScantronData.QuestionTitle = QuestionData.QuestionTitle
+                                    ScantronData.QuestionCode = QuestionData.QuestionCode
                                     ScantronData.QuestionType = QuestionData.QuestionType
                                     ScantronData.KnowledgeID = QuestionData.KnowledgeID
                                     ScantronData.Score = PaperRuleData.SingleScore

@@ -69,7 +69,7 @@ class ExamineeTokenLogic(BaseLogic):
                 ExamineeTokenData = ExamineeTokenEntity()
                 ExamineeTokenData.CreateTime = SignInTime
                 ExamineeTokenData.ExamID = ExamInfoData.ID
-                ExamineeTokenData.Token = self._common.StrMD5(ExamInfoData.ExamNo + str(SignInTime))
+                ExamineeTokenData.Token = self._common.GenerateToken()
                 AddInfo: Result = self._examineeTokenModel.Insert(_dbsession, ExamineeTokenData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo

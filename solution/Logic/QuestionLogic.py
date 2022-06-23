@@ -30,6 +30,12 @@ class QuestionLogic(BaseLogic):
                 if Description == '':
                     Description = 'none'
 
+                QuestionCode: str = self._common.StrMD5(self._common.RandomStr() + str(self._common.Time()))
+                CheckCode: QuestionEntity = self._questionModel.FindQuestionCode(_dbsession, QuestionCode)
+                if CheckCode is not None:
+                    result.Memo = self._lang.TryAgain
+                    return result
+
                 _dbsession.begin_nested()
 
                 QuestionData: QuestionEntity = QuestionEntity()
@@ -37,6 +43,7 @@ class QuestionLogic(BaseLogic):
                 QuestionData.QuestionType = QuestionType
                 QuestionData.KnowledgeID = KnowledgeID
                 QuestionData.Description = Description
+                QuestionData.QuestionCode = QuestionCode
                 AddInfo: Result = self._questionModel.Insert(_dbsession, QuestionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
@@ -306,9 +313,6 @@ class QuestionLogic(BaseLogic):
             if QuestionData is None:
                 result.Memo = self._lang.QuestionDataError
             else:
-                if QuestionData.QuestionTitle != QuestionTitle:
-                    QuestionData.QuestionCode = self._common.StrMD5(QuestionTitle)
-
                 _dbsession.begin_nested()
 
                 if Description == '':

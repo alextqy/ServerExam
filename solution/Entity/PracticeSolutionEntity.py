@@ -2,10 +2,10 @@ from Entity.BaseEntity import *
 
 
 # 练习题选项
-class ExerciseSolutionEntity(BaseEntity, BaseORM):
-    __tablename__ = 'ExerciseSolution'
+class PracticeSolutionEntity(BaseEntity, BaseORM):
+    __tablename__ = 'PracticeSolution'
 
-    ExerciseID: int = Column(INTEGER, comment='试题ID', default=0)
+    PracticeID: int = Column(INTEGER, comment='试题ID', default=0)
     Option: str = Column(String(128), comment='试题选项', default='none')
     OptionAttachment: str = Column(String(65535), comment='试题附件', default='none')
     CorrectAnswer: int = Column(INTEGER, comment='正确答案 1错误 2正确', default=0)

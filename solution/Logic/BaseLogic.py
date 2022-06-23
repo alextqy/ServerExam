@@ -12,13 +12,13 @@ from Entity.ExamineeTokenEntity import ExamineeTokenEntity
 from Entity.ExamInfoEntity import ExamInfoEntity
 from Entity.ExamInfoHistoryEntity import ExamInfoHistoryEntity
 from Entity.ExamLogEntity import ExamLogEntity
-from Entity.ExerciseEntity import ExerciseEntity
-from Entity.ExerciseSolutionEntity import ExerciseSolutionEntity
 from Entity.HeadlineEntity import HeadlineEntity
 from Entity.KnowledgeEntity import KnowledgeEntity
 from Entity.ManagerEntity import ManagerEntity
 from Entity.PaperEntity import PaperEntity
 from Entity.PaperRuleEntity import PaperRuleEntity
+from Entity.PracticeEntity import PracticeEntity
+from Entity.PracticeSolutionEntity import PracticeSolutionEntity
 from Entity.QuestionEntity import QuestionEntity
 from Entity.QuestionSolutionEntity import QuestionSolutionEntity
 from Entity.ScantronEntity import ScantronEntity
@@ -36,13 +36,13 @@ from Model.ExamineeTokenModel import ExamineeTokenModel
 from Model.ExamInfoModel import ExamInfoModel
 from Model.ExamInfoHistoryModel import ExamInfoHistoryModel
 from Model.ExamLogModel import ExamLogModel
-from Model.ExerciseModel import ExerciseModel
-from Model.ExerciseSolutionModel import ExerciseSolutionModel
 from Model.HeadlineModel import HeadlineModel
 from Model.KnowledgeModel import KnowledgeModel
 from Model.ManagerModel import ManagerModel
 from Model.PaperModel import PaperModel
 from Model.PaperRuleModel import PaperRuleModel
+from Model.PracticeModel import PracticeModel
+from Model.PracticeSolutionModel import PracticeSolutionModel
 from Model.QuestionModel import QuestionModel
 from Model.QuestionSolutionModel import QuestionSolutionModel
 from Model.ScantronModel import ScantronModel
@@ -68,13 +68,13 @@ class BaseLogic:
     _examInfoModel = ExamInfoModel()
     _examInfoHistoryModel = ExamInfoHistoryModel()
     _examLogModel = ExamLogModel()
-    _exerciseModel = ExerciseModel()
-    _exerciseSolutionModel = ExerciseSolutionModel()
     _headlineModel = HeadlineModel()
     _knowledgeModel = KnowledgeModel()
     _managerModel = ManagerModel()
     _paperModel = PaperModel()
     _paperRuleModel = PaperRuleModel()
+    _practiceModel = PracticeModel()
+    _practiceSolutionModel = PracticeSolutionModel()
     _questionModel = QuestionModel()
     _questionSolutionModel = QuestionSolutionModel()
     _scantronModel = ScantronModel()
@@ -122,6 +122,15 @@ class BaseLogic:
                 return 0
             else:
                 return ExamineeTokenData.ExamID
+
+    def PracticeValidation(self, _dbsession: DBsession, Token: str) -> int:
+        ExamineeTokenData: ExamineeTokenEntity = self._examineeTokenModel.FindToken(_dbsession, Token)
+        if ExamineeTokenData is None:
+            return 0
+        elif ExamineeTokenData.ExamID != 0:
+            return 0
+        else:
+            return ExamineeTokenData.ID
 
     def LogSysAction(self, _dbsession: DBsession, Type: int, ManagerID: int, Description: str, IP: str) -> bool:
         LogData = SysLogEntity()

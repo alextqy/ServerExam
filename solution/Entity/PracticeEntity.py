@@ -2,8 +2,8 @@ from Entity.BaseEntity import *
 
 
 # 练习题
-class ExerciseEntity(BaseEntity, BaseORM):
-    __tablename__ = 'Exercise'
+class PracticeEntity(BaseEntity, BaseORM):
+    __tablename__ = 'Practice'
 
     QuestionTitle: str = Column(String(65535), comment='标题', default='none')
     QuestionCode: str = Column(String(128), comment='试题编码', default='none')
@@ -16,6 +16,7 @@ class ExerciseEntity(BaseEntity, BaseORM):
     Score: float = Column(DECIMAL(10, 2), comment='额定分数', default=0.00)
     ExamineeID: int = Column(INTEGER, comment='考生ID', default=0)
     HeadlineContent: str = Column(String(65535), comment='大标题内容', default='none')
+    ExamineeTokenID: int = Column(INTEGER, comment='考生TokenID', default=0)
 
     def __init__(self):
         super().__init__()

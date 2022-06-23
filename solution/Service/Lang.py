@@ -137,6 +137,9 @@ class Lang(BaseService):
             self.DataCannotBeInvalidated = 'data cannot be invalidated'
             self.ExamNotCompleted = 'exam not completed'
             self.ScoringCompleted = 'scoring completed'
+            self.NoData = 'no data'
+            self.AllTestsCompleted = 'all tests completed'
+            self.TryAgain = 'try again'
 
         # 中文简体
         elif self.Type == "zh-cn":
@@ -263,6 +266,9 @@ class Lang(BaseService):
             self.DataCannotBeInvalidated = '数据不能被作废'
             self.ExamNotCompleted = '考试未完成'
             self.ScoringCompleted = '已完成打分'
+            self.NoData = '没有数据'
+            self.AllTestsCompleted = '已完成所有测试'
+            self.TryAgain = '再试一次'
 
         # 默认
         else:
@@ -389,3 +395,6 @@ class Lang(BaseService):
             self.DataCannotBeInvalidated = ''
             self.ExamNotCompleted = ''
             self.ScoringCompleted = ''
+            self.NoData = ''
+            self.AllTestsCompleted = ''
+            self.TryAgain = ''

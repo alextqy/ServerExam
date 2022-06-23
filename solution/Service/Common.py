@@ -278,6 +278,6 @@ class Common(BaseService):
     def RandomDrawChoice(self, Array: list) -> any:
         return choice(Array)
 
-    # 随机抽取数组中多个元素
+    # 随机抽取数组中多个不重复元素
     def RandomDrawSample(self, Array: list, Quantity: int) -> list:
         return sample(Array, Quantity)

@@ -13,9 +13,9 @@ class ExamineeTokenModel(BaseModel):
         if Data.Token == '':
             _result.Memo = self._lang.ParamErr
             return _result
-        if Data.ExamID <= 0:
-            _result.Memo = self._lang.ParamErr
-            return _result
+        # if Data.ExamID <= 0:
+        #     _result.Memo = self._lang.ParamErr
+        #     return _result
         try:
             _dbsession.add(Data)
             _dbsession.commit()

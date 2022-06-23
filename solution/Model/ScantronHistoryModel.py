@@ -10,6 +10,7 @@ class ScantronHistoryModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         # Data.QuestionTitle = Data.QuestionTitle.strip()
+        # Data.QuestionCode = Data.QuestionCode.strip()
         # Data.Description = Data.Description.strip()
         # Data.Attachment = Data.Attachment.strip()
         # Data.HeadlineContent = Data.HeadlineContent.strip()
@@ -26,7 +27,6 @@ class ScantronHistoryModel(BaseModel):
             if Data.Score <= 0:
                 _result.Memo = self._lang.ParamErr
                 return _result
-            Data.QuestionCode = self._common.StrMD5(Data.QuestionTitle.strip())
         if Data.ExamID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
