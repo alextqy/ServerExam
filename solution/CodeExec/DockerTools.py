@@ -45,7 +45,7 @@ CodeExecPrefix = ''
 
 @CodeExecRouter.get('/Clean/Temp/File')
 async def CleanTempFile(request: Request) -> str:
-    CodeDir = getcwd() + '/Code/'  # 代码执行文件夹
+    CodeDir = getcwd() + '/CodeTemp/'  # 代码执行文件夹
     try:
         rmtree(CodeDir, ignore_errors=False, onerror=None)
         mkdir(CodeDir)

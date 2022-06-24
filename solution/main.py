@@ -62,7 +62,7 @@ from Controller.ScantronSolutionHistoryController import ScantronSolutionHistory
 from Controller.SysConfController import SysConfRouter, SysConfPrefix
 from Controller.PracticeController import PracticeRouter, PracticePrefix
 
-# from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
+from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
 app.include_router(SysLogRouter, prefix=SysLogPrefix)
 app.include_router(ExamLogRouter, prefix=ExamLogPrefix)
@@ -87,7 +87,7 @@ app.include_router(ScantronSolutionHistoryRouter, prefix=ScantronSolutionHistory
 app.include_router(SysConfRouter, prefix=SysConfPrefix)
 app.include_router(PracticeRouter, prefix=PracticePrefix)
 
-# app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
+app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 
 # 修改数据库前置方法
 # daoHandler = DaoHandler()
