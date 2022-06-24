@@ -53,3 +53,12 @@ async def GradeThePractice(
         ID: int = Form(0),
 ) -> Result:
     return practiceLogic.GradeThePractice(Token, ID)
+
+
+# 删除刷题数据
+@PracticeRouter.post('/Practice/Delete')
+async def PracticeDelete(
+        request: Request,
+        ID: int = Form(0),
+) -> Result:
+    return practiceLogic.PracticeDeleteAction(ID)

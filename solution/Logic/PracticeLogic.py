@@ -317,3 +317,33 @@ class PracticeLogic(BaseLogic):
                     result.State = True
                     result.Data = Correct
         return result
+
+    def PracticeDeleteAction(self, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        if ID <= 0:
+            result.Memo = self._lang.WrongData
+        else:
+            PracticeData: PracticeEntity = self._practiceModel.Find(_dbsession, ID)
+            if PracticeData is None:
+                result.Memo = self._lang.WrongData
+            else:
+                _dbsession.begin_nested()
+
+                PracticeSolutionDataList: list = self._practiceSolutionModel.FindPracticeID(_dbsession, PracticeData.ID)
+                if len(PracticeSolutionDataList) > 0:
+                    for i in PracticeSolutionDataList:
+                        PracticeSolutionData: PracticeSolutionEntity = i
+                        DelInfo: Result = self._practiceSolutionModel.Delete(_dbsession, PracticeSolutionData.ID)
+                        if DelInfo.State == False:
+                            result.Memo = DelInfo.Memo
+                            return result
+
+                DelInfo: Result = self._practiceModel.Delete(_dbsession, PracticeData.ID)
+                if DelInfo.State == False:
+                    result.Memo = DelInfo.Memo
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        return result
