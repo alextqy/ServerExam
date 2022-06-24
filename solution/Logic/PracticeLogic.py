@@ -243,4 +243,77 @@ class PracticeLogic(BaseLogic):
         return result
 
     def GradeThePractice(self, Token: str, ID: int) -> Result:
-        pass
+        result = Result()
+        _dbsession = DBsession()
+        ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
+        if ExamineeTokenID == 0:
+            result.Memo = self._lang.WrongToken
+        elif ID <= 0:
+            result.Memo = self._lang.WrongData
+        else:
+            PracticeData: PracticeEntity = self._practiceModel.Find(_dbsession, ID)
+            if PracticeData is None:
+                result.Memo = self._lang.WrongData
+            # elif PracticeData.ExamineeTokenID != ExamineeTokenID:
+            #     result.Memo = self._lang.WrongData
+            else:
+                PracticeSolutionDataList: list = self._practiceSolutionModel.FindPracticeID(_dbsession, PracticeData.ID)
+                if len(PracticeSolutionDataList) == 0:
+                    result.Memo = self._lang.WrongData
+                else:
+                    Correct: bool = True
+                    # 单选 判断 多选
+                    if PracticeData.QuestionType >= 1 and PracticeData.QuestionType <= 3:
+                        for j in PracticeSolutionDataList:
+                            PracticeSolutionData: PracticeSolutionEntity = j
+                            if PracticeSolutionData.CorrectAnswer == 1 and PracticeSolutionData.CandidateAnswer == 'True':
+                                Correct = False
+                            if PracticeSolutionData.CorrectAnswer == 2 and PracticeSolutionData.CandidateAnswer == 'False':
+                                Correct = False
+                    # 填空 问答 实训
+                    elif PracticeData.QuestionType >= 4 and PracticeData.QuestionType <= 6:
+                        for j in PracticeSolutionDataList:
+                            PracticeSolutionData: PracticeSolutionEntity = j
+                            if PracticeSolutionData.CorrectItem != PracticeSolutionData.CandidateAnswer:
+                                Correct = False
+                    # 拖拽
+                    elif PracticeData.QuestionType == 7:
+                        for j in PracticeSolutionDataList:
+                            PracticeSolutionData: PracticeSolutionEntity = j
+                            if PracticeSolutionData.Position == 2:
+                                if PracticeSolutionData.CorrectItem != '' and PracticeSolutionData.CandidateAnswer == '':
+                                    Correct = False
+                                if PracticeSolutionData.CorrectItem == '' and PracticeSolutionData.CandidateAnswer != '':
+                                    Correct = False
+                                if PracticeSolutionData.CorrectItem != '' and PracticeSolutionData.CandidateAnswer != '':
+                                    SubID: int = int(PracticeSolutionData.CandidateAnswer)
+                                    if SubID > 0:
+                                        PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, SubID)
+                                        if PracticeSolutionDataSub is not None and PracticeSolutionData.CorrectItem != PracticeSolutionDataSub.Option:
+                                            Correct = False
+                    # 连线
+                    elif PracticeData.QuestionType == 8:
+                        for j in PracticeSolutionDataList:
+                            PracticeSolutionData: PracticeSolutionEntity = j
+                            if PracticeSolutionData.Position == 2:
+                                if PracticeSolutionData.CorrectItem != '' and PracticeSolutionData.CandidateAnswer == '':
+                                    Correct = False
+                                if PracticeSolutionData.CorrectItem == '' and PracticeSolutionData.CandidateAnswer != '':
+                                    Correct = False
+                                if PracticeSolutionData.CorrectItem != '' and PracticeSolutionData.CandidateAnswer != '':
+                                    CandidateAnswerList: list = PracticeSolutionData.CandidateAnswer.split(',')
+                                    # 答案数量是否相同
+                                    if len(PracticeSolutionData.CorrectItem.split('<->')) != len(CandidateAnswerList):
+                                        Correct = False
+                                    for c in CandidateAnswerList:
+                                        SubID: int = int(c)
+                                        if SubID > 0:
+                                            PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, SubID)
+                                            if PracticeSolutionDataSub is not None and PracticeSolutionDataSub.Option not in PracticeSolutionData.CorrectItem:
+                                                Correct = False
+                    else:
+                        Correct = False
+
+                    result.State = True
+                    result.Data = Correct
+        return result
