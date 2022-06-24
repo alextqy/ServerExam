@@ -58,9 +58,9 @@ class PracticeLogic(BaseLogic):
 
             # 去掉已经使用过的试题
             if len(DoneTestQuestionDataList) > 0:
-                for i in QuestionDataList:
+                for i in QuestionDataList[:]:
                     QuestionData: QuestionEntity = i
-                    for j in DoneTestQuestionDataList:
+                    for j in DoneTestQuestionDataList[:]:
                         PracticeData: PracticeEntity = j
                         if PracticeData.QuestionCode == QuestionData.QuestionCode:
                             QuestionDataList.remove(QuestionData)
@@ -86,5 +86,5 @@ class PracticeLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
-            result.Data = PracticeData.ID
+            result.Data = ChoiceData.ID
         return result
