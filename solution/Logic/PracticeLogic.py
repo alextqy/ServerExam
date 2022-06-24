@@ -70,6 +70,7 @@ class PracticeLogic(BaseLogic):
 
             _dbsession.begin_nested()
 
+            # 写入刷题数据
             PracticeData = PracticeEntity()
             PracticeData.QuestionTitle = ChoiceData.QuestionTitle
             PracticeData.QuestionCode = ChoiceData.QuestionCode
@@ -84,7 +85,50 @@ class PracticeLogic(BaseLogic):
                 result.Memo = AddInfo.Memo
                 return result
 
+            # 写入刷题选项数据
+            QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, ChoiceData.ID)
+            if len(QuestionSolutionDataList) == 0:
+                result.Memo = self._lang.WrongData
+                return result
+            for k in QuestionSolutionDataList:
+                QuestionSolutionData: QuestionSolutionEntity = k
+                PracticeSolutionData = PracticeSolutionEntity()
+                PracticeSolutionData.PracticeID = PracticeData.ID
+                PracticeSolutionData.Option = QuestionSolutionData.Option
+                PracticeSolutionData.OptionAttachment = QuestionSolutionData.OptionAttachment
+                PracticeSolutionData.CorrectAnswer = QuestionSolutionData.CorrectAnswer
+                PracticeSolutionData.CorrectItem = QuestionSolutionData.CorrectItem
+                PracticeSolutionData.ScoreRatio = QuestionSolutionData.ScoreRatio
+                PracticeSolutionData.Position = QuestionSolutionData.Position
+                AddInfo: Result = self._practiceSolutionModel.Insert(_dbsession, PracticeSolutionData)
+                if AddInfo.State == False:
+                    result.Memo = AddInfo.Memo
+                    return result
+
             _dbsession.commit()
+
             result.State = True
-            result.Data = ChoiceData.ID
+            result.Data = PracticeData.ID
+        return result
+
+    def PracticeInfo(self, Token: str, ID: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
+        if ExamineeTokenID == 0:
+            result.Memo = self._lang.WrongToken
+        elif ID <= 0:
+            result.Memo = self._lang.WrongData
+        else:
+            PracticeData: PracticeEntity = self._practiceModel.Find(_dbsession, ID)
+            if PracticeData is None:
+                result.Memo = self._lang.WrongData
+                return result
+            PracticeSolutionDataList: list = self._practiceSolutionModel.FindPracticeID(_dbsession, PracticeData.ID)
+            if len(PracticeSolutionDataList) == 0:
+                result.Memo = self._lang.WrongData
+                return result
+            PracticeData.SolutionList = PracticeSolutionDataList
+
+            result.Data = PracticeData
         return result

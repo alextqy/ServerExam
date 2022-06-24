@@ -134,7 +134,7 @@ class QuestionLogic(BaseLogic):
                 try:
                     if QuestionData.QuestionState == 2:
                         # 试卷选项合理性解析
-                        QuestionSolutionDataList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                        QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                         if len(QuestionSolutionDataList) == 0:
                             result.Memo = self._lang.NoOptions
                             _dbsession.rollback()

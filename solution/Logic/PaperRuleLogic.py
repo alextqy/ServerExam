@@ -68,7 +68,7 @@ class PaperRuleLogic(BaseLogic):
                     return result
                 # 当前试题规则总分是否超过试卷总分
                 CurrentTotalScore: float = SingleScore * QuestionNum
-                PaperRuleDataList: list = self._paperRuleModel.AllPaperRule(_dbsession, PaperID)
+                PaperRuleDataList: list = self._paperRuleModel.FindPaperID(_dbsession, PaperID)
                 if len(PaperRuleDataList) > 0:
                     for i in PaperRuleDataList:
                         Data: PaperRuleEntity = i

@@ -200,7 +200,7 @@ class ExamInfoLogic(BaseLogic):
                     result.Memo = self._lang.PaperDataDoesNotExist
                 else:
                     # 获取当前试卷下所有有效试卷规则
-                    PaperRuleListData: list = self._paperRuleModel.AllPaperRule(_dbsession, PaperData.ID)
+                    PaperRuleListData: list = self._paperRuleModel.FindPaperID(_dbsession, PaperData.ID)
                     if len(PaperRuleListData) == 0:
                         result.Memo = self._lang.PaperDataDoesNotExist
                     else:
@@ -266,7 +266,7 @@ class ExamInfoLogic(BaseLogic):
                                         result.Memo = AddInfo.Memo
                                         return result
                                     # 遍历写入答题卡选项数据
-                                    QuestionSolutionDataList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                                    QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                                     if len(QuestionSolutionDataList) == 0:
                                         result.Memo = self._lang.WrongQuestionOptions
                                         _dbsession.rollback()

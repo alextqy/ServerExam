@@ -43,7 +43,7 @@ class QuestionSolutionLogic(BaseLogic):
                     if CorrectAnswer <= 0:
                         result.Memo = self._lang.WrongCorrectAnswer
                         return result
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断重复选项
@@ -71,7 +71,7 @@ class QuestionSolutionLogic(BaseLogic):
                     if CorrectAnswer <= 0:
                         result.Memo = self._lang.WrongCorrectAnswer
                         return result
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断题只能有两个选项
@@ -106,7 +106,7 @@ class QuestionSolutionLogic(BaseLogic):
                     if CorrectAnswer <= 0:
                         result.Memo = self._lang.WrongCorrectAnswer
                         return result
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断重复选项
@@ -129,7 +129,7 @@ class QuestionSolutionLogic(BaseLogic):
                         result.Memo = self._lang.WrongScoreRatio
                         return result
                     Option = 'none'
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 答案数量是否超过填空数
@@ -164,7 +164,7 @@ class QuestionSolutionLogic(BaseLogic):
                         result.Memo = self._lang.WrongScoreRatio
                         return result
                     Option = 'none'
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断重复答案
@@ -190,7 +190,7 @@ class QuestionSolutionLogic(BaseLogic):
                     if CorrectItem == '':
                         result.Memo = self._lang.WrongCorrectItem
                         return result
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) >= 1:
                         result.Memo = self._lang.TooManyAnswers
                         return result
@@ -215,7 +215,7 @@ class QuestionSolutionLogic(BaseLogic):
                     CorrectAnswer = 1
                     if CorrectItem != '':
                         CorrectAnswer = 2
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断重复选项
@@ -258,7 +258,7 @@ class QuestionSolutionLogic(BaseLogic):
                     CorrectAnswer = 1  # 答案内容不为空 则为正确答案
                     if CorrectItem != '':
                         CorrectAnswer = 2
-                    QuestionSolutionList: list = self._questionSolutionModel.AllSolutions(_dbsession, QuestionData.ID)
+                    QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
                     if len(QuestionSolutionList) > 0:
                         SolutionDataList: list = QuestionSolutionList
                         # 判断重复选项

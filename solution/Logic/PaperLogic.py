@@ -73,7 +73,7 @@ class PaperLogic(BaseLogic):
                 try:
                     if PaperData.PaperState == 2:
                         # 当前试卷下是否有对应的试卷规则
-                        PaperRuleList: list = self._paperRuleModel.AllPaperRule(_dbsession, ID)
+                        PaperRuleList: list = self._paperRuleModel.FindPaperID(_dbsession, ID)
                         if len(PaperRuleList) == 0:
                             result.Memo = self._lang.PaperRuleDataDoesNotExist
                             _dbsession.rollback()

@@ -21,3 +21,13 @@ async def NewPractice(
         QuestionType: int = Form(0),
 ) -> Result:
     return practiceLogic.NewPractice(Token, QuestionType)
+
+
+# 获取试题信息
+@PracticeRouter.post('/Practice/Info')
+async def PracticeInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return practiceLogic.PracticeInfo(Token, ID)

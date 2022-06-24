@@ -82,7 +82,7 @@ class PaperRuleModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def AllPaperRule(self, _dbsession: DBsession, PaperID: int) -> list:
+    def FindPaperID(self, _dbsession: DBsession, PaperID: int) -> list:
         return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.PaperRuleState == 1).all()
 
     def CheckPaperRule(self, _dbsession: DBsession, PaperID: int, KnowledgeID: int, QuestionType: int) -> EType:
