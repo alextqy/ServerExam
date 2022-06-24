@@ -50,7 +50,7 @@ class PracticeLogic(BaseLogic):
                 return result
 
             # 获取该考生现在已经做过的试题
-            DoneTestQuestionDataList: list = self._practiceModel.FindExamineeTokenID(_dbsession, ExamineeTokenID)
+            DoneTestQuestionDataList: list = self._practiceModel.FindExamineeTokenID(_dbsession, ExamineeTokenID, QuestionType)
 
             if len(QuestionDataList) == len(DoneTestQuestionDataList):
                 result.Memo = self._lang.AllTestsCompleted
@@ -128,7 +128,119 @@ class PracticeLogic(BaseLogic):
             if len(PracticeSolutionDataList) == 0:
                 result.Memo = self._lang.WrongData
                 return result
+            for i in PracticeSolutionDataList:
+                PracticeSolutionData: PracticeSolutionEntity = i
+                PracticeSolutionData.CorrectAnswer = 0
+                PracticeSolutionData.CorrectItem = ''
             PracticeData.SolutionList = PracticeSolutionDataList
 
             result.Data = PracticeData
         return result
+
+    def PracticeAnswer(self, Token: str, PracticeID: int, ID: int, Answer: str = '') -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
+        if ExamineeTokenID == 0:
+            result.Memo = self._lang.WrongToken
+        elif PracticeID <= 0:
+            result.Memo = self._lang.WrongData
+        elif ID <= 0:
+            result.Memo = self._lang.WrongData
+        else:
+            PracticeData: PracticeEntity = self._practiceModel.Find(_dbsession, PracticeID)
+            if PracticeData is None:
+                result.Memo = self._lang.WrongData
+                return result
+            if PracticeData.ExamineeTokenID != ExamineeTokenID:
+                result.Memo = self._lang.WrongData
+                return result
+            PracticeSolutionData: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, ID)
+            if PracticeSolutionData is None:
+                result.Memo = self._lang.WrongData
+                return result
+            if PracticeData.ID != PracticeSolutionData.PracticeID:
+                result.Memo = self._lang.WrongData
+                return result
+
+            _dbsession.begin_nested()
+
+            # 获取当前试题选项列表
+            PracticeSolutionDataList: list = self._practiceSolutionModel.FindPracticeID(_dbsession, PracticeData.ID)
+            if len(PracticeSolutionDataList) == 0:
+                result.Memo = self._lang.WrongData
+                return result
+            for i in PracticeSolutionDataList:
+                PracticeSolutionData: PracticeSolutionEntity = i
+                # 单选/判断题 选项 =======================================================================================
+                # 单选判断ID不能输入错误 否侧全为False
+                if PracticeData.QuestionType >= 1 and PracticeData.QuestionType <= 2:
+                    if PracticeSolutionData.ID == ID:
+                        PracticeSolutionData.CandidateAnswer = 'True'
+                    else:
+                        PracticeSolutionData.CandidateAnswer = 'False'
+                # 多选题选项 =======================================================================================
+                # 多选题Answer不为空则为选择
+                elif PracticeData.QuestionType == 3 and PracticeSolutionData.ID == ID:
+                    if Answer != '':
+                        Answer = 'True'
+                    else:
+                        Answer = ''
+                    PracticeSolutionData.CandidateAnswer = Answer
+                # 填空/问答/实训 题选项 =======================================================================================
+                elif PracticeData.QuestionType >= 4 and PracticeData.QuestionType <= 6 and PracticeSolutionData.ID == ID:
+                    PracticeSolutionData.CandidateAnswer = Answer
+                # 拖拽题选项 =======================================================================================
+                elif PracticeData.QuestionType == 7 and PracticeSolutionData.ID == ID:
+                    if PracticeSolutionData.Position != 2:
+                        result.Memo = self._lang.WrongData
+                        return result
+                    else:
+                        if Answer != '':
+                            if int(Answer) == ID:
+                                result.Memo = self._lang.WrongData
+                                return result
+                            PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, int(Answer))
+                            if PracticeSolutionDataSub is None:
+                                result.Memo = self._lang.WrongData
+                                return result
+                            if PracticeSolutionDataSub.PracticeID != PracticeSolutionData.PracticeID:
+                                result.Memo = self._lang.WrongData
+                                return result
+                            if PracticeSolutionDataSub.Position == 2:
+                                result.Memo = self._lang.WrongData
+                                return result
+                        PracticeSolutionData.CandidateAnswer = Answer
+                # 连线题选项 =======================================================================================
+                elif PracticeData.QuestionType == 8 and PracticeSolutionData.ID == ID:
+                    if PracticeSolutionData.Position != 2:
+                        result.Memo = self._lang.WrongData
+                        return result
+                    else:
+                        if Answer != '':
+                            AnswerList: list = list(set(Answer.split(',')))
+                            if len(AnswerList) > 0:
+                                for i in AnswerList:
+                                    AnswerID: int = int(i)
+                                    PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, AnswerID)
+                                    if PracticeSolutionDataSub is None:
+                                        result.Memo = self._lang.WrongData
+                                        return result
+                                    if PracticeSolutionDataSub.PracticeID != PracticeSolutionData.PracticeID:
+                                        result.Memo = self._lang.WrongData
+                                        return result
+                                    if PracticeSolutionDataSub.Position == 2:
+                                        result.Memo = self._lang.WrongData
+                                        return result
+                            PracticeSolutionData.CandidateAnswer = ','.join(AnswerList)
+                else:
+                    continue
+                PracticeSolutionData.UpdateTime = self._common.Time()
+                _dbsession.commit()
+
+            _dbsession.commit()
+            result.State = True
+        return result
+
+    def GradeThePractice(self, Token: str, ID: int) -> Result:
+        pass

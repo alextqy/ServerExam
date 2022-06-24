@@ -88,5 +88,5 @@ class PracticeModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def FindExamineeTokenID(self, _dbsession: DBsession, ExamineeTokenID: int) -> list:
-        return _dbsession.query(self.EType).filter(self.EType.ExamineeTokenID == ExamineeTokenID).all()
+    def FindExamineeTokenID(self, _dbsession: DBsession, ExamineeTokenID: int, QuestionType: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.ExamineeTokenID == ExamineeTokenID).filter(self.EType.QuestionType == QuestionType).all()

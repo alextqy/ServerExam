@@ -31,3 +31,25 @@ async def PracticeInfo(
         ID: int = Form(0),
 ) -> Result:
     return practiceLogic.PracticeInfo(Token, ID)
+
+
+# 答题
+@PracticeRouter.post('/Practice/Answer')
+async def PracticeAnswer(
+        request: Request,
+        Token: str = Form(''),
+        PracticeID: int = Form(0),
+        ID: int = Form(0),
+        Answer: str = Form(''),
+) -> Result:
+    return practiceLogic.PracticeAnswer(Token, PracticeID, ID, Answer)
+
+
+# 验证
+@PracticeRouter.post('/Grade/The/Practice')
+async def GradeThePractice(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
+    return practiceLogic.GradeThePractice(Token, ID)
