@@ -178,17 +178,13 @@ def CodeExecAction(
                 # print('=====================')
 
                 cliinfo = ''
-                try:
-                    if Language == 'java':
-                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
-                    elif Language == 'c':
-                        print(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
-                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
-                    else:
-                        cliinfo = json.loads(_common.CLI(DockerRun[0]))
-                except OSError as e:
-                    result.Memo = str(e)
-                    return result
+                if Language == 'java':
+                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
+                elif Language == 'c':
+                    print(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
+                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
+                else:
+                    cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
                 CheckCliInfo = cliinfo['Result']
 
@@ -197,11 +193,11 @@ def CodeExecAction(
 
                 # 是否有语法错误
                 if 'error' in CheckCliInfo:
-                    result.Memo = 'error'
+                    result.Data = 'error'
                 elif 'err' in CheckCliInfo:
-                    result.Memo = 'error'
+                    result.Data = 'error'
                 else:
-                    result.Memo = CheckCliInfo
+                    result.Data = CheckCliInfo
 
                 result.Memo = 'Success'
                 result.State = True
