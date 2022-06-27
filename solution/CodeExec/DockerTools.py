@@ -8,11 +8,21 @@ _file: FileHelper = FileHelper()
 _lang: Lang = Lang()
 
 
-def ParamValidation(
+# 构建docker环境
+def BuildEnvironmentAction(
         Language: str = Form(''),
         Version: str = Form(''),
 ) -> Result:
+
+    if Language == '' or Version == '':
+        result.Memo = _lang.ParamErr
+        return result
+
+    Language = Language.lower()
+    Version = Version.lower()
+
     result = Result()
+
     LanguageList = [
         'php',
         'node',
@@ -21,17 +31,51 @@ def ParamValidation(
         'c',
     ]
 
-    if Language.lower() == 'java':
+    if Language == 'java':
         Language = 'openjdk'
-
-    if Language.lower() == 'javascript':
+    if Language == 'javascript':
         Language = 'node'
+    if Language == 'c':
+        Language = 'gcc'
 
-    if Language.lower() not in LanguageList:
+    if Language not in LanguageList:
         result.Memo = _lang.ParamErr
         return result
 
-    result.State = True
+    if Language == 'php' and Version != 'latest':
+        if float(Version) >= 6 and float(Version) < 7:
+            result.Memo = _lang.ParamErr
+            return result
+        if float(Version) < 5 or float(Version) > 8:
+            result.Memo = _lang.ParamErr
+            return result
+    if Language == 'node' and Version != 'latest':
+        if float(Version) < 4 or float(Version) > 18:
+            result.Memo = _lang.ParamErr
+            return result
+    if Language == 'python' and Language == 'latest':
+        if float(Version) < 2 or float(Version) > 3:
+            result.Memo = _lang.ParamErr
+            return result
+    if Language == 'openjdk' and Version != 'latest':
+        if float(Version) < 6 or float(Version) > 20:
+            result.Memo = _lang.ParamErr
+            return result
+    if Language == 'gcc' and Version != 'latest':
+        if float(Version) < 4 or float(Version) > 12:
+            result.Memo = _lang.ParamErr
+            return result
+
+    try:
+        CliInfo = _common.CLI('docker pull ' + Language + ':' + Version)
+        if CliInfo != '':
+            result.State = True
+            result.Memo = CliInfo
+        else:
+            result.Memo = _lang.NoData
+    except OSError as e:
+        result.Memo = str(e)
+
     return result
 
 
@@ -42,34 +86,7 @@ async def BuildEnvironment(
         Version: str = Form(''),
 ) -> Result:
     result = Result()
-    if Language == '' or Version == '':
-        result.Memo = _lang.ParamErr
-        return result
-
-    Language = Language.lower()
-    Version = Version.lower()
-
-    if Language == 'java':
-        Language = 'openjdk'
-
-    if Language == 'javascript':
-        Language = 'node'
-
-    ValidationInfo: Result = ParamValidation(Language, Version)
-    if ValidationInfo.State == False:
-        result.Memo = ValidationInfo.Memo
-        return result
-
-    try:
-        CliInfo = _common.CLI('docker pull ' + Language + ':' + Version)
-        if CliInfo != '':
-            result.Memo = CliInfo
-        else:
-            result.Memo = _lang.NoData
-        result.State = True
-    except OSError as e:
-        result.Memo = str(e)
-
+    result = BuildEnvironmentAction(Language, Version)
     return result
 
 
@@ -129,8 +146,12 @@ def CodeExecAction(
         result.Memo = str(e)
         return result
 
-    CheckCliInfo = ''  # 正确答案比对参数
+    BuildInfo: Result = BuildEnvironmentAction(Language, Version)
+    if BuildInfo.State == False:
+        result.Memo = BuildInfo.Memo
+        return result
 
+    CheckCliInfo = ''  # 正确答案比对参数
     # print('原始数据:')
     # print(CodeStr)
     # print('.....')
@@ -144,7 +165,6 @@ def CodeExecAction(
     except OSError as e:
         result.Memo = str(e)
         return result
-
     # print('解码数据:')
     # print(CodeStr)
     # print('.....')
@@ -237,7 +257,6 @@ def CodeExecAction(
                     _common.CLI(DockerRun[0] + ' openjdk:' + Version + ' javac Test' + RandomStr + '.java')
                 if Language == 'c':
                     _common.CLI('gcc ' + CodeDir + RandomStr + '.c -o ' + CodeDir + RandomStr)
-
                 # print('执行语句:')
                 # print(DockerRun[0])
                 # print('=====================')
@@ -252,15 +271,14 @@ def CodeExecAction(
                     cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
                 CheckCliInfo = cliinfo['Result']
-
                 # print('输出结果字符串 ' + CheckCliInfo)
                 # print('==========')
 
                 # 是否有语法错误
                 if 'error' in CheckCliInfo:
-                    result.Data = 'error'
+                    result.Data = _lang.OperationFailed
                 elif 'err' in CheckCliInfo:
-                    result.Data = 'error'
+                    result.Data = _lang.OperationFailed
                 else:
                     result.Data = CheckCliInfo
 
