@@ -199,8 +199,10 @@ def CodeExecAction(
                 except OSError as e:
                     result.Memo = str(e)
                     remove(CodeFile)
+                    return result
         except OSError as e:
             result.Memo = str(e)
+            return result
 
     # 删除执行完成的文件(重要)
     if Language == 'java':
