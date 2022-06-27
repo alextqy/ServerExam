@@ -195,10 +195,10 @@ def CodeExecAction(
 
                     result.Memo = 'Success'
                     result.State = True
-                    remove(CodeFile)
+                    # remove(CodeFile)
                 except OSError as e:
                     result.Memo = str(e)
-                    remove(CodeFile)
+                    # remove(CodeFile)
                     return result
         except OSError as e:
             result.Memo = str(e)
