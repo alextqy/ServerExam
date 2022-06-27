@@ -15,11 +15,18 @@ def ParamValidation(
     result = Result()
     LanguageList = [
         'php',
-        'javascript',
+        'node',
         'python',
-        'java',
+        'openjdk',
         'c',
     ]
+
+    if Language.lower() == 'java':
+        Language = 'openjdk'
+
+    if Language.lower() == 'javascript':
+        Language = 'node'
+
     if Language.lower() not in LanguageList:
         result.Memo = _lang.ParamErr
         return result
@@ -42,6 +49,12 @@ async def BuildEnvironment(
     Language = Language.lower()
     Version = Version.lower()
 
+    if Language == 'java':
+        Language = 'openjdk'
+
+    if Language == 'javascript':
+        Language = 'node'
+
     ValidationInfo: Result = ParamValidation(Language, Version)
     if ValidationInfo.State == False:
         result.Memo = ValidationInfo.Memo
@@ -54,7 +67,7 @@ async def BuildEnvironment(
         else:
             result.Memo = _lang.NoData
         result.State = True
-    except Exception as e:
+    except OSError as e:
         result.Memo = str(e)
 
     return result
