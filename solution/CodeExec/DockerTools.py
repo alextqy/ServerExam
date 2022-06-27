@@ -45,7 +45,7 @@ async def BuildEnvironment(
         return result
 
     try:
-        _common.CLI('docker pull ' + Language + ':' + Version)
+        result.Memo = _common.CLI('docker pull ' + Language + ':' + Version)
         result.State = True
     except OSError as e:
         result.Memo = str(e)
