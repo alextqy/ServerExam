@@ -8,6 +8,24 @@ _file: FileHelper = FileHelper()
 _lang: Lang = Lang()
 
 
+def ParamValidation(
+        Language: str = Form(''),
+        Version: str = Form(''),
+) -> Result:
+    result = Result()
+    LanguageList = [
+        'php',
+        'javascript',
+        'python',
+        'java',
+        'c',
+    ]
+    if Language.lower not in LanguageList:
+        result.Memo = _lang.ParamErr
+        return result
+    return result
+
+
 @CodeExecRouter.post('/Build/Environment')
 async def BuildEnvironment(
         request: Request,
@@ -15,6 +33,15 @@ async def BuildEnvironment(
         Version: str = Form(''),
 ) -> Result:
     result = Result()
+    if Language == '' or Version == '':
+        result.Memo = _lang.ParamErr
+        return result
+
+    ValidationInfo: Result = ParamValidation(Language.lower(), Version.lower())
+    if ValidationInfo.State == False:
+        result.Memo = ValidationInfo.Memo
+        return result
+
     try:
         _common.CLI('docker pull ' + Language + ':' + Version)
         result.State = True
