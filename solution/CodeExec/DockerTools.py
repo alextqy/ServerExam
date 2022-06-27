@@ -54,7 +54,7 @@ async def BuildEnvironment(
         else:
             result.Memo = _lang.NoData
         result.State = True
-    except OSError as e:
+    except Exception as e:
         result.Memo = str(e)
 
     return result
