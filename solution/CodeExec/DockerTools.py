@@ -20,7 +20,7 @@ def ParamValidation(
         'java',
         'c',
     ]
-    if Language.lower not in LanguageList:
+    if Language.lower() not in LanguageList:
         result.Memo = _lang.ParamErr
         return result
 
@@ -49,6 +49,7 @@ async def BuildEnvironment(
         result.State = True
     except OSError as e:
         result.Memo = str(e)
+
     return result
 
 
