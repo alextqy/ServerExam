@@ -39,7 +39,10 @@ async def BuildEnvironment(
         result.Memo = _lang.ParamErr
         return result
 
-    ValidationInfo: Result = ParamValidation(Language.lower(), Version.lower())
+    Language = Language.lower()
+    Version = Version.lower()
+
+    ValidationInfo: Result = ParamValidation(Language, Version)
     if ValidationInfo.State == False:
         result.Memo = ValidationInfo.Memo
         return result
