@@ -4,6 +4,7 @@ CodeExecRouter = APIRouter()
 CodeExecPrefix = ''
 
 _common: Common = Common()
+_file: FileHelper = FileHelper()
 _lang: Lang = Lang()
 
 
@@ -56,6 +57,12 @@ def CodeExecAction(
     CodeFilePath = getcwd() + '/CodeExec/CodeFile/'  # 模板文件夹
     CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
     result = Result()
+
+    try:
+        _file.MkDir(CodeDir)
+    except Exception as e:
+        result.Memo = str(e)
+        return result
 
     CheckCliInfo = ''  # 正确答案比对参数
 
@@ -171,35 +178,30 @@ def CodeExecAction(
                 # print('=====================')
 
                 cliinfo = ''
-                try:
-                    if Language == 'java':
-                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
-                    elif Language == 'c':
-                        print(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
-                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
-                    else:
-                        cliinfo = json.loads(_common.CLI(DockerRun[0]))
+                if Language == 'java':
+                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
+                elif Language == 'c':
+                    print(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
+                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
+                else:
+                    cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
-                    CheckCliInfo = cliinfo['Result']
+                CheckCliInfo = cliinfo['Result']
 
-                    # print('输出结果字符串 ' + CheckCliInfo)
-                    # print('==========')
+                # print('输出结果字符串 ' + CheckCliInfo)
+                # print('==========')
 
-                    # 是否有语法错误
-                    if 'error' in CheckCliInfo:
-                        result.Memo = 'error'
-                    elif 'err' in CheckCliInfo:
-                        result.Memo = 'error'
-                    else:
-                        result.Memo = CheckCliInfo
+                # 是否有语法错误
+                if 'error' in CheckCliInfo:
+                    result.Memo = 'error'
+                elif 'err' in CheckCliInfo:
+                    result.Memo = 'error'
+                else:
+                    result.Memo = CheckCliInfo
 
-                    result.Memo = 'Success'
-                    result.State = True
-                    # remove(CodeFile)
-                except OSError as e:
-                    result.Memo = str(e)
-                    # remove(CodeFile)
-                    return result
+                result.Memo = 'Success'
+                result.State = True
+                remove(CodeFile)
         except OSError as e:
             result.Memo = str(e)
             return result
