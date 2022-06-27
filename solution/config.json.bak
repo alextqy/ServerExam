@@ -1,4 +1,5 @@
 {
-    "DaoURL": "",
-    "DaoPWD": ""
+    "DaoURL": "192.168.0.28:3306",
+    "DaoPWD": "123456",
+    "Lang": "zh-cn"
 }
