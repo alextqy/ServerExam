@@ -8,6 +8,21 @@ _file: FileHelper = FileHelper()
 _lang: Lang = Lang()
 
 
+@CodeExecRouter.post('/Build/Environment')
+async def BuildEnvironment(
+        request: Request,
+        Language: str = Form(''),
+        Version: str = Form(''),
+) -> Result:
+    result = Result()
+    try:
+        _common.CLI('docker pull ' + Language + ':' + Version)
+        result.State = True
+    except OSError as e:
+        result.Memo = str(e)
+    return result
+
+
 # 考生代码执行
 @CodeExecRouter.post('/Code/Exec')
 async def CodeExec(
