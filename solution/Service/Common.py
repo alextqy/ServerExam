@@ -281,3 +281,7 @@ class Common(BaseService):
     # 随机抽取数组中多个不重复元素
     def RandomDrawSample(self, Array: list, Quantity: int) -> list:
         return sample(Array, Quantity)
+
+    # 执行Linux命令行
+    def CLI(self, Code=''):
+        return os.popen(Code).read()

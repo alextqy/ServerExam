@@ -1,93 +1,90 @@
-# -*- coding:utf-8 -*-
-import os
-from socket import *
-from os import *
-from os.path import *
-from functools import *
-from collections import *
-from platform import *
-from re import *
-from time import *
-from json import *
-from stat import *
-from hashlib import *
-from sys import *
-from base64 import *
-from math import *
-from shutil import *
-from io import *
-from base64 import *
-import json
-from fastapi import FastAPI, File
-from fastapi import APIRouter
-from fastapi import FastAPI, Form
-from fastapi import Cookie
-from starlette.requests import Request
-import base64
-
-
-class Result:
-
-    def __init__(self):
-        super().__init__()
-        self.State = False
-        self.Memo = '未知错误'
-        self.Data = ''
-
-
-def CLI(Code=''):
-    return os.popen(Code).read()
-
+from Controller.BaseController import *
 
 CodeExecRouter = APIRouter()
 CodeExecPrefix = ''
 
-
-@CodeExecRouter.get('/Clean/Temp/File')
-async def CleanTempFile(request: Request) -> str:
-    CodeDir = getcwd() + '/CodeTemp/'  # 代码执行文件夹
-    try:
-        rmtree(CodeDir, ignore_errors=False, onerror=None)
-        mkdir(CodeDir)
-        return 'ok'
-    except:
-        return 'error'
+_common: Common = Common()
+_lang: Lang = Lang()
 
 
+# 考生代码执行
 @CodeExecRouter.post('/Code/Exec')
-async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = Form(...), Version: str = Form(...), CodeStr: str = Form(...), ExamInfoID: int = Form(...)) -> Result:
+async def CodeExec(
+        request: Request,
+        Key: str = Form(''),
+        Language: str = Form(''),
+        Version: str = Form(''),
+        CodeStr: str = Form(''),
+        RandomStr: str = Form(''),
+) -> Result:
+    return CodeExecAction(Key.strip(), Language.strip(), Version.strip(), CodeStr.strip(), RandomStr.strip())
+
+
+# 测试
+@CodeExecRouter.post('/Code/Exec/Test')
+async def CodeExec(
+        request: Request,
+        Key: str = Form(''),
+        Language: str = Form(''),
+        Version: str = Form(''),
+        CodeStr: str = Form(''),
+        RandomStr: str = Form(''),
+) -> Result:
+    CodeStrBytes = CodeStr.strip().encode(encoding="utf-8")
+    CodeStr64 = base64.b64encode(CodeStrBytes)
+    return CodeExecAction(Key.strip(), Language.strip(), Version.strip(), CodeStr64, RandomStr.strip())
+
+
+'''
+代码执行
+Key 秘钥
+Language 语言
+Version 版本
+CodeStr 代码
+RandomStr 随机数
+'''
+
+
+def CodeExecAction(
+    Key: str,
+    Language: str,
+    Version: str,
+    CodeStr: str,
+    RandomStr: str,
+) -> Result:
     ServerKey = 'TXNGG3KidItKrCGf5wXT53eZTYCOynOAIjbKJPdy'
-    CodeFilePath = getcwd() + '/CodeFile/'  # 模板文件夹
-    CodeDir = getcwd() + '/Code/'  # 代码执行文件夹
+    CodeFilePath = getcwd() + '/CodeExec/CodeFile/'  # 模板文件夹
+    CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
     result = Result()
 
     CheckCliInfo = ''  # 正确答案比对参数
+
     # print('原始数据:')
     # print(CodeStr)
     # print('.....')
+
+    if CodeStr == '':
+        result.Memo = _lang.ParamErr
+        return result
+
     try:
         CodeStr = base64.b64decode(CodeStr).decode('utf-8')
-    # except Exception as e:
-    #     print(e)
-    except OSError as err:
-        # print('OS error: {0}'.format(err))
-        result.Memo = '代码解析失败'
-        result.Data = ''
+    except OSError as e:
+        result.Memo = str(e)
         return result
+
     # print('解码数据:')
     # print(CodeStr)
     # print('.....')
 
     if Key != ServerKey:
-        result.Memo = '密匙有误'
+        result.Memo = _lang.ParamErr
     elif Language == '':
-        result.Memo = '实训语言有误'
+        result.Memo = _lang.ParamErr
     elif Version == '':
-        result.Memo = '实训语言版本有误'
-    elif CodeStr == '':
-        result.Memo = '执行代码有误'
-    elif ExamInfoID <= 0:
-        result.Memo = '报名ID有误'
+        result.Memo = _lang.ParamErr
+    elif RandomStr == '':
+        result.Memo = _lang.ParamErr
     else:
         Language = Language.lower()
 
@@ -118,17 +115,18 @@ async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = 
             LangSuffix = ''
 
         if Language == 'php':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code php:' + Version + ' php ' + str(ExamInfoID) + '.php',
+            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code php:' + Version + ' php ' + RandomStr + '.php',
         elif Language == 'javascript':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code node node ' + str(ExamInfoID) + '.js',
+            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code node node ' + RandomStr + '.js',
         elif Language == 'python':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code python:' + Version + ' python ' + str(ExamInfoID) + '.py',
+            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code python:' + Version + ' python ' + RandomStr + '.py',
         elif Language == 'java':
             DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code',
         elif Language == 'c':
             DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code',
         else:
             DockerRun = ''
+
         try:
             if LangSuffix != '' and DockerRun != '':
                 FilePath = CodeFilePath + TempFile
@@ -139,22 +137,19 @@ async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = 
                 if FileContent != '':
                     FileContent = FileContent.replace('[CODE]', CodeStr)
                     if Language == 'java':
-                        FileContent = FileContent.replace('[NAME]', 'Test' + str(ExamInfoID))
+                        FileContent = FileContent.replace('[NAME]', 'Test' + RandomStr)
 
                 CodeFile = ''  # 代码运行文件
                 if Language == 'java':
-                    CodeFile = CodeDir + 'Test' + str(ExamInfoID) + LangSuffix
+                    CodeFile = CodeDir + 'Test' + RandomStr + LangSuffix
                 else:
-                    CodeFile = CodeDir + str(ExamInfoID) + LangSuffix
+                    CodeFile = CodeDir + RandomStr + LangSuffix
 
                 try:
                     file = open(CodeFile, 'w')
                     file.close()
                 except OSError as e:
-                    # print(e)
-                    # print('创建代码运行文件失败')
-                    result.Memo = '创建代码运行文件失败'
-                    result.Data = ''
+                    result.Memo = str(e)
                     return result
 
                 try:
@@ -162,59 +157,68 @@ async def CheckExamInfo(request: Request, Key: str = Form(...), Language: str = 
                     File.write(FileContent)
                     File.close()
                 except OSError as e:
-                    # print(e)
-                    # print('写入代码运行文件失败')
-                    result.Memo = '写入代码运行文件失败'
-                    result.Data = ''
+                    result.Memo = str(e)
                     remove(CodeFile)
                     return result
 
                 if Language == 'java':
-                    CLI(DockerRun[0] + ' openjdk:' + Version + ' javac Test' + str(ExamInfoID) + '.java')
+                    _common.CLI(DockerRun[0] + ' openjdk:' + Version + ' javac Test' + RandomStr + '.java')
                 if Language == 'c':
-                    CLI('gcc ' + CodeDir + str(ExamInfoID) + '.c -o ' + CodeDir + str(ExamInfoID))
+                    _common.CLI('gcc ' + CodeDir + RandomStr + '.c -o ' + CodeDir + RandomStr)
+
                 # print('执行语句:')
                 # print(DockerRun[0])
                 # print('=====================')
+
                 cliinfo = ''
                 try:
                     if Language == 'java':
-                        cliinfo = json.loads(CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + str(ExamInfoID)))
+                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
                     elif Language == 'c':
-                        print(CLI(DockerRun[0] + ' gcc /home/code/' + str(ExamInfoID)))
-                        # cliinfo = json.loads(CLI(DockerRun[0] + ' gcc /home/code/' + str(ExamInfoID)))
+                        print(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
+                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc /home/code/' + RandomStr))
                     else:
-                        cliinfo = json.loads(CLI(DockerRun[0]))
+                        cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
                     CheckCliInfo = cliinfo['Result']
+
                     # print('输出结果字符串 ' + CheckCliInfo)
                     # print('==========')
 
                     # 是否有语法错误
                     if 'error' in CheckCliInfo:
-                        result.Data = 'null'
+                        result.Memo = 'error'
                     elif 'err' in CheckCliInfo:
-                        result.Data = 'null'
+                        result.Memo = 'error'
                     else:
-                        result.Data = CheckCliInfo
+                        result.Memo = CheckCliInfo
 
                     result.Memo = 'Success'
                     result.State = True
                     remove(CodeFile)
                 except OSError as e:
-                    # print('执行结果异常')
-                    # print(e)
-                    # print('===========')
-                    result.Memo = '代码执行失败'
-                    result.Data = ''
+                    result.Memo = str(e)
                     remove(CodeFile)
         except OSError as e:
-            result.Memo = '代码执行失败'
-            result.Data = ''
+            result.Memo = str(e)
 
     # 删除执行完成的文件(重要)
     if Language == 'java':
-        remove(CodeDir + 'Test' + str(ExamInfoID) + '.class')
-        # remove(CodeDir + 'Test' + str(ExamInfoID) + '.java')
+        remove(CodeDir + 'Test' + RandomStr + '.class')
+        # remove(CodeDir + 'Test' + RandomStr + '.java')
 
+    return result
+
+
+# 清理执行缓存文件
+@CodeExecRouter.get('/Clean/Temp/File')
+async def CleanTempFile(request: Request) -> Result:
+    result = Result()
+    CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
+    try:
+        rmtree(CodeDir, ignore_errors=False, onerror=None)
+        mkdir(CodeDir)
+        result.State = True
+    except Exception as e:
+        result.Memo = str(e)
     return result
