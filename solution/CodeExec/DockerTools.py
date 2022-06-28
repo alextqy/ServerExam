@@ -223,9 +223,9 @@ def CodeExecAction(
         return result
 
     CheckCliInfo = ''  # 正确答案比对参数
-    print('原始数据:')
-    print(CodeStr)
-    print('.....')
+    # print('原始数据:')
+    # print(CodeStr)
+    # print('=====================')
 
     if CodeStr == '':
         result.Memo = _lang.ParamErr
@@ -236,9 +236,9 @@ def CodeExecAction(
     except OSError as e:
         result.Memo = str(e)
         return result
-    print('解码数据:')
-    print(CodeStr)
-    print('.....')
+    # print('解码数据:')
+    # print(CodeStr)
+    # print('=====================')
 
     if Key != ServerKey:
         result.Memo = _lang.ParamErr
@@ -342,8 +342,8 @@ def CodeExecAction(
                     cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
                 CheckCliInfo = cliinfo['Result']
-                print('输出结果字符串 ' + CheckCliInfo)
-                print('=====================')
+                # print('输出结果字符串 ' + CheckCliInfo)
+                # print('=====================')
 
                 # 是否有语法错误
                 if 'error' in CheckCliInfo:
