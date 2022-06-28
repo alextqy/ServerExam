@@ -39,7 +39,6 @@ def ImageIsExistsAction(
             CliInfoList: list = CliInfo.split('\n')
             if len(CliInfoList) > 1:
                 result.State = True
-                result.Memo = CliInfo
             else:
                 result.Memo = _lang.NoData
         else:
