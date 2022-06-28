@@ -16,7 +16,7 @@ async def ImageIsExists(
         Version: str = Form(''),
 ) -> Result:
     result = Result()
-    result = ImageIsExistsAction(Language, Version)
+    result = ImageIsExistsAction(Language.strip(), Version.strip())
     return result
 
 
@@ -65,7 +65,7 @@ async def BuildEnvironment(
         Version: str = Form(''),
 ) -> Result:
     result = Result()
-    result = BuildEnvironmentAction(Language, Version)
+    result = BuildEnvironmentAction(Language.strip(), Version.strip())
     return result
 
 
