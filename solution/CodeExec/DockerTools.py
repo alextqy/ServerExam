@@ -279,15 +279,15 @@ def CodeExecAction(
             LangSuffix = ''
 
         if Language == 'php':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code php:' + Version + ' php ' + RandomStr + '.php',
+            DockerRun = 'docker run' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code php:' + Version + ' php ' + RandomStr + '.php',
         elif Language == 'javascript':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code node node ' + RandomStr + '.js',
+            DockerRun = 'docker run' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code node node ' + RandomStr + '.js',
         elif Language == 'python':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code python:' + Version + ' python ' + RandomStr + '.py',
+            DockerRun = 'docker run' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code python:' + Version + ' python ' + RandomStr + '.py',
         elif Language == 'java':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code',
+            DockerRun = 'docker run' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code',
         elif Language == 'c':
-            DockerRun = 'docker run ' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code',
+            DockerRun = 'docker run' + ' --rm -it -v ' + CodeDir + ':/home/code -w /home/code',
         else:
             DockerRun = ''
 
