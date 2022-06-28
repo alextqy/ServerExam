@@ -35,6 +35,7 @@ def ImageIsExistsAction(
 
     try:
         CliInfo = _common.CLI('docker images ' + Language + ':' + Version)
+        print(CliInfo)
         if CliInfo != '':
             CliInfoList: list = CliInfo.split('\n')
             if len(CliInfoList) > 2:
