@@ -36,8 +36,12 @@ def ImageIsExistsAction(
     try:
         CliInfo = _common.CLI('docker images ' + Language + ':' + Version)
         if CliInfo != '':
-            result.State = True
-            result.Memo = CliInfo
+            CliInfoList: list = CliInfo.split('\n')
+            if len(CliInfoList) > 1:
+                result.State = True
+                result.Memo = CliInfo
+            else:
+                result.Memo = _lang.NoData
         else:
             result.Memo = _lang.NoData
     except OSError as e:
