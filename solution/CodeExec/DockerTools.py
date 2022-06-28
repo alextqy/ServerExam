@@ -33,11 +33,16 @@ def ImageIsExistsAction(
     Language = Language.lower()
     Version = Version.lower()
 
+    if Language == 'java':
+        Language = 'openjdk'
+    if Language == 'javascript':
+        Language = 'node'
+    if Language == 'c':
+        Language = 'gcc'
+
     try:
         Command: str = 'docker images ' + Language + ':' + Version
-        print(Command)
         CliInfo: str = _common.CLI(Command)
-        print(CliInfo)
         if CliInfo != '':
             CliInfoList: list = CliInfo.split('\n')
             if len(CliInfoList) > 2:
