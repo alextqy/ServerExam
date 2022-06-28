@@ -61,18 +61,12 @@ async def BuildEnvironment(
     return result
 
 
-def BuildEnvironmentAction(
+# 允许的代码范围
+def BuildRanges(
         Language: str = Form(''),
         Version: str = Form(''),
 ) -> Result:
     result = Result()
-
-    if Language == '' or Version == '':
-        result.Memo = _lang.ParamErr
-        return result
-
-    Language = Language.lower()
-    Version = Version.lower()
 
     LanguageList = [
         'php',
@@ -81,6 +75,9 @@ def BuildEnvironmentAction(
         'openjdk',
         'c',
     ]
+
+    Language = Language.lower()
+    Version = Version.lower()
 
     if Language == 'java':
         Language = 'openjdk'
@@ -116,6 +113,34 @@ def BuildEnvironmentAction(
         if float(Version) < 4 or float(Version) > 12:
             result.Memo = _lang.ParamErr
             return result
+
+    return result
+
+
+def BuildEnvironmentAction(
+        Language: str = Form(''),
+        Version: str = Form(''),
+) -> Result:
+    result = Result()
+
+    if Language == '' or Version == '':
+        result.Memo = _lang.ParamErr
+        return result
+
+    Language = Language.lower()
+    Version = Version.lower()
+
+    if Language == 'java':
+        Language = 'openjdk'
+    if Language == 'javascript':
+        Language = 'node'
+    if Language == 'c':
+        Language = 'gcc'
+
+    RangesInfo: Result = BuildRanges(Language, Version)
+    if RangesInfo.State == False:
+        result.Memo = RangesInfo.Memo
+        return result
 
     try:
         CliInfo = _common.CLI('docker pull ' + Language + ':' + Version)
