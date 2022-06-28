@@ -102,7 +102,7 @@ def BuildRanges(
             result.Memo = _lang.ParamErr
             return result
     if Language == 'python' and Language != 'latest':
-        if float(Version) < 2 or float(Version) > 3:
+        if float(Version) != 3:
             result.Memo = _lang.ParamErr
             return result
     if Language == 'openjdk' and Version != 'latest':
