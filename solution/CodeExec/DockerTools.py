@@ -349,7 +349,7 @@ def CodeExecAction(
                     # print('执行语句')
                     # print(CodeDir + RandomStr)
                     # print('=====================')
-                    CheckCliInfo = _common.CLI(CodeDir + RandomStr)
+                    CheckCliInfo = _common.CLI(CodeDir + RandomStr).replace('\n', '').strip()
                 else:
                     cliinfo = json.loads(_common.CLI(DockerRun[0]))
                     CheckCliInfo = cliinfo['Result']
