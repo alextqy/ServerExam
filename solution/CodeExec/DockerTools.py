@@ -344,7 +344,7 @@ def CodeExecAction(
                     # print(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr)
                     # print('=====================')
                     # cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr))
-                    cliinfo = json.loads(_common.CLI('./' + RandomStr))
+                    cliinfo = json.loads(_common.CLI(CodeDir + RandomStr))
                 else:
                     cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
@@ -381,8 +381,8 @@ async def CleanTempFile(request: Request) -> Result:
     result = Result()
     CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
     try:
-        rmtree(CodeDir, ignore_errors=False, onerror=None)
-        mkdir(CodeDir)
+        _file.DirRemoveAll(CodeDir)
+        _file.MkDir(CodeDir)
         result.State = True
     except Exception as e:
         result.Memo = str(e)
