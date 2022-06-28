@@ -143,6 +143,11 @@ def BuildEnvironmentAction(
         result.Memo = RangesInfo.Memo
         return result
 
+    ImageInfo: Result = ImageIsExistsAction(Language, Version)
+    if ImageInfo.State == True:
+        result.State = True
+        return result
+
     try:
         CliInfo = _common.CLI('docker pull ' + Language + ':' + Version)
         if CliInfo != '':
