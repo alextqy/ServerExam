@@ -322,7 +322,7 @@ def CodeExecAction(
                     File.close()
                 except OSError as e:
                     result.Memo = str(e)
-                    remove(CodeFile)
+                    _file.DeleteFile(CodeFile)
                     return result
 
                 if Language == 'java':
@@ -367,15 +367,17 @@ def CodeExecAction(
 
                 result.Memo = 'Success'
                 result.State = True
-                remove(CodeFile)
+                _file.DeleteFile(CodeFile)
         except OSError as e:
             result.Memo = str(e)
             return result
 
     # 删除执行完成的文件(重要)
     if Language == 'java':
-        remove(CodeDir + 'Test' + RandomStr + '.class')
-        # remove(CodeDir + 'Test' + RandomStr + '.java')
+        _file.DeleteFile(CodeDir + 'Test' + RandomStr + '.class')
+        # _file.DeleteFile(CodeDir + 'Test' + RandomStr + '.java')
+    if Language == 'c':
+        _file.DeleteFile(CodeDir + RandomStr)
 
     return result
 
