@@ -26,6 +26,17 @@ class QuestionModel(BaseModel):
         if Data.KnowledgeID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
+        if Data.QuestionType == 6:
+            if Data.Language == '':
+                _result.Memo = self._lang.ParamErr
+                return _result
+            if Data.LanguageVersion == '':
+                _result.Memo = self._lang.ParamErr
+            Data.Language = Data.Language.lower()
+            Data.LanguageVersion = Data.LanguageVersion.lower()
+        if Data.QuestionType != 6:
+            Data.Language = ''
+            Data.LanguageVersion = ''
         Data.QuestionState = 2
         Data.Marking = 1
         try:

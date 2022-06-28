@@ -140,6 +140,9 @@ class Lang(BaseService):
             self.NoData = 'no data'
             self.AllTestsCompleted = 'all tests completed'
             self.TryAgain = 'try again'
+            self.TheCodeRuntimeEnvironmentHasNotBeenBuilt = 'The code runtime environment has not been built'
+            self.WrongLanguage = 'wrong language'
+            self.WrongLanguageVersion = 'wrong language version'
 
         # 中文简体
         elif self.Type == "zh-cn":
@@ -269,6 +272,9 @@ class Lang(BaseService):
             self.NoData = '没有数据'
             self.AllTestsCompleted = '已完成所有测试'
             self.TryAgain = '再试一次'
+            self.TheCodeRuntimeEnvironmentHasNotBeenBuilt = '还未构建代码运行环境'
+            self.WrongLanguage = '语言错误'
+            self.WrongLanguageVersion = '语言版本错误'
 
         # 默认
         else:
@@ -398,3 +404,6 @@ class Lang(BaseService):
             self.NoData = ''
             self.AllTestsCompleted = ''
             self.TryAgain = ''
+            self.TheCodeRuntimeEnvironmentHasNotBeenBuilt = ''
+            self.WrongLanguage = ''
+            self.WrongLanguageVersion = ''

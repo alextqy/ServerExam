@@ -13,8 +13,10 @@ async def NewQuestion(
         QuestionType: int = Form(0),
         KnowledgeID: int = Form(0),
         Description: str = Form(''),
+        Language: str = Form(''),
+        LanguageVersion: str = Form(''),
 ) -> Result:
-    return questionLogic.NewQuestion(request.client.host, Token.strip(), QuestionTitle.strip(), QuestionType, KnowledgeID, Description.strip())
+    return questionLogic.NewQuestion(request.client.host, Token.strip(), QuestionTitle.strip(), QuestionType, KnowledgeID, Description.strip(), Language.strip().lower(), LanguageVersion.strip().lower())
 
 
 # 上传试题附件
@@ -48,8 +50,10 @@ async def UpdateQuestionInfo(
         QuestionTitle: str = Form(''),
         QuestionType: int = Form(0),
         Description: str = Form(''),
+        Language: str = Form(''),
+        LanguageVersion: str = Form(''),
 ) -> Result:
-    return questionLogic.UpdateQuestionInfo(request.client.host, Token.strip(), ID, QuestionTitle.strip(), QuestionType, Description.strip())
+    return questionLogic.UpdateQuestionInfo(request.client.host, Token.strip(), ID, QuestionTitle.strip(), QuestionType, Description.strip(), Language.strip().lower(), LanguageVersion.strip().lower())
 
 
 # 试题列表

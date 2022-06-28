@@ -13,6 +13,8 @@ class QuestionEntity(BaseEntity, BaseORM):
     KnowledgeID: int = Column(INTEGER, comment='知识点ID', default=0)
     Description: str = Column(String(65535), comment='试题描述', default='none')
     Attachment: str = Column(String(65535), comment='试题附件', default='none')
+    Language: str = Column(String(128), comment='计算机语言', default='none')
+    LanguageVersion: str = Column(String(128), comment='计算机语言版本', default='none')
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):

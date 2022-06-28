@@ -6,7 +6,7 @@ class QuestionLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str) -> Result:
+    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str, Language: str = '', LanguageVersion: str = '') -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -22,6 +22,10 @@ class QuestionLogic(BaseLogic):
             result.Memo = self._lang.NoVacancy
         elif KnowledgeID <= 0:
             result.Memo = self._lang.WrongKnowledgeID
+        elif QuestionType == 6 and Language == '':
+            result.Memo = self._lang.WrongLanguage
+        elif QuestionType == 6 and LanguageVersion == '':
+            result.Memo = self._lang.WrongLanguageVersion
         else:
             KnowledgeData: KnowledgeEntity = self._knowledgeModel.Find(_dbsession, KnowledgeID)
             if KnowledgeData is None:
@@ -44,6 +48,8 @@ class QuestionLogic(BaseLogic):
                 QuestionData.KnowledgeID = KnowledgeID
                 QuestionData.Description = Description
                 QuestionData.QuestionCode = QuestionCode
+                QuestionData.Language = Language
+                QuestionData.LanguageVersion = LanguageVersion
                 AddInfo: Result = self._questionModel.Insert(_dbsession, QuestionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
@@ -240,6 +246,12 @@ class QuestionLogic(BaseLogic):
                                 result.Memo = self._lang.JustNeedAnAnswer
                                 _dbsession.rollback()
                                 return result
+                            # 是否对应的运行环境
+                            from CodeExec.DockerTools import ImageIsExistsAction
+                            ImageInfo: Result = ImageIsExistsAction(QuestionData.Language, QuestionData.LanguageVersion)
+                            if ImageInfo.State == False:
+                                result.Memo = self._lang.TheCodeRuntimeEnvironmentHasNotBeenBuilt
+                                return result
 
                         if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽题 连线题 ##################################################################
                             # 不能低于四个选项
@@ -292,7 +304,7 @@ class QuestionLogic(BaseLogic):
                 result.State = True
         return result
 
-    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str) -> Result:
+    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str, Language: str, LanguageVersion: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -308,6 +320,10 @@ class QuestionLogic(BaseLogic):
             result.Memo = self._lang.NoVacancy
         elif QuestionType <= 0:
             result.Memo = self._lang.WrongQuestionType
+        elif QuestionType == 6 and Language == '':
+            result.Memo = self._lang.WrongLanguage
+        elif QuestionType == 6 and LanguageVersion == '':
+            result.Memo = self._lang.WrongLanguageVersion
         else:
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
@@ -322,6 +338,8 @@ class QuestionLogic(BaseLogic):
                     QuestionData.QuestionTitle = QuestionTitle
                     QuestionData.QuestionType = QuestionType
                     QuestionData.Description = Description
+                    QuestionData.Language = Language
+                    QuestionData.LanguageVersion = LanguageVersion
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
