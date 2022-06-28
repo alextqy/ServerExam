@@ -340,10 +340,11 @@ def CodeExecAction(
                     print('=====================')
                     cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
                 elif Language == 'c':
-                    print('编译语句:')
-                    print(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr)
-                    print('=====================')
-                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr))
+                    # print('编译语句:')
+                    # print(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr)
+                    # print('=====================')
+                    # cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr))
+                    cliinfo = json.loads(_common.CLI('./' + RandomStr))
                 else:
                     cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
