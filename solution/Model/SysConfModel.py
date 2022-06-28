@@ -13,27 +13,27 @@ class SysConfModel(BaseModel):
         Data.Value = Data.Value.strip()
         Data.Description = Data.Description.strip()
         if Data.Type <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Key == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Value == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         if Data.Description == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)
             _dbsession.commit()
             _dbsession.flush()
         except Exception as e:
-            _result.Memo = str(e.orig)
+            _result.Memo = str(e)
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         _result.Data = Data.ID
         return _result
 
@@ -48,38 +48,26 @@ class SysConfModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.Type = Param.Type if Param.Type > 0 else Data.Type
-                Data.Key = Param.Key.strip() if Param.Key.strip() != '' else Data.Key
-                Data.Value = Param.Value.strip() if Param.Value.strip() != '' else Data.Value
-                Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e.orig)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
+    def Find(self, _dbsession: DBsession, ID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def Find(self, _dbsession: DBsession, ID) -> Result:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
-
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, Type: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, Type: int) -> ResultList:
         _result = ResultList()
-        _result.Status = True
+        _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
-        _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        _result.TotalPage = 0
+        if _dbsession.query(self.EType).count() > 0:
+            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        if Page <= 0:
+            Page = 1
+        if PageSize <= 0:
+            PageSize = 10
+        if _result.TotalPage > 0 and Page > _result.TotalPage:
+            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
@@ -88,3 +76,6 @@ class SysConfModel(BaseModel):
             sql = sql.filter(self.EType.Type == Type)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindKey(self, _dbsession: DBsession, Key: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.Key == Key).first()

@@ -11,19 +11,19 @@ class Database(BaseService):
 
     def Init(self):
         if not isfile(self.DBFileURL):
-            file = open(self.DBFileURL, "w")
+            file = open(self.DBFileURL, 'w')
             file.close()
         self.SqlCon = sqlite3.connect(self.DBFileURL)
         self.Cur = self.SqlCon.cursor()
 
     def Tran(self):
-        self.Cur.execute("BEGIN TRANSACTION")
+        self.Cur.execute('BEGIN TRANSACTION')
 
     def Rollback(self):
-        self.Cur.execute("ROLLBACK")
+        self.Cur.execute('ROLLBACK')
 
     def Commit(self):
-        self.Cur.execute("COMMIT")
+        self.Cur.execute('COMMIT')
 
     def Cmd(self, CommandParam):
         return self.Cur.execute(CommandParam)

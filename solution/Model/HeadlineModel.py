@@ -11,7 +11,7 @@ class HeadlineModel(BaseModel):
         _result = Result()
         Data.Content = Data.Content.strip()
         if Data.Content == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         Data.ContentCode = self._common.StrMD5(Data.Content.strip())
         try:
@@ -19,11 +19,11 @@ class HeadlineModel(BaseModel):
             _dbsession.commit()
             _dbsession.flush()
         except Exception as e:
-            _result.Memo = str(e.orig)
+            _result.Memo = str(e)
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         _result.Data = Data.ID
         return _result
 
@@ -38,39 +38,32 @@ class HeadlineModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.Content = Param.Content.strip() if Param.Content.strip() != '' else Data.Content
-                Data.ContentCode = self._common.StrMD5(Param.Content.strip()) if Param.Content.strip() != '' and Param.Content.strip() != Data.Content else Data.ContentCode
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e.orig)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
+    def Find(self, _dbsession: DBsession, ID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def Find(self, _dbsession: DBsession, ID) -> Result:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
-
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> ResultList:
         _result = ResultList()
-        _result.Status = True
+        _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
-        _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        _result.TotalPage = 0
+        if _dbsession.query(self.EType).count() > 0:
+            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        if Page <= 0:
+            Page = 1
+        if PageSize <= 0:
+            PageSize = 10
+        if _result.TotalPage > 0 and Page > _result.TotalPage:
+            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.ContentCode.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.ContentCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindContentCode(self, _dbsession: DBsession, Content: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ContentCode == self._common.StrMD5(Content.strip())).first()

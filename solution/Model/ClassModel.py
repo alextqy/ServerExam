@@ -12,22 +12,21 @@ class ClassModel(BaseModel):
         Data.ClassName = Data.ClassName.strip()
         Data.Description = Data.Description.strip()
         if Data.ClassName == '':
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
-        # if Data.Description == '':
-        #     _result.Memo = 'param err'
-        #     return _result
+        if Data.Description == '':
+            Data.Description = 'none'
         Data.ClassCode = self._common.StrMD5(Data.ClassName.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
             _dbsession.flush()
         except Exception as e:
-            _result.Memo = str(e.orig)
+            _result.Memo = str(e)
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         _result.Data = Data.ID
         return _result
 
@@ -42,40 +41,32 @@ class ClassModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.ClassName = Param.ClassName.strip() if Param.ClassName.strip() != '' else Data.ClassName
-                Data.ClassCode = self._common.StrMD5(Param.ClassName.strip()) if Param.ClassName.strip() != '' and Param.ClassName.strip() != Data.ClassName else Data.ClassCode
-                Data.Description = Param.Description.strip() if Param.Description.strip() != '' else Data.Description
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e.orig)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
+    def Find(self, _dbsession: DBsession, ID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def Find(self, _dbsession: DBsession, ID) -> Result:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
-
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> ResultList:
         _result = ResultList()
-        _result.Status = True
+        _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
-        _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        _result.TotalPage = 0
+        if _dbsession.query(self.EType).count() > 0:
+            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        if Page <= 0:
+            Page = 1
+        if PageSize <= 0:
+            PageSize = 10
+        if _result.TotalPage > 0 and Page > _result.TotalPage:
+            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.ClassCode.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.ClassCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindName(self, _dbsession: DBsession, ClassName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ClassName == ClassName.strip()).first()

@@ -1,13 +1,13 @@
 var result = {
     RunTime: 0,
     Memory: 0,
-    Result: ""
+    Result: ''
 };
 
-function main(){
-    try{
+function main() {
+    try {
         [CODE]
-    }catch (error){
+    } catch (error) {
         return error.message;
     }
 }
@@ -15,6 +15,6 @@ function main(){
 var start = (new Date()).valueOf();
 result.Result = main().toString();
 var end = (new Date()).valueOf();
-result.RunTime = end-start;
+result.RunTime = end - start;
 
 console.log(JSON.stringify(result));

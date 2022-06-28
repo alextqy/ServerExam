@@ -5,10 +5,10 @@ from Entity.BaseEntity import *
 class SysLogEntity(BaseEntity, BaseORM):
     __tablename__ = 'SysLog'
 
-    Type: int = Column(INTEGER, comment='日志类型 1操作 2登录')
-    ManagerID: int = Column(INTEGER, comment='管理员ID')
-    Description: str = Column(String(65535), comment='描述信息')
-    IP: str = Column(String(128), comment='IP地址')
+    Type: int = Column(INTEGER, comment='日志类型 1操作 2登录', default=0)
+    ManagerID: int = Column(INTEGER, comment='管理员ID', default=0)
+    Description: str = Column(String(65535), comment='描述信息', default='none')
+    IP: str = Column(String(128), comment='IP地址', default='none')
 
     def __init__(self):
         super().__init__()

@@ -10,33 +10,35 @@ class QuestionSolutionModel(BaseModel):
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
         Data.Option = Data.Option.strip()
-        Data.OptionAttachment = Data.OptionAttachment.strip()
-        Data.CorrectAnswer = Data.CorrectAnswer.strip()
-        if Data.QuestionID < 0:
-            _result.Memo = 'param err'
+        # Data.OptionAttachment = Data.OptionAttachment.strip()
+        if Data.QuestionID <= 0:
+            _result.Memo = self._lang.ParamErr
             return _result
-        if Data.Option == '':
-            _result.Memo = 'param err'
+        # if Data.Option == '':
+        #     _result.Memo = self._lang.ParamErr
+        #     return _result
+        # if Data.OptionAttachment == '':
+        #     _result.Memo = self._lang.ParamErr
+        #     return _result
+        if Data.CorrectAnswer <= 0:
+            _result.Memo = self._lang.ParamErr
             return _result
-        if Data.OptionAttachment == '':
-            _result.Memo = 'param err'
-            return _result
-        if Data.CorrectAnswer == '':
-            _result.Memo = 'param err'
-            return _result
+        # if Data.CorrectItem == '':
+        #     _result.Memo = self._lang.ParamErr
+        #     return _result
         if Data.ScoreRatio <= 0:
-            _result.Memo = 'param err'
+            _result.Memo = self._lang.ParamErr
             return _result
         try:
             _dbsession.add(Data)
             _dbsession.commit()
             _dbsession.flush()
         except Exception as e:
-            _result.Memo = str(e.orig)
+            _result.Memo = str(e)
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         _result.Data = Data.ID
         return _result
 
@@ -51,43 +53,37 @@ class QuestionSolutionModel(BaseModel):
             _dbsession.rollback()
             return _result
 
-        _result.Status = True
+        _result.State = True
         return _result
 
-    def Update(self, _dbsession: DBsession, ID: int, Param: EType) -> Result:
-        _result = Result()
-        Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        if Data is not None:
-            try:
-                Data.QuestionID = Param.QuestionID if Param.QuestionID > 0 else Data.QuestionID
-                Data.Option = Param.Option.strip() if Param.Option.strip() != '' else Data.Option
-                Data.OptionAttachment = Param.OptionAttachment.strip() if Param.OptionAttachment.strip() != '' else Data.OptionAttachment
-                Data.CorrectAnswer = Param.CorrectAnswer.strip() if Param.CorrectAnswer.strip() != '' else Data.CorrectAnswer
-                Data.ScoreRatio = Param.ScoreRatio if Param.ScoreRatio > 0 else Data.ScoreRatio
-                Data.Position = Param.Position if Param.Position > 0 else Data.Position
-                _dbsession.commit()
-            except Exception as e:
-                _result.Memo = str(e.orig)
-                _dbsession.rollback()
-                return _result
-            _result.Status = True
-        return _result
+    def Find(self, _dbsession: DBsession, ID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def Find(self, _dbsession: DBsession, ID) -> Result:
-        _result = Result()
-        _result.Status = True
-        _result.Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return _result
-
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, QuestionID: int) -> Result:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, QuestionID: int) -> ResultList:
         _result = ResultList()
-        _result.Status = True
+        _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
-        _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        _result.TotalPage = 0
+        if _dbsession.query(self.EType).count() > 0:
+            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
+        if Page <= 0:
+            Page = 1
+        if PageSize <= 0:
+            PageSize = 10
+        if _result.TotalPage > 0 and Page > _result.TotalPage:
+            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if QuestionID > 0:
             sql = sql.filter(self.EType.QuestionID == QuestionID)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
+
+    def FindQuestionID(self, _dbsession: DBsession, QuestionID: int) -> list:
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.QuestionID == QuestionID)
+        return sql.all()
+
+    def FindCorrectItem(self, _dbsession: DBsession, QuestionID: int, Option: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.QuestionID == QuestionID).filter(self.EType.Option == Option).first()
