@@ -8,11 +8,23 @@ _file: FileHelper = FileHelper()
 _lang: Lang = Lang()
 
 
-# 构建docker环境
-def BuildEnvironmentAction(
+# 实训环境是否存在
+@CodeExecRouter.post('/Image/Is/Exists')
+async def ImageIsExists(
+        request: Request,
         Language: str = Form(''),
         Version: str = Form(''),
 ) -> Result:
+    result = Result()
+    result = ImageIsExistsAction(Language, Version)
+    return result
+
+
+def ImageIsExistsAction(
+        Language: str = Form(''),
+        Version: str = Form(''),
+) -> Result:
+    result = Result()
 
     if Language == '' or Version == '':
         result.Memo = _lang.ParamErr
@@ -21,7 +33,43 @@ def BuildEnvironmentAction(
     Language = Language.lower()
     Version = Version.lower()
 
+    try:
+        CliInfo = _common.CLI('docker images ' + Language + ':' + Version)
+        if CliInfo != '':
+            result.State = True
+            result.Memo = CliInfo
+        else:
+            result.Memo = _lang.NoData
+    except OSError as e:
+        result.Memo = str(e)
+
+    return result
+
+
+# 构建docker环境
+@CodeExecRouter.post('/Build/Environment')
+async def BuildEnvironment(
+        request: Request,
+        Language: str = Form(''),
+        Version: str = Form(''),
+) -> Result:
     result = Result()
+    result = BuildEnvironmentAction(Language, Version)
+    return result
+
+
+def BuildEnvironmentAction(
+        Language: str = Form(''),
+        Version: str = Form(''),
+) -> Result:
+    result = Result()
+
+    if Language == '' or Version == '':
+        result.Memo = _lang.ParamErr
+        return result
+
+    Language = Language.lower()
+    Version = Version.lower()
 
     LanguageList = [
         'php',
@@ -76,17 +124,6 @@ def BuildEnvironmentAction(
     except OSError as e:
         result.Memo = str(e)
 
-    return result
-
-
-@CodeExecRouter.post('/Build/Environment')
-async def BuildEnvironment(
-        request: Request,
-        Language: str = Form(''),
-        Version: str = Form(''),
-) -> Result:
-    result = Result()
-    result = BuildEnvironmentAction(Language, Version)
     return result
 
 
