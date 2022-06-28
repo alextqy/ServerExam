@@ -114,6 +114,7 @@ def BuildRanges(
             result.Memo = _lang.ParamErr
             return result
 
+    result.State = True
     return result
 
 
