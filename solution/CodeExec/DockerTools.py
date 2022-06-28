@@ -343,7 +343,7 @@ def CodeExecAction(
                     print('编译语句:')
                     print(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr)
                     print('=====================')
-                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr + '.c'))
+                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr))
                 else:
                     cliinfo = json.loads(_common.CLI(DockerRun[0]))
 
