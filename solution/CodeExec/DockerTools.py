@@ -73,7 +73,7 @@ def BuildRanges(
         'node',
         'python',
         'openjdk',
-        'c',
+        'gcc',
     ]
 
     Language = Language.lower()
