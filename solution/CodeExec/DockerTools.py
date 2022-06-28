@@ -250,6 +250,7 @@ def CodeExecAction(
         result.Memo = _lang.ParamErr
     else:
         Language = Language.lower()
+        Version = Version.lower()
 
         if Language == 'php':
             TempFile = 'php.php'
