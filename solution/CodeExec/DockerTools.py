@@ -329,15 +329,15 @@ def CodeExecAction(
                     _common.CLI(DockerRun[0] + ' openjdk:' + Version + ' javac Test' + RandomStr + '.java')
                 if Language == 'c':
                     _common.CLI('gcc ' + CodeDir + RandomStr + '.c -o ' + CodeDir + RandomStr)
-                print('编译语句:')
-                print(DockerRun[0])
-                print('=====================')
+                # print('编译语句:')
+                # print(DockerRun[0])
+                # print('=====================')
 
                 cliinfo = ''
                 if Language == 'java':
-                    print('执行语句:')
-                    print(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr)
-                    print('=====================')
+                    # print('执行语句:')
+                    # print(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr)
+                    # print('=====================')
                     cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
                     CheckCliInfo = cliinfo['Result']
                 elif Language == 'c':
