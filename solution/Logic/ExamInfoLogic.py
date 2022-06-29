@@ -624,6 +624,9 @@ class ExamInfoLogic(BaseLogic):
             if FileType == '':
                 result.Memo = self._lang.WrongFileType
                 return result
+            if FileType != '.xls' and FileType != '.xlsx':
+                result.Memo = self._lang.WrongFileType
+                return result
 
             # 保存路径
             ResourcePath: str = self._rootPath + 'Resource/ExamInfo/'
@@ -643,6 +646,25 @@ class ExamInfoLogic(BaseLogic):
                 return result
 
             # 解析Excel
+            try:
+                XBook: xlrd.Book = xlrd.open_workbook(UploadPath)
+                XSheet: xlrd.sheet.Sheet = XBook.sheets()[0]
+                XNrows = XSheet.nrows
+                j = 1
+                for i in XSheet:
+                    if j == XNrows: break
+                    XSheetListValue = XSheet.row_values(j, start_colx=0, end_colx=None)
+                    # print(XSheetListValue)
+                    SubjectName: str = XSheetListValue[0]
+                    ExamNo: str = XSheetListValue[1]
+                    ExamineeNo: str = XSheetListValue[2]
+                    Name: str = XSheetListValue[3]
+                    ExamType: str = XSheetListValue[4]
+                    j += 1
+            except Exception as e:
+                self._file.DeleteFile(UploadPath)
+                result.Memo = str(e)
+                return result
 
             self._file.DeleteFile(UploadPath)
             result.State = True
