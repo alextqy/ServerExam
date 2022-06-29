@@ -1,7 +1,9 @@
+# -*- coding:utf-8 -*-
 '''
 pip install python-multipart
 pip install pymysql
 pip install sqlalchemy
+pip install xlwings
 pip install fastapi
 pip install 'uvicorn[standard]'
 uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
