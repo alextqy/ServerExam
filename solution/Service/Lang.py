@@ -10,10 +10,10 @@ class Lang(BaseService):
 
     def __init__(self):
         super().__init__()
-        self.Type = str.lower(ConfigObj["Lang"])
+        self.Type = str.lower(ConfigObj['Lang'])
 
         # 英文
-        if self.Type == "en":
+        if self.Type == 'en':
             self.ParamErr = 'param err'
             self.WrongToken = 'wrong token'
             self.PermissionDenied = 'permission denied'
@@ -143,9 +143,10 @@ class Lang(BaseService):
             self.TheCodeRuntimeEnvironmentHasNotBeenBuilt = 'The code runtime environment has not been built'
             self.WrongLanguage = 'wrong language'
             self.WrongLanguageVersion = 'wrong language version'
+            self.Row = 'row'
 
         # 中文简体
-        elif self.Type == "zh-cn":
+        elif self.Type == 'zh-cn':
             self.ParamErr = '参数错误'
             self.WrongToken = '登陆失败'
             self.PermissionDenied = '权限异常'
@@ -275,6 +276,7 @@ class Lang(BaseService):
             self.TheCodeRuntimeEnvironmentHasNotBeenBuilt = '还未构建代码运行环境'
             self.WrongLanguage = '语言错误'
             self.WrongLanguageVersion = '语言版本错误'
+            self.Row = '行'
 
         # 默认
         else:
@@ -407,3 +409,4 @@ class Lang(BaseService):
             self.TheCodeRuntimeEnvironmentHasNotBeenBuilt = ''
             self.WrongLanguage = ''
             self.WrongLanguageVersion = ''
+            self.Row = ''

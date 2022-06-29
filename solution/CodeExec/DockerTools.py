@@ -193,7 +193,7 @@ async def CodeExec(
         CodeStr: str = Form(''),
         RandomStr: str = Form(''),
 ) -> Result:
-    CodeStrBytes = CodeStr.strip().encode(encoding="utf-8")
+    CodeStrBytes = CodeStr.strip().encode(encoding='utf-8')
     CodeStr64 = base64.b64encode(CodeStrBytes)
     return CodeExecAction(Key.strip(), Language.strip(), Version.strip(), CodeStr64, RandomStr.strip())
 

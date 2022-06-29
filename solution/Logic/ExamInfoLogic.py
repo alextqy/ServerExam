@@ -645,27 +645,86 @@ class ExamInfoLogic(BaseLogic):
                 result.Memo = str(e)
                 return result
 
+            _dbsession.begin_nested()
+
             # 解析Excel
             try:
-                XBook: xlrd.Book = xlrd.open_workbook(UploadPath)
-                XSheet: xlrd.sheet.Sheet = XBook.sheets()[0]
-                XNrows = XSheet.nrows
-                j = 1
+                XBook: xlrd.Book = xlrd.open_workbook(UploadPath)  # 读取文件
+                XSheet: xlrd.sheet.Sheet = XBook.sheets()[0]  # 获取第一页
+                XNrows = XSheet.nrows  # 有效行数
+                j = 0
                 for i in XSheet:
+                    j += 1
                     if j == XNrows: break
+
                     XSheetListValue = XSheet.row_values(j, start_colx=0, end_colx=None)
                     # print(XSheetListValue)
                     SubjectName: str = XSheetListValue[0]
-                    ExamNo: str = XSheetListValue[1]
-                    ExamineeNo: str = XSheetListValue[2]
-                    Name: str = XSheetListValue[3]
-                    ExamType: str = XSheetListValue[4]
-                    j += 1
+                    ExamType: str = XSheetListValue[1]
+                    ExamNo: str = XSheetListValue[2]
+                    ExamineeNo: str = XSheetListValue[3]
+                    Name: str = XSheetListValue[4]
+                    ClassName: str = XSheetListValue[5]
+
+                    RowInfo: str = str(j) + self._lang.Row + ' '
+                    if SubjectName == '':
+                        result.Memo = RowInfo + self._lang.WrongSubjectName
+                        _dbsession.rollback()
+                        return result
+
+                    ExamType = int(ExamType)
+                    if ExamType != 1 and ExamType != 2:
+                        result.Code = RowInfo + self._lang.WrongExamType
+                        _dbsession.rollback()
+                        return result
+
+                    if ExamNo == '':
+                        result.Memo = RowInfo + self._lang.WrongExamNo
+                        _dbsession.rollback()
+                        return result
+
+                    if ExamineeNo != '' and Name == '':
+                        result.Code = RowInfo + self._lang.WrongName
+                        _dbsession.rollback()
+                        return result
+
+                    if ExamineeNo == '' and Name != '':
+                        result.Code = RowInfo + self._lang.WrongExamineeNo
+                        _dbsession.rollback()
+                        return result
+
+                    if ExamineeNo != '' and ClassName == '':
+                        result.Code = RowInfo + self._lang.WrongClassName
+                        _dbsession.rollback()
+                        return result
+
+                    ExamInfoData = ExamInfoEntity()
+
+                    SubjectData: SubjectEntity = self._subjectModel.FindSubjectName(_dbsession, SubjectName)
+                    if SubjectData is None:
+                        result.Memo = RowInfo + SubjectName + ' ' + self._lang.SubjectDataDoesNotExist
+                        _dbsession.rollback()
+                        return result
+
+                    ExamInfoObj: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
+                    if ExamInfoObj is not None:
+                        result.Memo = RowInfo + ExamNo + ' ' + self._lang.ExamNoDataAlreadyExists
+                        _dbsession.rollback()
+                        return result
+
+                    ExamineeObj: ExamineeEntity = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
+                    if ExamineeObj is not None:
+                        ExamInfoData.ExamineeID = ExamineeObj.ID
+                    else:
+                        ExamineeData = ExamineeEntity()
+
             except Exception as e:
                 self._file.DeleteFile(UploadPath)
+                _dbsession.rollback()
                 result.Memo = str(e)
                 return result
 
             self._file.DeleteFile(UploadPath)
+            _dbsession.commit()
             result.State = True
         return result
