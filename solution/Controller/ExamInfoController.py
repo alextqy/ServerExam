@@ -90,3 +90,14 @@ async def GradeTheExam(
         ID: int = Form(0),
 ) -> Result:
     return examInfoLogic.GradeTheExam(request.client.host, Token.strip(), ID)
+
+
+# 导入报名
+@ExamInfoRouter.post('/Import/Exam/Info')
+async def ImportExamInfo(
+        request: Request,
+        Token: str = Form(''),
+        ExcelFile: UploadFile = File(...),
+) -> Result:
+    Contents: bytes = await ExcelFile.read()
+    return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ExcelFile.content_type, Contents)

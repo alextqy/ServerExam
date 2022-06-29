@@ -80,6 +80,11 @@ class QuestionLogic(BaseLogic):
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
             result.Memo = self._lang.TooLargeFile
         else:
+            FileType = self._common.MIME(FileType)
+            if FileType == '':
+                result.Memo = self._lang.WrongFileType
+                return result
+
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
                 result.Memo = self._lang.QuestionDataError

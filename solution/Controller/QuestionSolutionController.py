@@ -29,7 +29,7 @@ async def QuestionSolutionAttachment(
         Attachment: UploadFile = File(...),
 ) -> Result:
     Contents: bytes = await Attachment.read()
-    return questionSolutionLogic.QuestionSolutionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type.split('/')[1], Contents)
+    return questionSolutionLogic.QuestionSolutionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
 
 
 # 删除试题选项

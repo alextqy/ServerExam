@@ -606,3 +606,44 @@ class ExamInfoLogic(BaseLogic):
                     _dbsession.commit()
                     result.State = True
         return result
+
+    def ImportExamInfo(self, ClientHost: str, Token: str, FileType: str, Contents: bytes) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif FileType == '':
+            result.Memo = self._lang.WrongFileType
+        elif len(Contents) == '':
+            result.Memo = self._lang.NoData
+        else:
+            FileType = self._common.MIME(FileType)
+            if FileType == '':
+                result.Memo = self._lang.WrongFileType
+                return result
+
+            # 保存路径
+            ResourcePath: str = self._rootPath + 'Resource/ExamInfo/'
+            try:
+                self._file.MkDirs(ResourcePath)
+            except Exception as e:
+                result.Memo = str(e)
+                return result
+
+            # 写入文件
+            UploadPath = ResourcePath + str(self._common.TimeMS()) + '.' + FileType
+            try:
+                with open(UploadPath, 'wb') as f:
+                    f.write(Contents)
+            except Exception as e:
+                result.Memo = str(e)
+                return result
+
+            # 解析Excel
+
+            self._file.DeleteFile(UploadPath)
+            result.State = True
+        return result
