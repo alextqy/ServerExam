@@ -12,7 +12,7 @@ class ExamineeModel(BaseModel):
         _result = Result()
         Data.Name = Data.Name.strip()
         Data.ExamineeNo = Data.ExamineeNo.strip()
-        Data.Contact = Data.Contact.strip()
+        # Data.Contact = Data.Contact.strip()
         if Data.Name == '':
             _result.Memo = self._lang.ParamErr
             return _result

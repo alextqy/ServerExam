@@ -659,12 +659,13 @@ class ExamInfoLogic(BaseLogic):
 
                     XSheetListValue = XSheet.row_values(j, start_colx=0, end_colx=None)
                     # print(XSheetListValue)
-                    SubjectName: str = XSheetListValue[0]
-                    ExamType: str = XSheetListValue[1]
-                    ExamNo: str = XSheetListValue[2]
-                    ExamineeNo: str = XSheetListValue[3]
-                    Name: str = XSheetListValue[4]
-                    ClassName: str = XSheetListValue[5]
+                    SubjectName: str = str(XSheetListValue[0]).strip()
+                    ExamType: int = int(XSheetListValue[1])
+                    ExamNo: str = str(XSheetListValue[2]).strip()
+                    ExamineeNo: str = str(XSheetListValue[3]).strip()
+                    Name: str = str(XSheetListValue[4]).strip()
+                    ClassName: str = str(XSheetListValue[5]).strip()
+                    Contact: str = str(XSheetListValue[6]).strip()
 
                     RowInfo: str = str(j) + self._lang.Row + ' '
                     if SubjectName == '':
@@ -672,7 +673,6 @@ class ExamInfoLogic(BaseLogic):
                         _dbsession.rollback()
                         return result
 
-                    ExamType = int(ExamType)
                     if ExamType != 1 and ExamType != 2:
                         result.Code = RowInfo + self._lang.WrongExamType
                         _dbsession.rollback()
@@ -700,7 +700,7 @@ class ExamInfoLogic(BaseLogic):
 
                     ExamInfoData = ExamInfoEntity()
 
-                    SubjectData: SubjectEntity = self._subjectModel.FindSubjectName(_dbsession, SubjectName)
+                    SubjectData: SubjectEntity = self._subjectModel.FindSubjectCode(_dbsession, SubjectName)
                     if SubjectData is None:
                         result.Memo = RowInfo + SubjectName + ' ' + self._lang.SubjectDataDoesNotExist
                         _dbsession.rollback()
@@ -712,11 +712,52 @@ class ExamInfoLogic(BaseLogic):
                         _dbsession.rollback()
                         return result
 
-                    ExamineeObj: ExamineeEntity = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
-                    if ExamineeObj is not None:
-                        ExamInfoData.ExamineeID = ExamineeObj.ID
-                    else:
-                        ExamineeData = ExamineeEntity()
+                    # 选填项 ===================================================================================
+                    if ClassName != '':
+                        ClassData: ClassEntity = self._classModel.FindClassCode(_dbsession, ClassName)
+                        if ClassData is None:
+                            result.Memo = RowInfo + ClassName + ' ' + self._lang.ClassDataDoesNotExist
+                            _dbsession.rollback()
+                            return result
+
+                    if ExamineeNo != '':
+                        ExamineeObj: ExamineeEntity = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
+                        if ExamineeObj is not None:
+                            ExamInfoData.ExamineeID = ExamineeObj.ID
+                        else:
+                            ExamineeData = ExamineeEntity()
+                            ExamineeData.ExamineeNo = ExamineeNo
+                            ExamineeData.Name = Name
+                            ExamineeData.ClassID = ClassData.ID
+                            ExamineeData.Contact = Contact
+                            AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
+                            if AddInfo.State == False:
+                                result.Memo = AddInfo.Memo
+                                return result
+                            else:
+                                ExamInfoData.ExamineeID = ExamineeData.ID
+                    # ===================================================================================
+
+                    # 是否有相同科目未考试的报名记录
+                    CheckExamInfoData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamInfoData.ExamineeID, SubjectName)
+                    if CheckExamInfoData is not None:
+                        result.Memo = RowInfo + ExamNo + ' ' + self._lang.AlreadyRegisteredForTheSameSubject
+                        _dbsession.rollback()
+                        return result
+
+                    ExamInfoData.SubjectName = SubjectName
+                    ExamInfoData.ExamNo = ExamNo
+                    ExamInfoData.ExamineeID = ExamineeData.ID
+                    ExamInfoData.ExamType = ExamType
+                    AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
+                    if AddInfo.State == False:
+                        result.Memo = AddInfo.Memo
+                        return result
+
+                    Desc = 'import exam No.:' + ExamNo
+                    if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                        result.Memo = self._lang.LoggingFailed
+                        return result
 
             except Exception as e:
                 self._file.DeleteFile(UploadPath)

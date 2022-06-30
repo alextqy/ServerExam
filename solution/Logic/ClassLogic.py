@@ -17,7 +17,7 @@ class ClassLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         elif ClassName == '':
             result.Memo = self._lang.WrongClassName
-        elif self._classModel.FindName(_dbsession, ClassName) is not None:
+        elif self._classModel.FindClassCode(_dbsession, ClassName) is not None:
             result.Memo = self._lang.ClassDataAlreadyExists
         else:
             _dbsession.begin_nested()
@@ -54,7 +54,7 @@ class ClassLogic(BaseLogic):
         elif ClassName == '':
             result.Memo = self._lang.WrongClassName
         else:
-            CheckData: ClassEntity = self._classModel.FindName(_dbsession, ClassName)
+            CheckData: ClassEntity = self._classModel.FindClassCode(_dbsession, ClassName)
             if CheckData is not None and CheckData.ID != ID:
                 result.Memo = self._lang.ClassDataAlreadyExists
                 return result
