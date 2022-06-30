@@ -741,9 +741,10 @@ class ExamInfoLogic(BaseLogic):
                     # 是否有相同科目未考试的报名记录
                     CheckExamInfoData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamInfoData.ExamineeID, SubjectName)
                     if CheckExamInfoData is not None:
-                        result.Memo = RowInfo + ExamNo + ' ' + self._lang.AlreadyRegisteredForTheSameSubject
-                        _dbsession.rollback()
-                        return result
+                        if CheckExamInfoData.ExamState == 1 or CheckExamInfoData.ExamState == 2:
+                            result.Memo = RowInfo + ExamNo + ' ' + self._lang.AlreadyRegisteredForTheSameSubject
+                            _dbsession.rollback()
+                            return result
 
                     ExamInfoData.SubjectName = SubjectName
                     ExamInfoData.ExamNo = ExamNo
