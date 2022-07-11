@@ -181,7 +181,7 @@ class ExamineeTokenLogic(BaseLogic):
                         # 填空/问答/实训 题选项 =======================================================================================
                         elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6 and ScantronSolutionData.ID == ID:
                             ScantronSolutionData.CandidateAnswer = Answer
-                        # 拖拽题选项 =======================================================================================
+                        # 拖拽选项 =======================================================================================
                         elif ScantronData.QuestionType == 7 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
@@ -202,7 +202,7 @@ class ExamineeTokenLogic(BaseLogic):
                                         result.Memo = self._lang.WrongData
                                         return result
                                 ScantronSolutionData.CandidateAnswer = Answer
-                        # 连线题选项 =======================================================================================
+                        # 连线选项 =======================================================================================
                         elif ScantronData.QuestionType == 8 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData

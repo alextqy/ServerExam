@@ -184,7 +184,7 @@ class QuestionSolutionLogic(BaseLogic):
                             return result
                     CorrectAnswer = 1
                 '''
-                代码实训 ##################################################################
+                编程 ##################################################################
                 CorrectItem
                 '''
                 if QuestionData.QuestionType == 6:
@@ -199,7 +199,7 @@ class QuestionSolutionLogic(BaseLogic):
                     CorrectAnswer = 1
                     ScoreRatio = 1.00
                 '''
-                拖拽题 ##################################################################
+                拖拽 ##################################################################
                 Option
                 Position
                 CorrectItem
@@ -242,7 +242,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                     ScoreRatio = 1.00
                 '''
-                连线题 ##################################################################
+                连线 ##################################################################
                 Option
                 Position
                 CorrectItem
