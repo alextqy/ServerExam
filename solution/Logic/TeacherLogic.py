@@ -7,7 +7,7 @@ class TeacherLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewTeacher(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str, ClassID: int) -> Result:
+    def NewTeacher(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -27,12 +27,8 @@ class TeacherLogic(BaseLogic):
             result.Memo = self._lang.PasswordLengthIsNotEnough
         elif Name == '':
             result.Memo = self._lang.WrongName
-        elif ClassID <= 0:
-            result.Memo = self._lang.WrongClassID
         elif self._teacherModel.FindAccount(_dbsession, Account) is not None:
             result.Memo = self._lang.TeacherDataAlreadyExists
-        elif self._classModel.Find(_dbsession, ClassID) is None:
-            result.Memo = self._lang.ClassDataDoesNotExist
         else:
             _dbsession.begin_nested()
 
@@ -40,7 +36,6 @@ class TeacherLogic(BaseLogic):
             TeacherData.Account = Account
             TeacherData.Password = Password
             TeacherData.Name = Name
-            TeacherData.ClassID = ClassID
             TeacherData.State = 1
             AddInfo: Result = self._teacherModel.Insert(_dbsession, TeacherData)
             if AddInfo.State == False:
@@ -97,7 +92,7 @@ class TeacherLogic(BaseLogic):
                 result.State = True
         return result
 
-    def UpdateTeacherInfo(self, ClientHost: str, Token: str, Password: str, Name: str, ClassID: int, ID: int) -> Result:
+    def UpdateTeacherInfo(self, ClientHost: str, Token: str, Password: str, Name: str, ID: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -124,14 +119,6 @@ class TeacherLogic(BaseLogic):
                 else:
                     TeacherData.Password = self._common.UserPWD(Password.strip())
 
-            if ClassID > 0:
-                if self._classModel.Find(_dbsession, ClassID) is None:
-                    result.Memo = self._lang.ClassDataError
-                    _dbsession.rollback()
-                    return result
-                else:
-                    TeacherData.ClassID = ClassID
-
             TeacherData.Name = Name
 
             Desc = 'update teacker info ID:' + str(ID)
@@ -143,7 +130,7 @@ class TeacherLogic(BaseLogic):
             result.State = True
         return result
 
-    def TeacherList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> ResultList:
+    def TeacherList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -152,7 +139,7 @@ class TeacherLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._teacherModel.List(_dbsession, Page, PageSize, Stext, State, ClassID)
+            result: ResultList = self._teacherModel.List(_dbsession, Page, PageSize, Stext, State)
         return
 
     def TeacherInfo(self, Token: str, ID: int) -> Result:
