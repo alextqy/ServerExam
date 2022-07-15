@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Entity.BaseEntity import *
 
 
@@ -6,7 +7,7 @@ class PaperEntity(BaseEntity, BaseORM):
     __tablename__ = 'Paper'
 
     PaperName: str = Column(String(128), comment='试卷名称', default='none')
-    PaperCode: str = Column(String(128), index=True, comment='试卷编码', default='none')
+    PaperCode: str = Column(String(128), index=True, comment='试卷代码', default='none')
     SubjectID: int = Column(INTEGER, comment='科目ID', default=0)
     TotalScore: float = Column(DECIMAL(10, 2), comment='总分', default=0.00)
     PassLine: float = Column(DECIMAL(10, 2), comment='及格分数', default=0.00)

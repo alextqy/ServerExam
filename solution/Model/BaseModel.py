@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Service.Cache import *
 from Service.Common import *
 from Service.Database import *
@@ -28,6 +29,7 @@ from Entity.ScantronSolutionHistoryEntity import ScantronSolutionHistoryEntity
 from Entity.SubjectEntity import SubjectEntity
 from Entity.SysConfEntity import SysConfEntity
 from Entity.SysLogEntity import SysLogEntity
+from Entity.TeacherClassEntity import TeacherClassEntity
 from Entity.TeacherEntity import TeacherEntity
 
 

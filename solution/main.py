@@ -1,7 +1,9 @@
+# -*- coding:utf-8 -*-
 '''
 pip install python-multipart
 pip install pymysql
 pip install sqlalchemy
+pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
 uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
@@ -61,6 +63,7 @@ from Controller.ScantronSolutionController import ScantronSolutionRouter, Scantr
 from Controller.ScantronSolutionHistoryController import ScantronSolutionHistoryRouter, ScantronSolutionHistoryPrefix
 from Controller.SysConfController import SysConfRouter, SysConfPrefix
 from Controller.PracticeController import PracticeRouter, PracticePrefix
+from Controller.TeacherClassController import TeacherClassRouter, TeacherClassPrefix
 
 from CodeExec.DockerTools import CodeExecRouter, CodeExecPrefix
 
@@ -86,6 +89,7 @@ app.include_router(ScantronSolutionRouter, prefix=ScantronSolutionPrefix)
 app.include_router(ScantronSolutionHistoryRouter, prefix=ScantronSolutionHistoryPrefix)
 app.include_router(SysConfRouter, prefix=SysConfPrefix)
 app.include_router(PracticeRouter, prefix=PracticePrefix)
+app.include_router(TeacherClassRouter, prefix=TeacherClassPrefix)
 
 app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 

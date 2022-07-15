@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Logic.BaseLogic import *
 
 
@@ -16,7 +17,7 @@ class SubjectLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         elif SubjectName == '':
             result.Memo = self._lang.WrongSubjectName
-        elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
+        elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
             result.Memo = self._lang.SubjectDataAlreadyExists
         else:
             _dbsession.begin_nested()
@@ -97,7 +98,7 @@ class SubjectLogic(BaseLogic):
             elif SubjectData.SubjectName == SubjectName:
                 result.State = True
                 return result
-            elif self._subjectModel.FindSubjectName(_dbsession, SubjectName) is not None:
+            elif self._subjectModel.FindSubjectCode(_dbsession, SubjectName) is not None:
                 result.Memo = self._lang.SubjectDataAlreadyExists
             else:
                 if SubjectData.SubjectName != SubjectName:

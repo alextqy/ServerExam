@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Controller.BaseController import *
 
 TeacherRouter = APIRouter()
@@ -12,9 +13,8 @@ async def NewTeacher(
         Account: str = Form(''),
         Password: str = Form(''),
         Name: str = Form(''),
-        ClassID: int = Form(0),
 ) -> Result:
-    return teacherLogic.NewTeacher(request.client.host, Token.strip(), Account.strip(), Password.strip(), Name.strip(), ClassID)
+    return teacherLogic.NewTeacher(request.client.host, Token.strip(), Account.strip(), Password.strip(), Name.strip())
 
 
 # 禁用/启用 教师
@@ -34,10 +34,9 @@ async def UpdateTeacherInfo(
         Token: str = Form(''),
         Password: str = Form(''),
         Name: str = Form(''),
-        ClassID: int = Form(0),
         ID: int = Form(0),
 ) -> Result:
-    return teacherLogic.UpdateTeacherInfo(request.client.host, Token.strip(), Password.strip(), Name.strip(), ClassID, ID)
+    return teacherLogic.UpdateTeacherInfo(request.client.host, Token.strip(), Password.strip(), Name.strip(), ID)
 
 
 # 教师列表
@@ -49,9 +48,8 @@ async def TeacherList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         State: int = Form(0),
-        ClassID: int = Form(0),
 ) -> ResultList:
-    return teacherLogic.TeacherList(Token.strip(), Page, PageSize, Stext.strip(), State, ClassID)
+    return teacherLogic.TeacherList(Token.strip(), Page, PageSize, Stext.strip(), State)
 
 
 # 教师详情

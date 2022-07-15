@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Model.BaseModel import *
 
 
@@ -74,8 +75,8 @@ class SubjectModel(BaseModel):
     def FindSubjectCode(self, _dbsession: DBsession, SubjectName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.SubjectCode == self._common.StrMD5(SubjectName.strip())).first()
 
-    def FindSubjectName(self, _dbsession: DBsession, SubjectName: str) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.SubjectName == SubjectName.strip()).first()
+    # def FindSubjectName(self, _dbsession: DBsession, SubjectName: str) -> EType:
+    #     return _dbsession.query(self.EType).filter(self.EType.SubjectName == SubjectName.strip()).first()
 
     def SubjectList(self, _dbsession: DBsession, SubjectState: int = 1) -> list:
         return _dbsession.query(self.EType).filter(self.EType.SubjectState == SubjectState).all()

@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Logic.BaseLogic import *
 
 
@@ -79,6 +80,11 @@ class QuestionLogic(BaseLogic):
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
             result.Memo = self._lang.TooLargeFile
         else:
+            FileType = self._common.MIME(FileType)
+            if FileType == '':
+                result.Memo = self._lang.WrongFileType
+                return result
+
             QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, ID)
             if QuestionData is None:
                 result.Memo = self._lang.QuestionDataError
@@ -240,7 +246,7 @@ class QuestionLogic(BaseLogic):
                                 _dbsession.rollback()
                                 return result
 
-                        if QuestionData.QuestionType == 6:  # 代码实训 ##################################################################
+                        if QuestionData.QuestionType == 6:  # 编程 ##################################################################
                             # 只需要一个答案
                             if len(QuestionSolutionDataList) != 1:
                                 result.Memo = self._lang.JustNeedAnAnswer
@@ -253,7 +259,7 @@ class QuestionLogic(BaseLogic):
                                 result.Memo = self._lang.TheCodeRuntimeEnvironmentHasNotBeenBuilt
                                 return result
 
-                        if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽题 连线题 ##################################################################
+                        if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽 连线 ##################################################################
                             # 不能低于四个选项
                             if len(QuestionSolutionDataList) < 4:
                                 result.Memo = self._lang.NeedMoreThanFourOptions

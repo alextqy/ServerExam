@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Controller.BaseController import *
 
 QuestionRouter = APIRouter()
@@ -28,7 +29,7 @@ async def QuestionAttachment(
         Attachment: UploadFile = File(...),
 ) -> Result:
     Contents: bytes = await Attachment.read()
-    return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type.split('/')[1], Contents)
+    return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
 
 
 # 禁用/启用 试题

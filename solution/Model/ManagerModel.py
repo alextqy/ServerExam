@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Model.BaseModel import *
 
 
@@ -56,8 +57,7 @@ class ManagerModel(BaseModel):
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
-        Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return Data
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
         _result = ResultList()

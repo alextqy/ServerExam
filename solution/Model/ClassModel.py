@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Model.BaseModel import *
 
 
@@ -68,5 +69,8 @@ class ClassModel(BaseModel):
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
-    def FindName(self, _dbsession: DBsession, ClassName: str) -> EType:
+    def FindClassName(self, _dbsession: DBsession, ClassName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ClassName == ClassName.strip()).first()
+
+    def FindClassCode(self, _dbsession: DBsession, ClassName: str) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ClassCode == self._common.StrMD5(ClassName.strip())).first()

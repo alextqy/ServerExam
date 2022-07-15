@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Logic.BaseLogic import *
 
 
@@ -190,7 +191,7 @@ class PracticeLogic(BaseLogic):
                 # 填空/问答/实训 题选项 =======================================================================================
                 elif PracticeData.QuestionType >= 4 and PracticeData.QuestionType <= 6 and PracticeSolutionData.ID == ID:
                     PracticeSolutionData.CandidateAnswer = Answer
-                # 拖拽题选项 =======================================================================================
+                # 拖拽选项 =======================================================================================
                 elif PracticeData.QuestionType == 7 and PracticeSolutionData.ID == ID:
                     if PracticeSolutionData.Position != 2:
                         result.Memo = self._lang.WrongData
@@ -211,7 +212,7 @@ class PracticeLogic(BaseLogic):
                                 result.Memo = self._lang.WrongData
                                 return result
                         PracticeSolutionData.CandidateAnswer = Answer
-                # 连线题选项 =======================================================================================
+                # 连线选项 =======================================================================================
                 elif PracticeData.QuestionType == 8 and PracticeSolutionData.ID == ID:
                     if PracticeSolutionData.Position != 2:
                         result.Memo = self._lang.WrongData

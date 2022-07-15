@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Controller.BaseController import *
 
 PaperRuleRouter = APIRouter()

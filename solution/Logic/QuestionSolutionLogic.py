@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Logic.BaseLogic import *
 
 
@@ -183,7 +184,7 @@ class QuestionSolutionLogic(BaseLogic):
                             return result
                     CorrectAnswer = 1
                 '''
-                代码实训 ##################################################################
+                编程 ##################################################################
                 CorrectItem
                 '''
                 if QuestionData.QuestionType == 6:
@@ -198,7 +199,7 @@ class QuestionSolutionLogic(BaseLogic):
                     CorrectAnswer = 1
                     ScoreRatio = 1.00
                 '''
-                拖拽题 ##################################################################
+                拖拽 ##################################################################
                 Option
                 Position
                 CorrectItem
@@ -241,7 +242,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                     ScoreRatio = 1.00
                 '''
-                连线题 ##################################################################
+                连线 ##################################################################
                 Option
                 Position
                 CorrectItem
@@ -335,6 +336,11 @@ class QuestionSolutionLogic(BaseLogic):
         elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
             result.Memo = self._lang.TooLargeFile
         else:
+            FileType = self._common.MIME(FileType)
+            if FileType == '':
+                result.Memo = self._lang.WrongFileType
+                return result
+
             QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
             if QuestionSolutionData is None:
                 result.Memo = self._lang.QuestionSolutionDataError

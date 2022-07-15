@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Model.BaseModel import *
 
 
@@ -22,9 +23,6 @@ class TeacherModel(BaseModel):
             _result.Memo = self._lang.ParamErr
             return _result
         if Data.State <= 0:
-            _result.Memo = self._lang.ParamErr
-            return _result
-        if Data.ClassID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
         Data.Password = self._common.UserPWD(Data.Password.strip())
@@ -56,10 +54,9 @@ class TeacherModel(BaseModel):
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
-        Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return Data
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, ClassID: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -79,8 +76,6 @@ class TeacherModel(BaseModel):
             sql = sql.filter(or_(self.EType.Account.ilike('%' + Stext.strip() + '%'), self.EType.Name.ilike('%' + Stext.strip() + '%')))
         if State > 0:
             sql = sql.filter(self.EType.State == State)
-        if ClassID > 0:
-            sql = sql.filter(self.EType.ClassID == ClassID)
         DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         for i in DataList:
             i.Password = ''

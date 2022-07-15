@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Entity.BaseEntity import *
 
 
@@ -6,8 +7,8 @@ class QuestionEntity(BaseEntity, BaseORM):
     __tablename__ = 'Question'
 
     QuestionTitle: str = Column(String(65535), comment='题目', default='none')
-    QuestionCode: str = Column(String(128), index=True, comment='试题编码', default='none')
-    QuestionType: int = Column(INTEGER, comment='试题类型 1单选 2判断 3多选 4填空 5问答 6代码实训 7拖拽 8连线', default=0)
+    QuestionCode: str = Column(String(128), index=True, comment='试题代码', default='none')
+    QuestionType: int = Column(INTEGER, comment='试题类型 1单选 2判断 3多选 4填空 5问答 6编程 7拖拽 8连线', default=0)
     QuestionState: int = Column(INTEGER, comment='试题状态 1正常 2禁用', default=0)
     Marking: int = Column(INTEGER, comment='人工阅卷 1否 2是', default=0)
     KnowledgeID: int = Column(INTEGER, comment='知识点ID', default=0)
