@@ -54,8 +54,7 @@ class TeacherModel(BaseModel):
         return _result
 
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
-        Data: TeacherEntity = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
-        return Data
+        return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
     def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int) -> ResultList:
         _result = ResultList()

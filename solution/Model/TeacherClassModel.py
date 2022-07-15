@@ -2,33 +2,20 @@
 from Model.BaseModel import *
 
 
-class ManagerModel(BaseModel):
-    EType: ManagerEntity = ManagerEntity
+class TeacherClassModel(BaseModel):
+    EType: TeacherClassEntity = TeacherClassEntity
 
     def __init__(self):
         super().__init__()
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
-        Data.Account = Data.Account.strip()
-        Data.Password = Data.Password.strip()
-        Data.Name = Data.Name.strip()
-        if Data.Account == '':
+        if Data.TeacherID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        if Data.Password == '':
+        if Data.ClassID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        if Data.Name == '':
-            _result.Memo = self._lang.ParamErr
-            return _result
-        if Data.State <= 0:
-            _result.Memo = self._lang.ParamErr
-            return _result
-        if Data.Permission <= 0:
-            _result.Memo = self._lang.ParamErr
-            return _result
-        Data.Password = self._common.UserPWD(Data.Password.strip())
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -59,7 +46,7 @@ class ManagerModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, TeacherID: int, ClassID: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -75,12 +62,10 @@ class ManagerModel(BaseModel):
             Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
-        if Stext != '':
-            sql = sql.filter(or_(self.EType.Account.ilike('%' + Stext.strip() + '%'), self.EType.Name.ilike('%' + Stext.strip() + '%')))
-        if State > 0:
-            sql = sql.filter(self.EType.State == State)
-        if Permission > 0:
-            sql = sql.filter(self.EType.Permission == Permission)
+        if TeacherID > 0:
+            sql = sql.filter(self.EType.TeacherID == TeacherID)
+        if ClassID > 0:
+            sql = sql.filter(self.EType.ClassID == ClassID)
         DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         for i in DataList:
             i.Password = ''
@@ -88,22 +73,11 @@ class ManagerModel(BaseModel):
         _result.Data = DataList
         return _result
 
-    def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
-        Data: ManagerEntity = _dbsession.query(self.EType).filter(self.EType.Account == Account.strip()).first()
-        return Data
+    def CheckClass(self, _dbsession: DBsession, ClassID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.ClassID == ClassID).all()
 
-    def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
+    def CheckTeacher(self, _dbsession: DBsession, TeacherID: int) -> list:
+        return _dbsession.query(self.EType).filter(self.EType.TeacherID == TeacherID).all()
 
-    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> Result:
-        _result = Result()
-        try:
-            Data.Password = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.Password else Data.Password
-            Data.UpdateTime = self._common.Time()
-            _dbsession.commit()
-        except Exception as e:
-            _dbsession.rollback()
-            _result.Memo = str(e)
-            return _result
-        _result.State = True
-        return _result
+    def CheckData(self, _dbsession: DBsession, TeacherID: int, ClassID: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.TeacherID == TeacherID).filter(self.EType.ClassID == ClassID).first()

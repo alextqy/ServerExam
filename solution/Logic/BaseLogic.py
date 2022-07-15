@@ -29,6 +29,7 @@ from Entity.ScantronSolutionHistoryEntity import ScantronSolutionHistoryEntity
 from Entity.SubjectEntity import SubjectEntity
 from Entity.SysConfEntity import SysConfEntity
 from Entity.SysLogEntity import SysLogEntity
+from Entity.TeacherClassEntity import TeacherClassEntity
 from Entity.TeacherEntity import TeacherEntity
 
 from Model.ClassModel import ClassModel
@@ -53,6 +54,7 @@ from Model.ScantronSolutionHistoryModel import ScantronSolutionHistoryModel
 from Model.SubjectModel import SubjectModel
 from Model.SysConfModel import SysConfModel
 from Model.SysLogModel import SysLogModel
+from Model.TeacherClassModel import TeacherClassModel
 from Model.TeacherModel import TeacherModel
 
 
@@ -85,6 +87,7 @@ class BaseLogic:
     _subjectModel = SubjectModel()
     _sysConfModel = SysConfModel()
     _sysLogModel = SysLogModel()
+    _teacherClassModel = TeacherClassModel()
     _teacherModel = TeacherModel()
 
     _rootPath = path[0] + '/'

@@ -109,7 +109,6 @@ class ExamInfoLogic(BaseLogic):
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
                                 result.Memo = SDelInfo.Memo
-                                _dbsession.rollback()
                                 return result
 
                 try:

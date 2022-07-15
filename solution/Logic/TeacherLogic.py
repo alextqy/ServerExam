@@ -140,7 +140,7 @@ class TeacherLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._teacherModel.List(_dbsession, Page, PageSize, Stext, State)
-        return
+        return result
 
     def TeacherInfo(self, Token: str, ID: int) -> Result:
         result = Result()
