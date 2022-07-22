@@ -9,6 +9,7 @@ pip install 'uvicorn[standard]'
 uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
 '''
 from Service.Common import *
+from Service.UDPTool import *
 from PreOperation.DaoHandler import DaoHandler
 
 app = FastAPI()
@@ -96,3 +97,7 @@ app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 # 修改数据库前置方法
 # daoHandler = DaoHandler()
 # daoHandler.AddFields()
+
+# 发送UDP信息
+UDPTool = UDPTool()
+t = threading.Thread(target=UDPTool.UDPBroadcast())

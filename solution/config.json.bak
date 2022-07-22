@@ -1,5 +1,6 @@
 {
     "DaoURL": "127.0.0.1:3306",
     "DaoPWD": "123456",
-    "Lang": "zh-cn"
+    "Lang": "zh-cn",
+    "UDPPort": "6001"
 }

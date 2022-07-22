@@ -2,35 +2,41 @@
 from Service.BaseService import *
 from Service.Common import *
 
+_common = Common()
+ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
+
 
 class UDPTool(BaseService):
 
-    def __init__(self, PORT=5002, BUFSIZE=64, SendInfoStr='bitbox', TimeoutSet=15):
+    def __init__(self, PORT=ConfigObj['UDPPort'], BUFSIZE=64, SendInfoStr='bit exam', TimeoutSet=15):
         super().__init__()
+        self.IP = Common().LocalIP()
+
         HOST = '192.168.' + \
-            str(Common().Explode('.', Common().LocalIP())[2]) + '.255'
-        self.PORT = PORT
+            str(Common().Explode('.', self.IP)[2]) + '.255'
+
+        self.PORT = int(PORT)
         self.BUFSIZE = BUFSIZE
         self.SendInfoStr = SendInfoStr
         self.ADDR = (HOST, PORT)
         self.UDPClient = socket(AF_INET, SOCK_DGRAM)
         self.UDPClient.settimeout(TimeoutSet)
 
-    # 发送广播
+    # 发送广播(等待返回)
     def Send(self):
-        self.UDPClient.sendto(self.SendInfoStr.encode('utf8'), self.ADDR)
+        self.UDPClient.sendto(self.SendInfoStr.encode('utf8'), (self.IP, self.PORT))
         self.SendInfoStr, self.ADDR = self.UDPClient.recvfrom(self.BUFSIZE)
         InformationReceived = self.SendInfoStr.decode('utf8')
         self.UDPClient.close()
         return InformationReceived
 
-    # 发送广播(备选方案)
+    # 发送广播(不等待返回)
     def UDPBroadcast(self):
         self.UDPClient.setsockopt(SOL_SOCKET, SO_BROADCAST, True)
         while True:  # 发送广播
             sleep(1)
             try:
-                self.UDPClient.sendto(self.SendInfoStr.encode('utf8'), self.ADDR)
+                self.UDPClient.sendto(self.SendInfoStr.encode('utf8'), (self.IP, self.PORT))
             except OSError as e:
                 print(e)
 
