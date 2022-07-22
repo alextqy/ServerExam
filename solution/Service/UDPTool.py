@@ -15,7 +15,7 @@ class UDPTool(BaseService):
         HOST = '192.168.' + \
             str(Common().Explode('.', self.IP)[2]) + '.255'
 
-        self.PORT = int(PORT)
+        self.PORT = PORT
         self.BUFSIZE = BUFSIZE
         self.SendInfoStr = SendInfoStr
         self.ADDR = (HOST, PORT)
@@ -36,7 +36,7 @@ class UDPTool(BaseService):
         while True:  # 发送广播
             sleep(1)
             try:
-                self.UDPClient.sendto(self.SendInfoStr.encode('utf8'), (self.IP, self.PORT))
+                self.UDPClient.sendto((self.IP + ":" + self.PORT).encode('utf8'), (self.IP, int(self.PORT)))
             except OSError as e:
                 print(e)
 

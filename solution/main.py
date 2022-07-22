@@ -99,5 +99,6 @@ app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 # daoHandler.AddFields()
 
 # 发送UDP信息
-UDPTool = UDPTool()
-t = threading.Thread(target=UDPTool.UDPBroadcast())
+# UDPTool = UDPTool()
+# t = Thread(target=UDPTool.UDPBroadcast(), daemon=False)
+# t.start()
