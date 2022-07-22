@@ -20,5 +20,9 @@ async def ExamLogList(
 
 # 日志详情
 @ExamLogRouter.post('/Exam/Log/Info')
-async def ExamLogInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
+async def ExamLogInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
     return examLogLogic.ExamLogInfo(Token.strip(), ID)

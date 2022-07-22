@@ -21,5 +21,9 @@ async def SysLogList(
 
 # 日志详情
 @SysLogRouter.post('/Sys/Log/Info')
-async def SysLogInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
+async def SysLogInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+) -> Result:
     return sysLogLogic.SysLogInfo(Token.strip(), ID)
