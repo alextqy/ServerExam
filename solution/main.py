@@ -98,7 +98,12 @@ app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 # daoHandler = DaoHandler()
 # daoHandler.AddFields()
 
-# 发送UDP信息
-# UDPTool = UDPTool()
-# t = Thread(target=UDPTool.UDPBroadcast(), daemon=False)
-# t.start()
+import uvicorn
+if __name__ == '__main__':
+    _common = Common()
+    ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
+    uvicorn.run(app, host="0.0.0.0", port=int(ConfigObj['UDPPort']))
+
+    # 发送UDP信息
+    # UDPTool = UDPTool()
+    # t = Thread(target=UDPTool.UDPBroadcast(), daemon=False)
