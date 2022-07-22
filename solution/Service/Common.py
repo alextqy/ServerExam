@@ -213,7 +213,7 @@ class Common(BaseService):
         # MailPass = ''  # 密码(这里的密码不是登录邮箱密码，而是授权码)
         # Sender = ''  # 发件人邮箱
         # Receivers = ['']  # 接收人邮箱
-        # Title = 'bit exam Suggestions & Opinion'  # 邮件主题
+        # Title = 'BIT EXAM Suggestions & Opinion'  # 邮件主题
         # Message = MIMEText(Content, 'plain', 'utf-8')  # 内容, 格式, 编码
         # Message['From'] = '{}'.format(Sender)
         # Message['To'] = ','.join(Receivers)
@@ -230,7 +230,7 @@ class Common(BaseService):
         mailFrom = 'alextqy@qq.com'  # 发送方邮箱
         smtpObj = MIMEMultipart()
         smtpObj.attach(MIMEText(Content, 'plain', 'utf-8'))
-        smtpObj['Subject'] = 'bit exam Suggestions & Opinion'
+        smtpObj['Subject'] = 'BIT EXAM Suggestions & Opinion'
         smtpObj['From'] = mailFrom
         email = smtplib.SMTP_SSL('smtp.qq.com', 465)  # 通过SSL方式发送，服务器地址和端口
         email.login(mailFrom, 'rkswvfmitwzlbggd')  # 登录邮箱
