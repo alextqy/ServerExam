@@ -6,7 +6,7 @@ pip install sqlalchemy
 pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
-uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
+uvicorn main:app --host=0.0.0.0 --port=6001 --reload-exclude TEXT
 '''
 from Service.Common import *
 from Service.UDPTool import *
