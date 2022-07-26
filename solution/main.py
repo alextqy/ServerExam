@@ -98,12 +98,32 @@ app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 # daoHandler = DaoHandler()
 # daoHandler.AddFields()
 
-import uvicorn
-if __name__ == '__main__':
+
+def URPAsync(f):
+
+    def wrapper(*args, **kwargs):
+        thr = Thread(target=f, args=args, kwargs=kwargs)
+        thr.start()
+
+    return wrapper
+
+
+UDPTool = UDPTool()
+
+
+@URPAsync
+def UDPThread():
+    # 发送UDP信息
+    t = Thread(target=UDPTool.UDPBroadcast(), daemon=True)
+
+
+def run():
+    UDPThread()
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
-    uvicorn.run(app, host="0.0.0.0", port=int(ConfigObj['UDPPort']))
+    uvicorn.run("main:app", host="0.0.0.0", port=int(ConfigObj['UDPPort']), reload=True, workers=2)
 
-    # 发送UDP信息
-    # UDPTool = UDPTool()
-    # t = Thread(target=UDPTool.UDPBroadcast(), daemon=False)
+
+import uvicorn
+if __name__ == '__main__':
+    run()
