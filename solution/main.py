@@ -114,14 +114,14 @@ UDPTool = UDPTool()
 @URPAsync
 def UDPThread():
     # 发送UDP信息
-    t = Thread(target=UDPTool.UDPBroadcast(), daemon=True)
+    t = Thread(target=UDPTool.UDPBroadcast(), daemon=False)
 
 
 def run():
     UDPThread()
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
-    uvicorn.run("main:app", host="0.0.0.0", port=int(ConfigObj['UDPPort']), reload=True, workers=2)
+    uvicorn.run("main:app", host="0.0.0.0", port=int(ConfigObj['UDPPort']), reload=True)
 
 
 import uvicorn
