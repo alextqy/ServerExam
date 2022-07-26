@@ -108,7 +108,7 @@ s = sched.scheduler(time, sleep)
 # 可加入多个后台执行方法
 def StartEvent(sc):
     UDPTool.SendBroadcast()  # 发送UDP信息
-    sc.enter(5, 1, StartEvent, (sc, ))
+    sc.enter(3, 1, StartEvent, (sc, ))
 
 
 def StartScheduler():
