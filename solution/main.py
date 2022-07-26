@@ -100,17 +100,29 @@ app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 
 UDPTool = UDPTool()
 
+import sched
 
-# 发送UDP信息
-class UDPThread(Thread):
+s = sched.scheduler(time, sleep)
 
-    def run(self) -> None:
-        UDPTool.UDPBroadcast()
+
+# 可加入多个后台执行方法
+def StartEvent(sc):
+    UDPTool.SendBroadcast()  # 发送UDP信息
+    sc.enter(5, 1, StartEvent, (sc, ))
+
+
+def StartScheduler():
+    s.enter(5, 1, StartEvent, (s, ))
+    s.run()
+
+
+@app.on_event("startup")
+async def StartupEvent():
+    thread = Thread(target=StartScheduler)
+    thread.start()
 
 
 def run():
-    t = UDPThread()
-    t.start()
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
     uvicorn.run("main:app", host="0.0.0.0", port=int(ConfigObj['UDPPort']), reload=True)
