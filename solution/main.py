@@ -111,10 +111,10 @@ def URPAsync(f):
 UDPTool = UDPTool()
 
 
+# 发送UDP信息
 @URPAsync
 def UDPThread():
-    # 发送UDP信息
-    t = Thread(target=UDPTool.UDPBroadcast(), daemon=False)
+    UDPTool.UDPBroadcast()
 
 
 def run():
