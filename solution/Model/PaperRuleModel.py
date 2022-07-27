@@ -68,12 +68,12 @@ class PaperRuleModel(BaseModel):
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = 0
-        if _dbsession.query(self.EType).count() > 0:
-            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         if Page <= 0:
             Page = 1
         if PageSize <= 0:
             PageSize = 10
+        if _dbsession.query(self.EType).count() > 0:
+            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         if _result.TotalPage > 0 and Page > _result.TotalPage:
             Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
