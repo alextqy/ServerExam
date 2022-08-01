@@ -48,3 +48,12 @@ async def ClassInfo(
         ID: int = Form(0),
 ) -> Result:
     return classLogic.ClassInfo(Token.strip(), ID)
+
+
+# 全部班级
+@ClassRouter.post('/Classes')
+async def Classes(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return classLogic.Classes(Token.strip())
