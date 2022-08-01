@@ -62,7 +62,7 @@ class HeadlineModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.ContentCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
+            sql = sql.filter(or_(self.EType.Content.ilike('%' + Stext.strip() + '%'), self.EType.ContentCode.ilike('%' + Stext.strip() + '%')))
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 

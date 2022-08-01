@@ -66,7 +66,7 @@ class SubjectModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.SubjectCode.ilike('%' + self._common.StrMD5(Stext.strip()) + '%')))
+            sql = sql.filter(or_(self.EType.SubjectName.ilike('%' + Stext.strip() + '%'), self.EType.SubjectCode.ilike('%' + Stext.strip() + '%')))
         if SubjectState > 0:
             sql = sql.filter(self.EType.SubjectState == SubjectState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
