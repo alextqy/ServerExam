@@ -83,7 +83,7 @@ class ExamInfoModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -105,6 +105,8 @@ class ExamInfoModel(BaseModel):
             sql = sql.filter(self.EType.ExamState == ExamState)
         if ExamType > 0:
             sql = sql.filter(self.EType.ExamType == ExamType)
+        if Pass > 0:
+            sql = sql.filter(self.EType.Pass == Pass)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
