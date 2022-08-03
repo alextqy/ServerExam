@@ -51,3 +51,12 @@ async def ExamineeInfo(
         ID: int = Form(0),
 ) -> Result:
     return examineeLogic.ExamineeInfo(Token.strip(), ID)
+
+
+# 全部考生
+@ExamineeRouter.post('/Examinees')
+async def Examinees(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return examineeLogic.Examinees(Token.strip())

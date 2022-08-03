@@ -57,3 +57,12 @@ async def SubjectInfo(
         ID: int = Form(0),
 ) -> Result:
     return subjectLogic.SubjectInfo(Token.strip(), ID)
+
+
+# 全部科目
+@SubjectRouter.post('/Subjects')
+async def Subjects(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return subjectLogic.Subjects(Token.strip())

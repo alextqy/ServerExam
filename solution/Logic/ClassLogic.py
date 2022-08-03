@@ -120,8 +120,8 @@ class ClassLogic(BaseLogic):
                 result.Data = ClassData
         return result
 
-    def Classes(self, Token: str) -> Result:
-        result = Result()
+    def Classes(self, Token: str) -> ResultList:
+        result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':

@@ -154,3 +154,15 @@ class SubjectLogic(BaseLogic):
                 result.State = True
                 result.Data = SubjectData
         return result
+
+    def Subjects(self, Token: str) -> ResultList:
+        result = ResultList()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: ResultList = self._subjectModel.Subjects(_dbsession)
+        return result

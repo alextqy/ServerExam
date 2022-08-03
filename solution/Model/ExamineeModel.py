@@ -77,3 +77,10 @@ class ExamineeModel(BaseModel):
 
     def FindExamineeNo(self, _dbsession: DBsession, ExamineeNo: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ExamineeNo == ExamineeNo).first()
+
+    def Examinees(self, _dbsession: DBsession) -> ResultList:
+        _result = ResultList()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        _result.Data = sql.all()
+        return _result

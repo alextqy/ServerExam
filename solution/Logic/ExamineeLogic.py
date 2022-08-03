@@ -121,3 +121,15 @@ class ExamineeLogic(BaseLogic):
                 result.State = True
                 result.Data = ExamineeData
         return result
+
+    def Examinees(self, Token: str) -> ResultList:
+        result = ResultList()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: ResultList = self._examineeModel.Examinees(_dbsession)
+        return result

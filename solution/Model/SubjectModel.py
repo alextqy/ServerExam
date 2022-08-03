@@ -78,5 +78,13 @@ class SubjectModel(BaseModel):
     # def FindSubjectName(self, _dbsession: DBsession, SubjectName: str) -> EType:
     #     return _dbsession.query(self.EType).filter(self.EType.SubjectName == SubjectName.strip()).first()
 
-    def SubjectList(self, _dbsession: DBsession, SubjectState: int = 1) -> list:
-        return _dbsession.query(self.EType).filter(self.EType.SubjectState == SubjectState).all()
+    # def SubjectList(self, _dbsession: DBsession, SubjectState: int = 1) -> list:
+    #     return _dbsession.query(self.EType).filter(self.EType.SubjectState == SubjectState).all()
+
+    def Subjects(self, _dbsession: DBsession) -> ResultList:
+        _result = ResultList()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.SubjectState == 1)
+        _result.Data = sql.all()
+        return _result
