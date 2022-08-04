@@ -319,6 +319,7 @@ class QuestionSolutionLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def QuestionSolutionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
@@ -380,6 +381,7 @@ class QuestionSolutionLogic(BaseLogic):
 
                 result.State = True
                 result.Data = UploadPath
+        _dbsession.close()
         return result
 
     def QuestionSolutionDelete(self, ClientHost: str, Token: str, ID: int):
@@ -430,6 +432,7 @@ class QuestionSolutionLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def QuestionSolutionList(self, Token: str, Page: int, PageSize: int, QuestionID: int) -> ResultList:
@@ -444,4 +447,5 @@ class QuestionSolutionLogic(BaseLogic):
             result.Memo = self._lang.WrongQuestionID
         else:
             result: ResultList = self._questionSolutionModel.List(_dbsession, Page, PageSize, QuestionID)
+        _dbsession.close()
         return result

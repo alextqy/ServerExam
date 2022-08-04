@@ -17,6 +17,7 @@ class ScantronSolutionLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._scantronSolutionModel.List(_dbsession, Page, PageSize, ScantronID, Position)
+        _dbsession.close()
         return result
 
     def ScantronSolutionInfo(self, Token: str, ID: int) -> Result:
@@ -36,4 +37,5 @@ class ScantronSolutionLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
         return result

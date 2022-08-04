@@ -30,9 +30,9 @@ class PracticeLogic(BaseLogic):
                     return result
 
                 _dbsession.commit()
-
                 result.State = True
                 result.Data = ExamineeTokenData.Token
+        _dbsession.close()
         return result
 
     def NewPractice(self, Token: str, QuestionType: int) -> Result:
@@ -107,9 +107,9 @@ class PracticeLogic(BaseLogic):
                     return result
 
             _dbsession.commit()
-
             result.State = True
             result.Data = PracticeData.ID
+        _dbsession.close()
         return result
 
     def PracticeInfo(self, Token: str, ID: int) -> Result:
@@ -134,8 +134,8 @@ class PracticeLogic(BaseLogic):
                 PracticeSolutionData.CorrectAnswer = 0
                 PracticeSolutionData.CorrectItem = ''
             PracticeData.SolutionList = PracticeSolutionDataList
-
             result.Data = PracticeData
+        _dbsession.close()
         return result
 
     def PracticeAnswer(self, Token: str, PracticeID: int, ID: int, Answer: str = '') -> Result:
@@ -241,6 +241,7 @@ class PracticeLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def GradeThePractice(self, Token: str, ID: int) -> Result:
@@ -317,6 +318,7 @@ class PracticeLogic(BaseLogic):
 
                     result.State = True
                     result.Data = Correct
+        _dbsession.close()
         return result
 
     def PracticeDeleteAction(self, ID: int) -> Result:
@@ -347,4 +349,5 @@ class PracticeLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result

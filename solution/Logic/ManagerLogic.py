@@ -42,6 +42,7 @@ class ManagerLogic(BaseLogic):
                     _dbsession.commit()
                     result.State = True
                     result.Data = ManagerData.Token
+        _dbsession.close()
         return result
 
     def ManagerSignOut(self, ClientHost: str, Token: str) -> Result:
@@ -71,6 +72,7 @@ class ManagerLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def NewManager(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str) -> Result:
@@ -116,6 +118,7 @@ class ManagerLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def ManagerDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -159,6 +162,7 @@ class ManagerLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def ManagerChangePassword(self, ClientHost: str, Token: str, NewPassword: str, ID: int) -> Result:
@@ -195,6 +199,7 @@ class ManagerLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def UpdateManagerInfo(self, ClientHost: str, Token: str, Name: str, Permission: int, ID: int) -> Result:
@@ -236,6 +241,7 @@ class ManagerLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
@@ -248,6 +254,7 @@ class ManagerLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._managerModel.List(_dbsession, Page, PageSize, Stext, State, Permission)
+        _dbsession.close()
         return result
 
     def ManagerInfo(self, Token: str, ID: int) -> Result:
@@ -267,4 +274,5 @@ class ManagerLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ManagerData
+        _dbsession.close()
         return result

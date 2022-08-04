@@ -43,6 +43,7 @@ class TeacherClassLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def DeleteTeacherClass(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -72,6 +73,7 @@ class TeacherClassLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def TeacherClassList(self, Token: str, Page: int, PageSize: int, TeacherID: int, ClassID: int) -> ResultList:
@@ -84,4 +86,5 @@ class TeacherClassLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._teacherClassModel.List(_dbsession, Page, PageSize, TeacherID, ClassID)
+        _dbsession.close()
         return result

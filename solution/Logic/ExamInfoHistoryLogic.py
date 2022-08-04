@@ -17,6 +17,7 @@ class ExamInfoHistoryLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examInfoHistoryModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType)
+        _dbsession.close()
         return result
 
     def ExamInfoHistory(self, Token: str, ID: int) -> Result:
@@ -36,4 +37,5 @@ class ExamInfoHistoryLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
         return result

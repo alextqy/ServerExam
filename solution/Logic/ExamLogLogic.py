@@ -17,6 +17,7 @@ class ExamLogLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examLogModel.List(_dbsession, Page, PageSize, Stext, Type)
+        _dbsession.close()
         return result
 
     def ExamLogInfo(self, Token: str, ID: int) -> Result:
@@ -36,4 +37,5 @@ class ExamLogLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamLogData
+        _dbsession.close()
         return result

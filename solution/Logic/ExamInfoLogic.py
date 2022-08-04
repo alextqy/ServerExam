@@ -64,6 +64,7 @@ class ExamInfoLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -110,7 +111,6 @@ class ExamInfoLogic(BaseLogic):
                             if SDelInfo.State == False:
                                 result.Memo = SDelInfo.Memo
                                 return result
-
                 try:
                     ExamInfoData.ExamState = 4
                     ExamInfoData.UpdateTime = self._common.Time()
@@ -127,6 +127,7 @@ class ExamInfoLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int) -> ResultList:
@@ -139,6 +140,7 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass)
+        _dbsession.close()
         return result
 
     def ExamInfo(self, Token: str, ID: int) -> Result:
@@ -158,6 +160,7 @@ class ExamInfoLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
         return result
 
     def GenerateTestPaper(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -170,6 +173,7 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result = self.GenerateTestPaperAction(ClientHost, ID, AdminID)
+        _dbsession.close()
         return result
 
     def GenerateTestPaperAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
@@ -298,6 +302,7 @@ class ExamInfoLogic(BaseLogic):
 
                         _dbsession.commit()
                         result.State = True
+        _dbsession.close()
         return result
 
     def ResetExamQuestionData(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -361,6 +366,7 @@ class ExamInfoLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def ExamIntoHistory(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -373,6 +379,7 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result = self.ExamIntoHistoryAction(ClientHost, ID, AdminID)
+        _dbsession.close()
         return result
 
     def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
@@ -482,6 +489,7 @@ class ExamInfoLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def GradeTheExam(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -494,6 +502,7 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result = self.GradeTheExamAction(ClientHost, ID, AdminID)
+        _dbsession.close()
         return result
 
     def GradeTheExamAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
@@ -604,6 +613,7 @@ class ExamInfoLogic(BaseLogic):
 
                     _dbsession.commit()
                     result.State = True
+        _dbsession.close()
         return result
 
     def ImportExamInfo(self, ClientHost: str, Token: str, FileType: str, Contents: bytes) -> Result:
@@ -758,7 +768,6 @@ class ExamInfoLogic(BaseLogic):
                     if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                         result.Memo = self._lang.LoggingFailed
                         return result
-
             except Exception as e:
                 self._file.DeleteFile(UploadPath)
                 _dbsession.rollback()
@@ -768,4 +777,5 @@ class ExamInfoLogic(BaseLogic):
             self._file.DeleteFile(UploadPath)
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result

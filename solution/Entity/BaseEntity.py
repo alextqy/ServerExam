@@ -13,11 +13,28 @@ ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
 # DBEngine = create_engine(SQLALCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
 
 SQLALCHEMY_DATABASE_URI: str = 'mysql+pymysql://root:' + ConfigObj['DaoPWD'] + '@' + ConfigObj['DaoURL'] + '/server-exam'
-DBEngine = create_engine(SQLALCHEMY_DATABASE_URI, pool_pre_ping=True)
+DBEngine = create_engine(
+    SQLALCHEMY_DATABASE_URI,
+    # pool_size=20,
+    # max_overflow=0,
+    # pool_pre_ping=True,
+    echo=False,
+    pool_size=0,
+    pool_timeout=1,
+    pool_recycle=30,
+    max_overflow=-1,
+    pool_pre_ping=True,
+    isolation_level="READ UNCOMMITTED",
+)
 # mysql内置压测工具 范例 J4125 4G
 # sudo mysqlslap -hlocalhost -uroot -p123456 -P3306 --concurrency=3000 --iterations=1 --auto-generate-sql --auto-generate-sql-load-type=mixed --auto-generate-sql-add-autoincrement --engine=innodb --number-of-queries=3000
 
-DBsession = sessionmaker(autocommit=False, autoflush=False, bind=DBEngine)
+DBsession = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=DBEngine,
+    expire_on_commit=False,
+)
 BaseORM = declarative_base()
 
 

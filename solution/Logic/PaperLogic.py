@@ -54,6 +54,7 @@ class PaperLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def PaperDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -115,6 +116,7 @@ class PaperLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
@@ -164,6 +166,7 @@ class PaperLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> ResultList:
@@ -176,6 +179,7 @@ class PaperLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._paperModel.List(_dbsession, Page, PageSize, Stext, SubjectID, PaperState)
+        _dbsession.close()
         return result
 
     def PaperInfo(self, Token: str, ID: int) -> Result:
@@ -195,4 +199,5 @@ class PaperLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = PaperData
+        _dbsession.close()
         return result

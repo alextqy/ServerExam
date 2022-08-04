@@ -63,6 +63,7 @@ class QuestionLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
@@ -124,6 +125,7 @@ class QuestionLogic(BaseLogic):
 
                 result.State = True
                 result.Data = UploadPath
+        _dbsession.close()
         return result
 
     def QuestionDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -308,6 +310,7 @@ class QuestionLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str, Language: str, LanguageVersion: str) -> Result:
@@ -359,6 +362,7 @@ class QuestionLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int) -> ResultList:
@@ -371,6 +375,7 @@ class QuestionLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._questionModel.List(_dbsession, Page, PageSize, Stext, QuestionType, QuestionState, 1, KnowledgeID)
+        _dbsession.close()
         return result
 
     def QuestionInfo(self, Token: str, ID: int) -> Result:
@@ -390,4 +395,5 @@ class QuestionLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = QuestionData
+        _dbsession.close()
         return result

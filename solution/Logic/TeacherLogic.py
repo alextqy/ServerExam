@@ -49,6 +49,7 @@ class TeacherLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def TeacherDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -90,6 +91,7 @@ class TeacherLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def UpdateTeacherInfo(self, ClientHost: str, Token: str, Password: str, Name: str, ID: int) -> Result:
@@ -128,6 +130,7 @@ class TeacherLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def TeacherList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int) -> ResultList:
@@ -140,6 +143,7 @@ class TeacherLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._teacherModel.List(_dbsession, Page, PageSize, Stext, State)
+        _dbsession.close()
         return result
 
     def TeacherInfo(self, Token: str, ID: int) -> Result:
@@ -159,6 +163,7 @@ class TeacherLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = TeacherData
+        _dbsession.close()
         return result
 
     def TeacherSignIn(self, ClientHost: str, Account: str, Password: str) -> Result:
@@ -196,6 +201,7 @@ class TeacherLogic(BaseLogic):
                     _dbsession.commit()
                     result.State = True
                     result.Data = TeacherData.Token
+        _dbsession.close()
         return result
 
     def TeacherSignOut(self, ClientHost: str, Token: str) -> Result:
@@ -225,6 +231,7 @@ class TeacherLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def TeacherChangePassword(self, ClientHost: str, Token: str, NewPassword: str) -> Result:
@@ -258,4 +265,5 @@ class TeacherLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result

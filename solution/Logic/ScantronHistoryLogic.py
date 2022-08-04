@@ -17,6 +17,7 @@ class ScantronHistoryLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._scantronHistoryModel.List(_dbsession, Page, PageSize, ExamID)
+        _dbsession.close()
         return result
 
     def ScantronHistoryInfo(self, Token: str, ID: int) -> Result:
@@ -36,4 +37,5 @@ class ScantronHistoryLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
         return result

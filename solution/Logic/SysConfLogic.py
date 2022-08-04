@@ -20,4 +20,5 @@ class SysConfLogic(BaseLogic):
         else:
             result.Data = self._sysConfModel.FindKey(_dbsession, Key)
             result.State = True
+        _dbsession.close()
         return result

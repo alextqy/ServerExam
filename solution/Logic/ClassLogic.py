@@ -37,6 +37,7 @@ class ClassLogic(BaseLogic):
                 return result
 
             _dbsession.commit()
+            _dbsession.close()
             result.State = True
 
         return result
@@ -86,6 +87,7 @@ class ClassLogic(BaseLogic):
                 return result
 
             _dbsession.commit()
+            _dbsession.close()
             result.State = True
         return result
 
@@ -99,6 +101,7 @@ class ClassLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._classModel.List(_dbsession, Page, PageSize, Stext)
+        _dbsession.close()
         return result
 
     def ClassInfo(self, Token: str, ID: int) -> Result:
@@ -118,6 +121,7 @@ class ClassLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ClassData
+        _dbsession.close()
         return result
 
     def Classes(self, Token: str) -> ResultList:
@@ -130,4 +134,5 @@ class ClassLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._classModel.Classes(_dbsession)
+        _dbsession.close()
         return result

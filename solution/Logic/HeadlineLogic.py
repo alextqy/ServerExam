@@ -36,6 +36,7 @@ class HeadlineLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str) -> Result:
@@ -81,6 +82,7 @@ class HeadlineLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str) -> ResultList:
@@ -93,6 +95,7 @@ class HeadlineLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._headlineModel.List(_dbsession, Page, PageSize, Stext)
+        _dbsession.close()
         return result
 
     def HeadlineInfo(self, Token: str, ID: int) -> Result:
@@ -112,4 +115,5 @@ class HeadlineLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = HeadlineData
+        _dbsession.close()
         return result

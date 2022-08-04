@@ -17,6 +17,7 @@ class SysLogLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._sysLogModel.List(_dbsession, Page, PageSize, Stext, Type, ManagerID)
+        _dbsession.close()
         return result
 
     def SysLogInfo(self, Token: str, ID: int) -> Result:
@@ -36,4 +37,5 @@ class SysLogLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = SysLogData
+        _dbsession.close()
         return result

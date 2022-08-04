@@ -36,6 +36,7 @@ class SubjectLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def SubjectDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -77,6 +78,7 @@ class SubjectLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str) -> Result:
@@ -122,6 +124,7 @@ class SubjectLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> ResultList:
@@ -134,6 +137,7 @@ class SubjectLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._subjectModel.List(_dbsession, Page, PageSize, Stext, SubjectState)
+        _dbsession.close()
         return result
 
     def SubjectInfo(self, Token: str, ID: int) -> Result:
@@ -153,6 +157,7 @@ class SubjectLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = SubjectData
+        _dbsession.close()
         return result
 
     def Subjects(self, Token: str) -> ResultList:
@@ -165,4 +170,5 @@ class SubjectLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._subjectModel.Subjects(_dbsession)
+        _dbsession.close()
         return result

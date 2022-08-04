@@ -48,6 +48,7 @@ class ExamineeLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str) -> Result:
@@ -89,6 +90,7 @@ class ExamineeLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def ExamineeList(self, Token: str, Page: int, PageSize: int, Stext: str, ClassID: int) -> ResultList:
@@ -101,6 +103,7 @@ class ExamineeLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
+        _dbsession.close()
         return result
 
     def ExamineeInfo(self, Token: str, ID: int) -> Result:
@@ -120,6 +123,7 @@ class ExamineeLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamineeData
+        _dbsession.close()
         return result
 
     def Examinees(self, Token: str) -> ResultList:
@@ -132,4 +136,5 @@ class ExamineeLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examineeModel.Examinees(_dbsession)
+        _dbsession.close()
         return result

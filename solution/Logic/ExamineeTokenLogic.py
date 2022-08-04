@@ -25,6 +25,7 @@ class ExamineeTokenLogic(BaseLogic):
                         ExamInfoList.remove(ExamInfoData)
                 result.Data = ExamInfoList
                 result.State = True
+        _dbsession.close()
         return result
 
     def SignInAdmissionTicket(self, ClientHost: str, ExamNo: str) -> Result:
@@ -38,6 +39,7 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamDataDoesNotExist
             else:
                 result = self.PostLoginOperationAction(ClientHost, ExamInfoData.ID)
+        _dbsession.close()
         return result
 
     def PostLoginOperationAction(self, ClientHost: str, ExamInfoID: int) -> Result:
@@ -95,6 +97,7 @@ class ExamineeTokenLogic(BaseLogic):
                 _dbsession.commit()
                 result.Data = ExamineeTokenData.Token
                 result.State = True
+        _dbsession.close()
         return result
 
     def ExamScantronList(self, Token: str) -> Result:
@@ -107,6 +110,7 @@ class ExamineeTokenLogic(BaseLogic):
             ScantronData: list = self._scantronModel.FindExamID(_dbsession, ExamID)
             result.State = True
             result.Data = ScantronData
+        _dbsession.close()
         return result
 
     def ExamScantronSolutionInfo(self, Token: str, ID: int) -> Result:
@@ -134,6 +138,7 @@ class ExamineeTokenLogic(BaseLogic):
                     ScantronData.ScantronSolutionList = ScantronSolutionList
                     result.Data = ScantronData
                 result.State = True
+        _dbsession.close()
         return result
 
     def ExamAnswer(self, Token: str, ScantronID: int, ID: int, Answer: str = '') -> Result:
@@ -231,6 +236,7 @@ class ExamineeTokenLogic(BaseLogic):
 
                     _dbsession.commit()
                     result.State = True
+        _dbsession.close()
         return result
 
     def EndTheExam(self, ClientHost: str, Token: str) -> Result:
@@ -268,4 +274,5 @@ class ExamineeTokenLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result

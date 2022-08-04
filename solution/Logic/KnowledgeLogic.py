@@ -43,6 +43,7 @@ class KnowledgeLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def KnowledgeDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -82,6 +83,7 @@ class KnowledgeLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def UpdateKnowledgeInfo(self, ClientHost: str, Token: str, ID: int, KnowledgeName: str) -> Result:
@@ -125,6 +127,7 @@ class KnowledgeLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
     def KnowledgeList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, KnowledgeState: int) -> ResultList:
@@ -137,6 +140,7 @@ class KnowledgeLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._knowledgeModel.List(_dbsession, Page, PageSize, Stext, SubjectID, KnowledgeState)
+        _dbsession.close()
         return result
 
     def KnowledgeInfo(self, Token: str, ID: int) -> Result:
@@ -156,4 +160,5 @@ class KnowledgeLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = KnowledgeData
+        _dbsession.close()
         return result

@@ -99,6 +99,7 @@ class PaperRuleLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def PaperRuleDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -141,6 +142,7 @@ class PaperRuleLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def PaperRuleDelete(self, ClientHost: str, Token: str, ID: int) -> Result:
@@ -173,6 +175,7 @@ class PaperRuleLogic(BaseLogic):
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
     def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int) -> ResultList:
@@ -187,6 +190,7 @@ class PaperRuleLogic(BaseLogic):
             result.Memo = self._lang.WrongPaperID
         else:
             result: ResultList = self._paperRuleModel.List(_dbsession, Page, PageSize, PaperID, PaperRuleState)
+        _dbsession.close()
         return result
 
     def PaperRuleInfo(self, Token: str, ID: int) -> Result:
@@ -206,4 +210,5 @@ class PaperRuleLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = PaperRuleData
+        _dbsession.close()
         return result
