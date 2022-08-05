@@ -113,8 +113,8 @@ class ExamInfoModel(BaseModel):
     def FindExamNo(self, _dbsession: DBsession, ExamNo: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ExamNo == ExamNo).first()
 
-    def CheckExam(self, _dbsession: DBsession, ExamineeID: int, SubjectName: str) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.ExamineeID == ExamineeID).filter(self.EType.SubjectName == SubjectName.strip()).first()
+    def CheckExam(self, _dbsession: DBsession, ExamineeID: int, SubjectName: str, ExamType: int) -> EType:
+        return _dbsession.query(self.EType).filter(self.EType.ExamType == ExamType).filter(self.EType.ExamineeID == ExamineeID).filter(or_(self.EType.ExamState == 1, self.EType.ExamState == 2)).filter(self.EType.SubjectName == SubjectName.strip()).first()
 
     def FindExamineeID(self, _dbsession: DBsession, ExamineeID: int) -> list:
         return _dbsession.query(self.EType).filter(self.EType.ExamineeID == ExamineeID).filter(self.EType.ExamState == 2).all()

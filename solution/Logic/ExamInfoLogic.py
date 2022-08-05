@@ -34,7 +34,7 @@ class ExamInfoLogic(BaseLogic):
                         result.Memo = self._lang.ExamineeDataDoesNotExist
                         return result
                     # 该考生是否有相同科目的报名且未考试
-                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeID, SubjectName)
+                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeID, SubjectName, ExamType)
                     if CheckData is not None:
                         if CheckData.ExamState < 3:
                             result.Memo = self._lang.AlreadyRegisteredForTheSameSubject
@@ -352,6 +352,9 @@ class ExamInfoLogic(BaseLogic):
 
                 try:
                     ExamInfoData.ExamState = 1
+                    ExamInfoData.ExamDuration = 0
+                    ExamInfoData.PassLine = 0
+                    ExamInfoData.TotalScore = 0
                     ExamInfoData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
@@ -748,7 +751,7 @@ class ExamInfoLogic(BaseLogic):
                     # ===================================================================================
 
                     # 是否有相同科目未考试的报名记录
-                    CheckExamInfoData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamInfoData.ExamineeID, SubjectName)
+                    CheckExamInfoData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamInfoData.ExamineeID, SubjectName, ExamType)
                     if CheckExamInfoData is not None:
                         if CheckExamInfoData.ExamState == 1 or CheckExamInfoData.ExamState == 2:
                             result.Memo = RowInfo + ExamNo + ' ' + self._lang.AlreadyRegisteredForTheSameSubject
