@@ -17,4 +17,4 @@ class DaoHandler(BaseLogic):
                 sql = "ALTER TABLE `ExamInfoHistory` ADD COLUMN `ExamType` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '考试类型 1正式考试 2练习';"
                 tables = con.execute(sql).fetchall()
         except Exception as e:
-            print("Pre-Operation finish")
+            print('Pre-Operation finish')

@@ -36,14 +36,14 @@ class UDPTool(BaseService):
         while True:  # 发送广播
             sleep(1)
             try:
-                self.UDPClient.sendto((self.IP + ":" + self.PORT).encode('utf8'), (self.IP, int(self.PORT)))
+                self.UDPClient.sendto((self.IP + ':' + self.PORT).encode('utf8'), (self.IP, int(self.PORT)))
             except OSError as e:
                 print(e)
 
     # 单次发送广播
     def SendBroadcast(self):
         self.UDPClient.setsockopt(SOL_SOCKET, SO_BROADCAST, True)
-        self.UDPClient.sendto((self.IP + ":" + self.PORT).encode('utf8'), (self.IP, int(self.PORT)))
+        self.UDPClient.sendto((self.IP + ':' + self.PORT).encode('utf8'), (self.IP, int(self.PORT)))
 
     # 接收广播
     def Receive(self, HostName, UDPPort):

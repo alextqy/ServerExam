@@ -24,7 +24,7 @@ DBEngine = create_engine(
     pool_recycle=30,
     max_overflow=-1,
     pool_pre_ping=True,
-    isolation_level="READ UNCOMMITTED",
+    isolation_level='READ UNCOMMITTED',
 )
 # mysql内置压测工具 范例 J4125 4G
 # sudo mysqlslap -hlocalhost -uroot -p123456 -P3306 --concurrency=3000 --iterations=1 --auto-generate-sql --auto-generate-sql-load-type=mixed --auto-generate-sql-add-autoincrement --engine=innodb --number-of-queries=3000

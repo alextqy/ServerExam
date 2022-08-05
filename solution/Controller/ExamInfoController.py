@@ -102,3 +102,12 @@ async def ImportExamInfo(
 ) -> Result:
     Contents: bytes = await ExcelFile.read()
     return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ExcelFile.content_type, Contents)
+
+
+# 下载导入文件Demo
+@ExamInfoRouter.post('/Download/Exam/Info/Demo')
+async def DownloadExamInfoDemo(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return examInfoLogic.DownloadExamInfoDemo(Token.strip())

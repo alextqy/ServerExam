@@ -782,3 +782,22 @@ class ExamInfoLogic(BaseLogic):
             result.State = True
         _dbsession.close()
         return result
+
+    def DownloadExamInfoDemo(self, Token: str) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            FileName: str = self._rootPath + 'Resource/demo.xls'
+            with open(FileName, 'rb') as f:
+                FileEncode = b64encode(f.read())
+                FileEncodeStr = str(FileEncode, 'utf-8')
+            result.State = True
+            result.Memo = self._file.CheckFileType(FileName)
+            result.Data = FileEncodeStr
+        _dbsession.close()
+        return result

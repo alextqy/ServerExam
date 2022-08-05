@@ -116,7 +116,7 @@ def StartScheduler():
     s.run()
 
 
-@app.on_event("startup")
+@app.on_event('startup')
 async def StartupEvent():
     thread = Thread(target=StartScheduler)
     thread.start()
@@ -125,7 +125,7 @@ async def StartupEvent():
 def run():
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
-    uvicorn.run("main:app", host="0.0.0.0", port=int(ConfigObj['UDPPort']), reload=True)
+    uvicorn.run('main:app', host='0.0.0.0', port=int(ConfigObj['UDPPort']), reload=True)
 
 
 import uvicorn
