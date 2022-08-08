@@ -665,7 +665,7 @@ class ExamInfoLogic(BaseLogic):
                 XSheet: xlrd.sheet.Sheet = XBook.sheets()[0]  # 获取第一页
                 XNrows = XSheet.nrows  # 有效行数
                 j = 0
-                if XNrows > 2:
+                if XNrows > 1:
                     for i in XSheet:
                         j += 1
                         if j == XNrows: break
