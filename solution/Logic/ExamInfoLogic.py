@@ -636,7 +636,7 @@ class ExamInfoLogic(BaseLogic):
             if FileType == '':
                 result.Memo = self._lang.WrongFileType
                 return result
-            if FileType != '.xls' and FileType != '.xlsx':
+            if FileType.lower() != '.xls' and FileType.lower() != '.xlsx':
                 result.Memo = self._lang.WrongFileType
                 return result
 
