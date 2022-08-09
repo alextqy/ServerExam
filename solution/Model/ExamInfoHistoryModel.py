@@ -51,8 +51,10 @@ class ExamInfoHistoryModel(BaseModel):
         if Data.ExamType <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        Data.Pass = 1
-        Data.ExamState = 1
+        if Data.Pass <= 0:
+            Data.Pass = 1
+        if Data.ExamState <= 0:
+            Data.ExamState = 1
         try:
             _dbsession.add(Data)
             _dbsession.commit()
@@ -83,7 +85,7 @@ class ExamInfoHistoryModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int) -> ResultList:
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -105,5 +107,7 @@ class ExamInfoHistoryModel(BaseModel):
             sql = sql.filter(self.EType.ExamState == ExamState)
         if ExamType > 0:
             sql = sql.filter(self.EType.ExamType == ExamType)
+        if Pass > 0:
+            sql = sql.filter(self.EType.Pass == Pass)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result

@@ -388,10 +388,7 @@ class ExamInfoLogic(BaseLogic):
     def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
         result = Result()
         _dbsession = DBsession()
-        ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
-        if ExamInfoData is None:
-            result.Memo = self._lang.ExamDataDoesNotExist
-        elif ID <= 0:
+        if ID <= 0:
             result.Memo = self._lang.WrongID
         else:
             _dbsession.begin_nested()

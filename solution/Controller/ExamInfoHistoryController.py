@@ -15,8 +15,9 @@ async def ExamInfoHistoryList(
         Stext: str = Form(''),
         ExamState: int = Form(0),
         ExamType: int = Form(0),
+        Pass: int = Form(0),
 ) -> ResultList:
-    return examInfoHistoryLogic.ExamInfoHistoryList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType)
+    return examInfoHistoryLogic.ExamInfoHistoryList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType, Pass)
 
 
 # 报名历史详情

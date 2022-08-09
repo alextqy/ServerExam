@@ -51,8 +51,10 @@ class ExamInfoModel(BaseModel):
         if Data.ExamType <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        Data.Pass = 1
-        Data.ExamState = 1
+        if Data.Pass <= 0:
+            Data.Pass = 1
+        if Data.ExamState <= 0:
+            Data.ExamState = 1
         try:
             _dbsession.add(Data)
             _dbsession.commit()

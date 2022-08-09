@@ -19,7 +19,7 @@ class ExamInfoEntity(BaseEntity, BaseORM):
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
     ExamineeID: int = Column(INTEGER, comment='考生ID', default=0)
     ExamState: int = Column(INTEGER, comment='考试状态 1没有答题卡 2待考(已经生成答题卡) 3已考试 4作废', default=0)
-    ExamType: int = Column(INTEGER, comment='考试类型 1正式考试 2练习')
+    ExamType: int = Column(INTEGER, comment='考试类型 1正式考试 2练习', default=0)
 
     def __init__(self):
         super().__init__()
