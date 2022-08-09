@@ -52,6 +52,8 @@ class ExamInfoLogic(BaseLogic):
                 ExamInfoData.ExamNo = ExamNo
                 ExamInfoData.ExamineeID = ExamineeID
                 ExamInfoData.ExamType = ExamType
+                ExamInfoData.Pass = 1
+                ExamInfoData.ExamState = 1
                 AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
