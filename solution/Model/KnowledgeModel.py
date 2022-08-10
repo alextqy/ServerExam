@@ -62,10 +62,6 @@ class KnowledgeModel(BaseModel):
             Page = 1
         if PageSize <= 0:
             PageSize = 10
-        if _dbsession.query(self.EType).count() > 0:
-            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
-        if _result.TotalPage > 0 and Page > _result.TotalPage:
-            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
@@ -74,6 +70,10 @@ class KnowledgeModel(BaseModel):
             sql = sql.filter(self.EType.SubjectID == SubjectID)
         if KnowledgeState > 0:
             sql = sql.filter(self.EType.KnowledgeState == KnowledgeState)
+        if sql.count() > 0:
+            _result.TotalPage = math.ceil(sql.count() / PageSize)
+        if _result.TotalPage > 0 and Page > _result.TotalPage:
+            Page = _result.TotalPage
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
