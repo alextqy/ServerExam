@@ -59,3 +59,11 @@ async def KnowledgeInfo(
         ID: int = Form(0),
 ) -> Result:
     return knowledgeLogic.KnowledgeInfo(Token.strip(), ID)
+
+
+@KnowledgeRouter.post('/Knowledge')
+async def Knowledge(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return knowledgeLogic.Knowledge(Token.strip())
