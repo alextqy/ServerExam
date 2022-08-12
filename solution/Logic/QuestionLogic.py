@@ -345,7 +345,7 @@ class QuestionLogic(BaseLogic):
 
                 try:
                     QuestionData.QuestionTitle = QuestionTitle
-                    QuestionData.QuestionType = QuestionType
+                    # QuestionData.QuestionType = QuestionType
                     QuestionData.Description = Description
                     QuestionData.Language = Language
                     QuestionData.LanguageVersion = LanguageVersion
