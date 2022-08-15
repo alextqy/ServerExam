@@ -51,7 +51,7 @@ class QuestionLogic(BaseLogic):
                     if float(LanguageVersion) < 5 or float(LanguageVersion) > 8:
                         result.Memo = self._lang.ParamErr + ' ver.5 ver.7 ver.8 required'
                         return result
-                if Language == 'node' and LanguageVersion != 'latest':
+                if Language == 'javascript' and LanguageVersion != 'latest':
                     if float(LanguageVersion) < 4 or float(LanguageVersion) > 18:
                         result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.18 required'
                         return result
@@ -59,11 +59,11 @@ class QuestionLogic(BaseLogic):
                     if float(LanguageVersion) != 3:
                         result.Memo = self._lang.ParamErr + ' ver.3 required'
                         return result
-                if Language == 'openjdk' and LanguageVersion != 'latest':
+                if Language == 'java' and LanguageVersion != 'latest':
                     if float(LanguageVersion) < 6 or float(LanguageVersion) > 20:
                         result.Memo = self._lang.ParamErr + ' ver.6 ~ ver.20 required'
                         return result
-                if Language == 'gcc' and LanguageVersion != 'latest':
+                if Language == 'c' and LanguageVersion != 'latest':
                     if float(LanguageVersion) < 4 or float(LanguageVersion) > 12:
                         result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.12 required'
                         return result
