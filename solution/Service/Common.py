@@ -294,285 +294,283 @@ class Common(BaseService):
     # MIME类型查询
     def MIME(self, TypeInfo: str) -> str:
         if TypeInfo == '':
-            TypeInfo = ''
+            return ''
         else:
             TypeInfo = TypeInfo.lower()
             if TypeInfo == 'audio/aac':
-                TypeInfo = '.acc'
+                return '.acc'
             elif TypeInfo == 'application/x-abiword':
-                TypeInfo = '.abw'
+                return '.abw'
             elif TypeInfo == 'application/x-freearc':
-                TypeInfo = '.arc'
+                return '.arc'
             elif TypeInfo == 'video/x-msvideo':
-                TypeInfo = '.avi'
+                return '.avi'
             elif TypeInfo == 'application/vnd.amazon.ebook':
-                TypeInfo = '.azw'
+                return '.azw'
             elif TypeInfo == 'application/octet-stream':
-                TypeInfo = '.bin'
+                return '.bin'
             elif TypeInfo == 'image/bmp':
-                TypeInfo = '.bmp'
+                return '.bmp'
             elif TypeInfo == 'application/x-bzip':
-                TypeInfo = '.bz'
+                return '.bz'
             elif TypeInfo == 'application/x-bzip2':
-                TypeInfo = '.bz2'
+                return '.bz2'
             elif TypeInfo == 'application/x-csh':
-                TypeInfo = '.csh'
+                return '.csh'
             elif TypeInfo == 'text/css':
-                TypeInfo = '.css'
+                return '.css'
             elif TypeInfo == 'text/csv':
-                TypeInfo = '.csv'
+                return '.csv'
             elif TypeInfo == 'application/msword':
-                TypeInfo = '.doc'
+                return '.doc'
             elif TypeInfo == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                TypeInfo = '.docx'
+                return '.docx'
             elif TypeInfo == 'application/vnd.ms-fontobject':
-                TypeInfo = '.eot'
+                return '.eot'
             elif TypeInfo == 'application/epub+zip':
-                TypeInfo = '.epub'
+                return '.epub'
             elif TypeInfo == 'image/gif':
-                TypeInfo = '.gif'
+                return '.gif'
             elif TypeInfo == 'text/html':
-                TypeInfo = '.html'
+                return '.html'
             elif TypeInfo == 'image/vnd.microsoft.icon':
-                TypeInfo = '.ico'
+                return '.ico'
             elif TypeInfo == 'text/calendar':
-                TypeInfo = '.ics'
+                return '.ics'
             elif TypeInfo == 'application/java-archive':
-                TypeInfo = '.jar'
+                return '.jar'
             elif TypeInfo == 'image/jpeg':
-                TypeInfo = '.jpeg'
+                return '.jpeg'
             elif TypeInfo == 'text/javascript':
-                TypeInfo = '.js'
+                return '.js'
             elif TypeInfo == 'application/json':
-                TypeInfo = '.json'
+                return '.json'
             elif TypeInfo == 'application/ld+json':
-                TypeInfo = '.jsonld'
+                return '.jsonld'
             elif TypeInfo == 'audio/midi':
-                TypeInfo = '.mid'
+                return '.mid'
             elif TypeInfo == 'audio/x-midi':
-                TypeInfo = '.midi'
+                return '.midi'
             elif TypeInfo == 'text/javascript':
-                TypeInfo = '.mjs'
+                return '.mjs'
             elif TypeInfo == 'audio/mpeg':
-                TypeInfo = '.mp3'
+                return '.mp3'
             elif TypeInfo == 'video/mpeg':
-                TypeInfo = '.mpeg'
+                return '.mpeg'
             elif TypeInfo == 'application/vnd.apple.installer+xml':
-                TypeInfo = '.mpkg'
+                return '.mpkg'
             elif TypeInfo == 'application/vnd.oasis.opendocument.presentation':
-                TypeInfo = '.odp'
+                return '.odp'
             elif TypeInfo == 'application/vnd.oasis.opendocument.text':
-                TypeInfo = '.odt'
+                return '.odt'
             elif TypeInfo == 'audio/ogg':
-                TypeInfo = '.oga'
+                return '.oga'
             elif TypeInfo == 'video/ogg':
-                TypeInfo = '.ogv'
+                return '.ogv'
             elif TypeInfo == 'application/ogg':
-                TypeInfo = '.ogx'
+                return '.ogx'
             elif TypeInfo == 'font/otf':
-                TypeInfo = '.otf'
+                return '.otf'
             elif TypeInfo == 'image/png':
-                TypeInfo = '.png'
+                return '.png'
             elif TypeInfo == 'application/pdf':
-                TypeInfo = '.pdf'
+                return '.pdf'
             elif TypeInfo == 'application/vnd.ms-powerpoint':
-                TypeInfo = '.ppt'
+                return '.ppt'
             elif TypeInfo == 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                TypeInfo = '.pptx'
+                return '.pptx'
             elif TypeInfo == 'application/x-rar-compressed':
-                TypeInfo = '.rar'
+                return '.rar'
             elif TypeInfo == 'application/rtf':
-                TypeInfo = '.rtf'
+                return '.rtf'
             elif TypeInfo == 'application/x-sh':
-                TypeInfo = '.sh'
+                return '.sh'
             elif TypeInfo == 'image/svg+xml':
-                TypeInfo = '.svg'
+                return '.svg'
             elif TypeInfo == 'application/x-shockwave-flash':
-                TypeInfo = '.swf'
+                return '.swf'
             elif TypeInfo == 'application/x-tar':
-                TypeInfo = '.tar'
+                return '.tar'
             elif TypeInfo == 'image/tiff':
-                TypeInfo = '.tiff'
+                return '.tiff'
             elif TypeInfo == 'font/ttf':
-                TypeInfo = '.ttf'
+                return '.ttf'
             elif TypeInfo == 'text/plain':
-                TypeInfo = '.txt'
+                return '.txt'
             elif TypeInfo == 'application/vnd.visio':
-                TypeInfo = '.vsd'
+                return '.vsd'
             elif TypeInfo == 'audio/wav':
-                TypeInfo = '.wav'
+                return '.wav'
             elif TypeInfo == 'audio/webm':
-                TypeInfo = '.weba'
+                return '.weba'
             elif TypeInfo == 'video/webm':
-                TypeInfo = '.webm'
+                return '.webm'
             elif TypeInfo == 'image/webp':
-                TypeInfo = '.webp'
+                return '.webp'
             elif TypeInfo == 'font/woff':
-                TypeInfo = '.woff'
+                return '.woff'
             elif TypeInfo == 'font/woff2':
-                TypeInfo = '.woff2'
+                return '.woff2'
             elif TypeInfo == 'application/xhtml+xml':
-                TypeInfo = '.xhtml'
+                return '.xhtml'
             elif TypeInfo == 'application/vnd.ms-excel':
-                TypeInfo = '.xls'
+                return '.xls'
             elif TypeInfo == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                TypeInfo = '.xlsx'
+                return '.xlsx'
             elif TypeInfo == 'application/xml' or TypeInfo == 'text/xml':
-                TypeInfo = '.xml'
+                return '.xml'
             elif TypeInfo == 'application/vnd.mozilla.xul+xml':
-                TypeInfo = '.xul'
+                return '.xul'
             elif TypeInfo == 'application/zip':
-                TypeInfo = '.zip'
+                return '.zip'
             elif TypeInfo == 'video/3gpp' or TypeInfo == 'audio/3gpp':
-                TypeInfo = '.3gp'
+                return '.3gp'
             elif TypeInfo == 'video/3gpp2' or TypeInfo == 'audio/3gpp2':
-                TypeInfo = '.3g2'
+                return '.3g2'
             elif TypeInfo == 'application/x-7z-compressed':
-                TypeInfo = '.7z'
+                return '.7z'
             else:
-                TypeInfo = ''
-        return TypeInfo
+                return ''
 
     # content-type类型查询
     def ContentType(self, TypeInfo: str) -> str:
         if TypeInfo == '':
-            TypeInfo = ''
+            return ''
         else:
             TypeInfo = TypeInfo.lower()
             if TypeInfo == '.acc':
-                TypeInfo = 'audio/aac'
+                return 'audio/aac'
             elif TypeInfo == '.abw':
-                TypeInfo = 'application/x-abiword'
+                return 'application/x-abiword'
             elif TypeInfo == '.arc':
-                TypeInfo = 'application/x-freearc'
+                return 'application/x-freearc'
             elif TypeInfo == '.avi':
-                TypeInfo = 'video/x-msvideo'
+                return 'video/x-msvideo'
             elif TypeInfo == '.azw':
-                TypeInfo = 'application/vnd.amazon.ebook'
+                return 'application/vnd.amazon.ebook'
             elif TypeInfo == '.bin':
-                TypeInfo = 'application/octet-stream'
+                return 'application/octet-stream'
             elif TypeInfo == '.bmp':
-                TypeInfo = 'image/bmp'
+                return 'image/bmp'
             elif TypeInfo == '.bz':
-                TypeInfo = 'application/x-bzip'
+                return 'application/x-bzip'
             elif TypeInfo == '.bz2':
-                TypeInfo = 'application/x-bzip2'
+                return 'application/x-bzip2'
             elif TypeInfo == '.csh':
-                TypeInfo = 'application/x-csh'
+                return 'application/x-csh'
             elif TypeInfo == '.css':
-                TypeInfo = 'text/css'
+                return 'text/css'
             elif TypeInfo == '.csv':
-                TypeInfo = 'text/csv'
+                return 'text/csv'
             elif TypeInfo == '.doc':
-                TypeInfo = 'application/msword'
+                return 'application/msword'
             elif TypeInfo == '.docx':
-                TypeInfo = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
             elif TypeInfo == '.eot':
-                TypeInfo = 'application/vnd.ms-fontobject'
+                return 'application/vnd.ms-fontobject'
             elif TypeInfo == '.epub':
-                TypeInfo = 'application/epub+zip'
+                return 'application/epub+zip'
             elif TypeInfo == '.gif':
-                TypeInfo = 'image/gif'
+                return 'image/gif'
             elif TypeInfo == '.html':
-                TypeInfo = 'text/html'
+                return 'text/html'
             elif TypeInfo == '.ico':
-                TypeInfo = 'image/vnd.microsoft.icon'
+                return 'image/vnd.microsoft.icon'
             elif TypeInfo == '.ics':
-                TypeInfo = 'text/calendar'
+                return 'text/calendar'
             elif TypeInfo == '.jar':
-                TypeInfo = 'application/java-archive'
+                return 'application/java-archive'
             elif TypeInfo == '.jpeg':
-                TypeInfo = 'image/jpeg'
+                return 'image/jpeg'
             elif TypeInfo == '.jpg':
-                TypeInfo == 'image/jpeg'
+                return 'image/jpeg'
             elif TypeInfo == '.js':
-                TypeInfo = 'text/javascript'
+                return 'text/javascript'
             elif TypeInfo == '.json':
-                TypeInfo = 'application/json'
+                return 'application/json'
             elif TypeInfo == '.jsonld':
-                TypeInfo = 'application/ld+json'
+                return 'application/ld+json'
             elif TypeInfo == '.mid':
-                TypeInfo = 'audio/midi'
+                return 'audio/midi'
             elif TypeInfo == '.midi':
-                TypeInfo = 'audio/x-midi'
+                return 'audio/x-midi'
             elif TypeInfo == '.mjs':
-                TypeInfo = 'text/javascript'
+                return 'text/javascript'
             elif TypeInfo == '.mp3':
-                TypeInfo = 'audio/mpeg'
+                return 'audio/mpeg'
             elif TypeInfo == '.mpeg':
-                TypeInfo = 'video/mpeg'
+                return 'video/mpeg'
             elif TypeInfo == '.mpkg':
-                TypeInfo = 'application/vnd.apple.installer+xml'
+                return 'application/vnd.apple.installer+xml'
             elif TypeInfo == '.odp':
-                TypeInfo = 'application/vnd.oasis.opendocument.presentation'
+                return 'application/vnd.oasis.opendocument.presentation'
             elif TypeInfo == '.odt':
-                TypeInfo = 'application/vnd.oasis.opendocument.text'
+                return 'application/vnd.oasis.opendocument.text'
             elif TypeInfo == '.oga':
-                TypeInfo = 'audio/ogg'
+                return 'audio/ogg'
             elif TypeInfo == '.ogv':
-                TypeInfo = 'video/ogg'
+                return 'video/ogg'
             elif TypeInfo == '.ogx':
-                TypeInfo = 'application/ogg'
+                return 'application/ogg'
             elif TypeInfo == '.otf':
-                TypeInfo = 'font/otf'
+                return 'font/otf'
             elif TypeInfo == '.png':
-                TypeInfo = 'image/png'
+                return 'image/png'
             elif TypeInfo == '.pdf':
-                TypeInfo = 'application/pdf'
+                return 'application/pdf'
             elif TypeInfo == '.ppt':
-                TypeInfo = 'application/vnd.ms-powerpoint'
+                return 'application/vnd.ms-powerpoint'
             elif TypeInfo == '.pptx':
-                TypeInfo = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+                return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
             elif TypeInfo == '.rar':
-                TypeInfo = 'application/x-rar-compressed'
+                return 'application/x-rar-compressed'
             elif TypeInfo == '.rtf':
-                TypeInfo = 'application/rtf'
+                return 'application/rtf'
             elif TypeInfo == '.sh':
-                TypeInfo = 'application/x-sh'
+                return 'application/x-sh'
             elif TypeInfo == '.svg':
-                TypeInfo = 'image/svg+xml'
+                return 'image/svg+xml'
             elif TypeInfo == '.swf':
-                TypeInfo = 'application/x-shockwave-flash'
+                return 'application/x-shockwave-flash'
             elif TypeInfo == '.tar':
-                TypeInfo = 'application/x-tar'
+                return 'application/x-tar'
             elif TypeInfo == '.tiff':
-                TypeInfo = 'image/tiff'
+                return 'image/tiff'
             elif TypeInfo == '.ttf':
-                TypeInfo = 'font/ttf'
+                return 'font/ttf'
             elif TypeInfo == '.txt':
-                TypeInfo = 'text/plain'
+                return 'text/plain'
             elif TypeInfo == '.vsd':
-                TypeInfo = 'application/vnd.visio'
+                return 'application/vnd.visio'
             elif TypeInfo == '.wav':
-                TypeInfo = 'audio/wav'
+                return 'audio/wav'
             elif TypeInfo == '.weba':
-                TypeInfo = 'audio/webm'
+                return 'audio/webm'
             elif TypeInfo == '.webm':
-                TypeInfo = 'video/webm'
+                return 'video/webm'
             elif TypeInfo == '.webp':
-                TypeInfo = 'image/webp'
+                return 'image/webp'
             elif TypeInfo == '.woff':
-                TypeInfo = 'font/woff'
+                return 'font/woff'
             elif TypeInfo == '.woff2':
-                TypeInfo = 'font/woff2'
+                return 'font/woff2'
             elif TypeInfo == '.xhtml':
-                TypeInfo = 'application/xhtml+xml'
+                return 'application/xhtml+xml'
             elif TypeInfo == '.xls':
-                TypeInfo = 'application/vnd.ms-excel'
+                return 'application/vnd.ms-excel'
             elif TypeInfo == '.xlsx':
-                TypeInfo = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             elif TypeInfo == '.xml':
-                TypeInfo = 'application/xml'
+                return 'application/xml'
             elif TypeInfo == '.xul':
-                TypeInfo = 'application/vnd.mozilla.xul+xml'
+                return 'application/vnd.mozilla.xul+xml'
             elif TypeInfo == '.zip':
-                TypeInfo = 'application/zip'
+                return 'application/zip'
             elif TypeInfo == '.3gp':
-                TypeInfo = 'audio/3gpp'
+                return 'audio/3gpp'
             elif TypeInfo == '.3g2':
-                TypeInfo = 'audio/3gpp2'
+                return 'audio/3gpp2'
             elif TypeInfo == '.7z':
-                TypeInfo = 'application/x-7z-compressed'
+                return 'application/x-7z-compressed'
             else:
-                TypeInfo = ''
-        return TypeInfo
+                return ''
