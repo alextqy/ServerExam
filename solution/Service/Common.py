@@ -432,3 +432,145 @@ class Common(BaseService):
             else:
                 TypeInfo = ''
         return TypeInfo
+
+    # content-type类型查询
+    def ContentType(self, TypeInfo: str) -> str:
+        if TypeInfo == '':
+            TypeInfo = ''
+        else:
+            TypeInfo = TypeInfo.lower()
+            if TypeInfo == '.acc':
+                TypeInfo = 'audio/aac'
+            elif TypeInfo == '.abw':
+                TypeInfo = 'application/x-abiword'
+            elif TypeInfo == '.arc':
+                TypeInfo = 'application/x-freearc'
+            elif TypeInfo == '.avi':
+                TypeInfo = 'video/x-msvideo'
+            elif TypeInfo == '.azw':
+                TypeInfo = 'application/vnd.amazon.ebook'
+            elif TypeInfo == '.bin':
+                TypeInfo = 'application/octet-stream'
+            elif TypeInfo == '.bmp':
+                TypeInfo = 'image/bmp'
+            elif TypeInfo == '.bz':
+                TypeInfo = 'application/x-bzip'
+            elif TypeInfo == '.bz2':
+                TypeInfo = 'application/x-bzip2'
+            elif TypeInfo == '.csh':
+                TypeInfo = 'application/x-csh'
+            elif TypeInfo == '.css':
+                TypeInfo = 'text/css'
+            elif TypeInfo == '.csv':
+                TypeInfo = 'text/csv'
+            elif TypeInfo == '.doc':
+                TypeInfo = 'application/msword'
+            elif TypeInfo == '.docx':
+                TypeInfo = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            elif TypeInfo == '.eot':
+                TypeInfo = 'application/vnd.ms-fontobject'
+            elif TypeInfo == '.epub':
+                TypeInfo = 'application/epub+zip'
+            elif TypeInfo == '.gif':
+                TypeInfo = 'image/gif'
+            elif TypeInfo == '.html':
+                TypeInfo = 'text/html'
+            elif TypeInfo == '.ico':
+                TypeInfo = 'image/vnd.microsoft.icon'
+            elif TypeInfo == '.ics':
+                TypeInfo = 'text/calendar'
+            elif TypeInfo == '.jar':
+                TypeInfo = 'application/java-archive'
+            elif TypeInfo == '.jpeg':
+                TypeInfo = 'image/jpeg'
+            elif TypeInfo == '.js':
+                TypeInfo = 'text/javascript'
+            elif TypeInfo == '.json':
+                TypeInfo = 'application/json'
+            elif TypeInfo == '.jsonld':
+                TypeInfo = 'application/ld+json'
+            elif TypeInfo == '.mid':
+                TypeInfo = 'audio/midi'
+            elif TypeInfo == '.midi':
+                TypeInfo = 'audio/x-midi'
+            elif TypeInfo == '.mjs':
+                TypeInfo = 'text/javascript'
+            elif TypeInfo == '.mp3':
+                TypeInfo = 'audio/mpeg'
+            elif TypeInfo == '.mpeg':
+                TypeInfo = 'video/mpeg'
+            elif TypeInfo == '.mpkg':
+                TypeInfo = 'application/vnd.apple.installer+xml'
+            elif TypeInfo == '.odp':
+                TypeInfo = 'application/vnd.oasis.opendocument.presentation'
+            elif TypeInfo == '.odt':
+                TypeInfo = 'application/vnd.oasis.opendocument.text'
+            elif TypeInfo == '.oga':
+                TypeInfo = 'audio/ogg'
+            elif TypeInfo == '.ogv':
+                TypeInfo = 'video/ogg'
+            elif TypeInfo == '.ogx':
+                TypeInfo = 'application/ogg'
+            elif TypeInfo == '.otf':
+                TypeInfo = 'font/otf'
+            elif TypeInfo == '.png':
+                TypeInfo = 'image/png'
+            elif TypeInfo == '.pdf':
+                TypeInfo = 'application/pdf'
+            elif TypeInfo == '.ppt':
+                TypeInfo = 'application/vnd.ms-powerpoint'
+            elif TypeInfo == '.pptx':
+                TypeInfo = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            elif TypeInfo == '.rar':
+                TypeInfo = 'application/x-rar-compressed'
+            elif TypeInfo == '.rtf':
+                TypeInfo = 'application/rtf'
+            elif TypeInfo == '.sh':
+                TypeInfo = 'application/x-sh'
+            elif TypeInfo == '.svg':
+                TypeInfo = 'image/svg+xml'
+            elif TypeInfo == '.swf':
+                TypeInfo = 'application/x-shockwave-flash'
+            elif TypeInfo == '.tar':
+                TypeInfo = 'application/x-tar'
+            elif TypeInfo == '.tiff':
+                TypeInfo = 'image/tiff'
+            elif TypeInfo == '.ttf':
+                TypeInfo = 'font/ttf'
+            elif TypeInfo == '.txt':
+                TypeInfo = 'text/plain'
+            elif TypeInfo == '.vsd':
+                TypeInfo = 'application/vnd.visio'
+            elif TypeInfo == '.wav':
+                TypeInfo = 'audio/wav'
+            elif TypeInfo == '.weba':
+                TypeInfo = 'audio/webm'
+            elif TypeInfo == '.webm':
+                TypeInfo = 'video/webm'
+            elif TypeInfo == '.webp':
+                TypeInfo = 'image/webp'
+            elif TypeInfo == '.woff':
+                TypeInfo = 'font/woff'
+            elif TypeInfo == '.woff2':
+                TypeInfo = 'font/woff2'
+            elif TypeInfo == '.xhtml':
+                TypeInfo = 'application/xhtml+xml'
+            elif TypeInfo == '.xls':
+                TypeInfo = 'application/vnd.ms-excel'
+            elif TypeInfo == '.xlsx':
+                TypeInfo = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            elif TypeInfo == '.xml':
+                TypeInfo = 'application/xml'
+            elif TypeInfo == '.xul':
+                TypeInfo = 'application/vnd.mozilla.xul+xml'
+            elif TypeInfo == '.zip':
+                TypeInfo = 'application/zip'
+            elif TypeInfo == '.3gp':
+                TypeInfo = 'audio/3gpp'
+            elif TypeInfo == '.3g2':
+                TypeInfo = 'audio/3gpp2'
+            elif TypeInfo == '.7z':
+                TypeInfo = 'application/x-7z-compressed'
+            else:
+                TypeInfo = ''
+        return TypeInfo
