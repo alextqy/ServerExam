@@ -450,6 +450,8 @@ class Common(BaseService):
                 return 'application/vnd.amazon.ebook'
             elif TypeInfo == '.bin':
                 return 'application/octet-stream'
+            elif TypeInfo == '.exe':
+                return 'application/octet-stream'
             elif TypeInfo == '.bmp':
                 return 'image/bmp'
             elif TypeInfo == '.bz':
@@ -572,5 +574,11 @@ class Common(BaseService):
                 return 'audio/3gpp2'
             elif TypeInfo == '.7z':
                 return 'application/x-7z-compressed'
+            elif TypeInfo == '.psd':
+                return 'application/x-photoshop'
+            elif TypeInfo == '.ico':
+                return 'image/x-icon'
+            elif TypeInfo == '.wps':
+                return 'application/kswps'
             else:
                 return ''
