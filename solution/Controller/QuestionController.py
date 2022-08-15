@@ -32,6 +32,16 @@ async def QuestionAttachment(
     return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
 
 
+# 查看附件
+@QuestionRouter.post('/Question/View/Attachments')
+async def QuestionAttachment(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+) -> Result:
+    return questionLogic.QuestionViewAttachments(Token.strip(), FilePath)
+
+
 # 禁用/启用 试题
 @QuestionRouter.post('/Question/Disabled')
 async def QuestionDisabled(
