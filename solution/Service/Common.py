@@ -381,6 +381,8 @@ class Common(BaseService):
                 return '.pptx'
             elif TypeInfo == 'application/x-rar-compressed':
                 return '.rar'
+            elif TypeInfo == 'application/rar':
+                return '.rar'
             elif TypeInfo == 'application/rtf':
                 return '.rtf'
             elif TypeInfo == 'application/x-sh':
