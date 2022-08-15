@@ -483,6 +483,8 @@ class Common(BaseService):
                 TypeInfo = 'application/java-archive'
             elif TypeInfo == '.jpeg':
                 TypeInfo = 'image/jpeg'
+            elif TypeInfo == '.jpg':
+                TypeInfo == 'image/jpeg'
             elif TypeInfo == '.js':
                 TypeInfo = 'text/javascript'
             elif TypeInfo == '.json':
