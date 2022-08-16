@@ -65,5 +65,6 @@ async def KnowledgeInfo(
 async def Knowledge(
         request: Request,
         Token: str = Form(''),
+        SubjectID: int = Form(0),
 ) -> Result:
-    return knowledgeLogic.Knowledge(Token.strip())
+    return knowledgeLogic.Knowledge(Token.strip(), SubjectID)
