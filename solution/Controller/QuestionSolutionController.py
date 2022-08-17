@@ -52,3 +52,14 @@ async def QuestionSolutionList(
         QuestionID: int = Form(0),
 ) -> ResultList:
     return questionSolutionLogic.QuestionSolutionList(Token.strip(), Page, PageSize, QuestionID)
+
+
+# 获取所有试题选项
+@QuestionSolutionRouter.post('/Question/Solutions')
+async def QuestionSolutions(
+        request: Request,
+        Token: str = Form(''),
+        QuestionID: int = Form(0),
+        Position: int = Form(0),
+):
+    return questionSolutionLogic.QuestionSolutions(Token.strip(), QuestionID, Position)

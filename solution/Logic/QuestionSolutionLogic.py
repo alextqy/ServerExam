@@ -449,3 +449,18 @@ class QuestionSolutionLogic(BaseLogic):
             result: ResultList = self._questionSolutionModel.List(_dbsession, Page, PageSize, QuestionID)
         _dbsession.close()
         return result
+
+    def QuestionSolutions(self, Token: str, QuestionID: int, Position: int = 0) -> ResultList:
+        result = ResultList()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif QuestionID <= 0:
+            result.Memo = self._lang.QuestionIDError
+        else:
+            result = self._questionSolutionModel.Solutions(_dbsession, QuestionID, Position)
+        _dbsession.close()
+        return result
