@@ -63,3 +63,12 @@ async def QuestionSolutions(
         Position: int = Form(0),
 ):
     return questionSolutionLogic.QuestionSolutions(Token.strip(), QuestionID, Position)
+
+
+@QuestionSolutionRouter.post('/Question/Solution/View/Attachments')
+async def QuestionSolutionViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return questionSolutionLogic.QuestionSolutionViewAttachments(Token.strip(), FilePath)

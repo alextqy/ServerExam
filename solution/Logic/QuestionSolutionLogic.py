@@ -464,3 +464,22 @@ class QuestionSolutionLogic(BaseLogic):
             result = self._questionSolutionModel.Solutions(_dbsession, QuestionID, Position)
         _dbsession.close()
         return result
+
+    def QuestionSolutionViewAttachments(self, Token: str, FilePath: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            if FilePath != '' and FilePath != 'none':
+                with open(FilePath, 'rb') as f:
+                    FileEncode = b64encode(f.read())
+                    FileEncodeStr = str(FileEncode, 'utf-8')
+                result.State = True
+                result.Memo = self._file.CheckFileType(FilePath)
+                result.Data = FileEncodeStr
+        _dbsession.close()
+        return result
