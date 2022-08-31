@@ -423,6 +423,8 @@ class QuestionLogic(BaseLogic):
                     QuestionData.Description = Description
                     QuestionData.Language = Language
                     QuestionData.LanguageVersion = LanguageVersion
+                    if QuestionType == 4:
+                        QuestionData.QuestionState = 2
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
