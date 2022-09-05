@@ -10,6 +10,7 @@ class HeadlineModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Content = Data.Content.strip()
         if Data.Content == '':
             _result.Memo = self._lang.ParamErr

@@ -10,6 +10,7 @@ class KnowledgeModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.KnowledgeName = Data.KnowledgeName.strip()
         if Data.KnowledgeName == '':
             _result.Memo = self._lang.ParamErr

@@ -10,6 +10,7 @@ class ExamineeModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Name = Data.Name.strip()
         Data.ExamineeNo = Data.ExamineeNo.strip()
         # Data.Contact = Data.Contact.strip()

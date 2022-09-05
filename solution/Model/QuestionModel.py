@@ -10,6 +10,7 @@ class QuestionModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.QuestionTitle = Data.QuestionTitle.strip()
         Data.Description = Data.Description.strip()
         if Data.QuestionTitle == '':

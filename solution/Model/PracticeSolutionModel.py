@@ -10,6 +10,7 @@ class PracticeSolutionModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Option = Data.Option.strip()
         Data.OptionAttachment = Data.OptionAttachment.strip()
         if Data.PracticeID <= 0:

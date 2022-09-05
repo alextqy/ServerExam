@@ -10,6 +10,7 @@ class ManagerModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Account = Data.Account.strip()
         Data.Password = Data.Password.strip()
         Data.Name = Data.Name.strip()

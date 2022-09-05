@@ -10,6 +10,7 @@ class ExamineeTokenModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Token = Data.Token.strip()
         if Data.Token == '':
             _result.Memo = self._lang.ParamErr

@@ -10,6 +10,7 @@ class ExamInfoHistoryModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.SubjectName = Data.SubjectName.strip()
         Data.ExamNo = Data.ExamNo.strip()
         if Data.SubjectName == '':

@@ -10,6 +10,7 @@ class PaperModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.PaperName = Data.PaperName.strip()
         if Data.PaperName == '':
             _result.Memo = self._lang.ParamErr

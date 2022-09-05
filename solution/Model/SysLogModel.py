@@ -10,6 +10,7 @@ class SysLogModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Description = Data.Description.strip()
         Data.IP = Data.IP.strip()
         if Data.Type <= 0:

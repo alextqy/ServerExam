@@ -10,6 +10,7 @@ class PaperRuleModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         if Data.HeadlineID <= 0:
             if Data.KnowledgeID <= 0:
                 _result.Memo = self._lang.ParamErr

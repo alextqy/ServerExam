@@ -10,6 +10,7 @@ class TeacherClassModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         if Data.TeacherID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result

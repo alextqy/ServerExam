@@ -10,6 +10,7 @@ class ExamLogModel(BaseModel):
 
     def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.ExamNo = Data.ExamNo.strip()
         Data.Description = Data.Description.strip()
         Data.IP = Data.IP.strip()
