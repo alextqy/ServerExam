@@ -238,7 +238,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 return result
                             # 答案必须为左侧选项ID
                             if CorrectItemData.Position == 2:
-                                result.Memo = self._lang.TheAnswerMustBeTheLeftOptionID
+                                result.Memo = self._lang.TheAnswerMustBeTheLeftOption
                                 return result
                     ScoreRatio = 1.00
                 '''
@@ -294,7 +294,7 @@ class QuestionSolutionLogic(BaseLogic):
                                     return result
                                 # 答案必须为左侧选项ID
                                 if CorrectItemData.Position == 2:
-                                    result.Memo = self._lang.TheAnswerMustBeTheLeftOptionID
+                                    result.Memo = self._lang.TheAnswerMustBeTheLeftOption
                                     return result
                     ScoreRatio = 1.00
 
