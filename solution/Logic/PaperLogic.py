@@ -151,7 +151,7 @@ class PaperLogic(BaseLogic):
                     PaperData.PaperName = PaperName
                     PaperData.TotalScore = TotalScore
                     PaperData.PassLine = PassLine
-                    PaperData.ExamDuration = ExamDuration * 60
+                    PaperData.ExamDuration = ExamDuration
                     PaperData.UpdateTime = self._common.Time()
                     _dbsession.commit()
                 except Exception as e:
