@@ -300,16 +300,24 @@ class QuestionSolutionLogic(BaseLogic):
 
                 _dbsession.begin_nested()
 
-                QuestionData = QuestionSolutionEntity()
-                QuestionData.QuestionID = QuestionID
-                QuestionData.Option = Option
-                QuestionData.CorrectAnswer = CorrectAnswer
-                QuestionData.CorrectItem = CorrectItem
-                QuestionData.ScoreRatio = ScoreRatio
-                QuestionData.Position = Position
-                AddInfo: Result = self._questionSolutionModel.Insert(_dbsession, QuestionData)
+                QuestionSolutionData = QuestionSolutionEntity()
+                QuestionSolutionData.QuestionID = QuestionID
+                QuestionSolutionData.Option = Option
+                QuestionSolutionData.CorrectAnswer = CorrectAnswer
+                QuestionSolutionData.CorrectItem = CorrectItem
+                QuestionSolutionData.ScoreRatio = ScoreRatio
+                QuestionSolutionData.Position = Position
+                AddInfo: Result = self._questionSolutionModel.Insert(_dbsession, QuestionSolutionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    return result
+
+                try:
+                    QuestionData.QuestionState = 2
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new question solution:' + Option
