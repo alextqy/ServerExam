@@ -312,6 +312,7 @@ class QuestionSolutionLogic(BaseLogic):
                     result.Memo = AddInfo.Memo
                     return result
 
+                # 试题设置为禁用状态
                 try:
                     QuestionData.QuestionState = 2
                     _dbsession.commit()
