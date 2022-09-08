@@ -236,7 +236,7 @@ class QuestionSolutionLogic(BaseLogic):
                             if CorrectItemData is None:
                                 result.Memo = self._lang.CorrectItemDataError
                                 return result
-                            # 答案必须为左侧选项ID
+                            # 答案必须为左侧题干
                             if CorrectItemData.Position == 2:
                                 result.Memo = self._lang.TheAnswerMustBeTheLeftOption
                                 return result
@@ -292,7 +292,7 @@ class QuestionSolutionLogic(BaseLogic):
                                 if CorrectItemData.QuestionID != QuestionData.ID:
                                     result.Memo = self._lang.QuestionIDError
                                     return result
-                                # 答案必须为左侧选项ID
+                                # 答案必须为左侧题干
                                 if CorrectItemData.Position == 2:
                                     result.Memo = self._lang.TheAnswerMustBeTheLeftOption
                                     return result
