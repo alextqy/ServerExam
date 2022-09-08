@@ -31,7 +31,6 @@ class PaperModel(BaseModel):
         #     _result.Memo = self._lang.ParamErr
         #     return _result
 
-        Data.ExamDuration *= 60
         Data.PaperState = 2
         Data.PaperCode = self._common.StrMD5(Data.PaperName.strip())
         try:
