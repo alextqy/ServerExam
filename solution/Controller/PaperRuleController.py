@@ -61,3 +61,13 @@ async def PaperRuleInfo(
         ID: int = Form(0),
 ) -> Result:
     return paperRuleLogic.PaperRuleInfo(Token.strip(), ID)
+
+
+# 试题规则详情
+@PaperRuleRouter.post('/Paper/Rules')
+async def PaperRuleInfo(
+        request: Request,
+        Token: str = Form(''),
+        PaperID: int = Form(0),
+) -> Result:
+    return paperRuleLogic.PaperRules(Token.strip(), PaperID)

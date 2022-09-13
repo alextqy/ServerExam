@@ -92,6 +92,15 @@ class PaperRuleLogic(BaseLogic):
                 result.Memo - AddInfo.Memo
                 return result
 
+            try:
+                PaperData.PaperState = 2
+                PaperRuleData.UpdateTime = self._common.Time()
+                _dbsession.commit()
+            except Exception as e:
+                result.Memo = str(e)
+                _dbsession.rollback()
+                return result
+
             Desc = 'new paper rule'
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
@@ -132,6 +141,17 @@ class PaperRuleLogic(BaseLogic):
                 _dbsession.rollback()
                 return result
 
+            PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperRuleData.PaperID)
+            if PaperData is not None:
+                try:
+                    PaperData.PaperState = 2
+                    PaperRuleData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
             if PaperRuleData.PaperRuleState == 1:
                 Desc = 'enable paper rule ID:' + str(ID)
             if PaperRuleData.PaperRuleState == 2:
@@ -167,6 +187,17 @@ class PaperRuleLogic(BaseLogic):
             if DelInfo.State == False:
                 result.Memo - DelInfo.Memo
                 return result
+
+            PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperRuleData.PaperID)
+            if PaperData is not None:
+                try:
+                    PaperData.PaperState = 2
+                    PaperRuleData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
 
             Desc = 'delete paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
@@ -210,5 +241,18 @@ class PaperRuleLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = PaperRuleData
+        _dbsession.close()
+        return result
+
+    def PaperRules(self, Token: str, PaperID: int) -> ResultList:
+        result = ResultList()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: ResultList = self._paperRuleModel.PaperRules(_dbsession, PaperID)
         _dbsession.close()
         return result

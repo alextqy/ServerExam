@@ -89,3 +89,11 @@ class PaperRuleModel(BaseModel):
 
     def CheckPaperRule(self, _dbsession: DBsession, PaperID: int, KnowledgeID: int, QuestionType: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.PaperRuleState == 1).first()
+
+    def PaperRules(self, _dbsession: DBsession, PaperID: int) -> ResultList:
+        _result = ResultList()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.PaperID == PaperID)
+        _result.Data = sql.all()
+        return _result
