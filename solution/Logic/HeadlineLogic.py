@@ -117,3 +117,16 @@ class HeadlineLogic(BaseLogic):
                 result.Data = HeadlineData
         _dbsession.close()
         return result
+
+    def Headlines(self, Token: str) -> ResultList:
+        result = ResultList()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: ResultList = self._headlineModel.Headlines(_dbsession)
+        _dbsession.close()
+        return result

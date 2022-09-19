@@ -46,3 +46,11 @@ async def HeadlineInfo(
         ID: int = Form(0),
 ) -> Result:
     return headlineLogic.HeadlineInfo(Token.strip(), ID)
+
+
+@HeadlineRouter.post('/Headlines')
+async def Headlines(
+        request: Request,
+        Token: str = Form(''),
+) -> Result:
+    return headlineLogic.Headlines(Token.strip())
