@@ -7,7 +7,7 @@ class PaperRuleLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewPaperRule(self, ClientHost: str, Token: str, HeadlineID: int, QuestionType: int, KnowledgeID: int, QuestionNum: int, SingleScore: float, PaperID: int) -> Result:
+    def NewPaperRule(self, ClientHost: str, Token: str, HeadlineID: int, QuestionType: int, KnowledgeID: int, QuestionNum: int, SingleScore: float, PaperID: int, SerialNumber: int) -> Result:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -17,6 +17,8 @@ class PaperRuleLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         elif PaperID <= 0:
             result.Memo = self._lang.WrongPaperID
+        elif SerialNumber <= 0:
+            result.Memo = self._lang.WrongSerialNumber
         elif HeadlineID > 0 and KnowledgeID > 0:
             result.Memo = self._lang.WrongData
         elif HeadlineID == 0 and KnowledgeID == 0:
@@ -87,6 +89,7 @@ class PaperRuleLogic(BaseLogic):
             PaperRuleData.QuestionNum = QuestionNum
             PaperRuleData.SingleScore = SingleScore
             PaperRuleData.PaperID = PaperID
+            PaperRuleData.SerialNumber = SerialNumber
             AddInfo: Result = self._paperRuleModel.Insert(_dbsession, PaperRuleData)
             if AddInfo.State == False:
                 result.Memo - AddInfo.Memo
@@ -252,7 +255,67 @@ class PaperRuleLogic(BaseLogic):
             result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
+        elif PaperID <= 0:
+            result.Memo = self._lang.WrongPaperID
         else:
             result: ResultList = self._paperRuleModel.PaperRules(_dbsession, PaperID)
+        _dbsession.close()
+        return result
+
+    def UpdatePaperRule(self, ClientHost: str, Token: str, ID: int, QuestionType: int, QuestionNum: int, SingleScore: float, SerialNumber: int) -> Result:
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        elif QuestionType <= 0:
+            result.Memo = self._lang.WrongQuestionType
+        elif QuestionNum <= 0:
+            result.Memo = self._lang.WrongQuestionNum
+        elif SingleScore <= 0:
+            result.Memo = self._lang.WrongSingleScore
+        elif SerialNumber <= 0:
+            result.Memo = self._lang.WrongSerialNumber
+        else:
+            PaperRuleData: PaperRuleEntity = self._paperRuleModel.Find(_dbsession, ID)
+            if PaperRuleData is None:
+                result.Memo = self._lang.PaperRuleDataError
+            else:
+                _dbsession.begin_nested()
+
+                try:
+                    PaperRuleData.QuestionType = QuestionType
+                    PaperRuleData.QuestionNum = QuestionNum
+                    PaperRuleData.SingleScore = SingleScore
+                    PaperRuleData.SerialNumber = SerialNumber
+                    PaperRuleData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperRuleData.PaperID)
+                if PaperData is not None:
+                    try:
+                        PaperData.PaperState = 2
+                        PaperRuleData.UpdateTime = self._common.Time()
+                        _dbsession.commit()
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _dbsession.rollback()
+                        return result
+
+                Desc = 'update paper rule ID:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    return result
+
+                _dbsession.commit()
+                result.State = True
         _dbsession.close()
         return result

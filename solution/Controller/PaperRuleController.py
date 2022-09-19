@@ -16,8 +16,9 @@ async def NewPaperRule(
         QuestionNum: int = Form(0),
         SingleScore: float = Form(0),
         PaperID: int = Form(0),
+        SerialNumber: int = Form(0),
 ) -> Result:
-    return paperRuleLogic.NewPaperRule(request.client.host, Token.strip(), HeadlineID, QuestionType, KnowledgeID, QuestionNum, SingleScore, PaperID)
+    return paperRuleLogic.NewPaperRule(request.client.host, Token.strip(), HeadlineID, QuestionType, KnowledgeID, QuestionNum, SingleScore, PaperID, SerialNumber)
 
 
 # 禁用试题规则
@@ -63,7 +64,7 @@ async def PaperRuleInfo(
     return paperRuleLogic.PaperRuleInfo(Token.strip(), ID)
 
 
-# 试题规则详情
+# 获取所有试题规则
 @PaperRuleRouter.post('/Paper/Rules')
 async def PaperRuleInfo(
         request: Request,
@@ -71,3 +72,17 @@ async def PaperRuleInfo(
         PaperID: int = Form(0),
 ) -> Result:
     return paperRuleLogic.PaperRules(Token.strip(), PaperID)
+
+
+# 修改试卷规则
+@PaperRuleRouter.post('/Update/Paper/Rule')
+async def UpdatePaperRule(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+        QuestionType: int = Form(0),
+        QuestionNum: int = Form(0),
+        SingleScore: float = Form(0),
+        SerialNumber: int = Form(0),
+) -> Result:
+    return paperRuleLogic.UpdatePaperRule(request.client.host, Token.strip(), ID, QuestionType, QuestionNum, SingleScore, SerialNumber)

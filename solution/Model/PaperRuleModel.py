@@ -31,6 +31,9 @@ class PaperRuleModel(BaseModel):
         if Data.PaperID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
+        if Data.SerialNumber <= 0:
+            _result.Memo = self._lang.ParamErr
+            return _result
 
         Data.PaperRuleState = 1
         try:

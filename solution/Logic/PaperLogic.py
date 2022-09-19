@@ -153,6 +153,7 @@ class PaperLogic(BaseLogic):
                     PaperData.PassLine = PassLine
                     PaperData.ExamDuration = ExamDuration
                     PaperData.UpdateTime = self._common.Time()
+                    PaperData.PaperState = 2
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
