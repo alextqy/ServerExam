@@ -180,6 +180,9 @@ class PaperLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._paperModel.List(_dbsession, Page, PageSize, Stext, SubjectID, PaperState)
+            for i in result.Data:
+                PaperData: PaperEntity = i
+                PaperData.SubjectName = self._subjectModel.Find(_dbsession, PaperData.SubjectID).SubjectName
         _dbsession.close()
         return result
 
