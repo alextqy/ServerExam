@@ -24,10 +24,10 @@ class PaperRuleModel(BaseModel):
             if Data.SingleScore <= 0:
                 _result.Memo = self._lang.ParamErr
                 return _result
-        if Data.KnowledgeID <= 0:
-            if Data.HeadlineID <= 0:
-                _result.Memo = self._lang.ParamErr
-                return _result
+            if Data.KnowledgeID <= 0:
+                if Data.HeadlineID <= 0:
+                    _result.Memo = self._lang.ParamErr
+                    return _result
         if Data.PaperID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
