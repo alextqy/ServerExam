@@ -82,6 +82,7 @@ class ExamineeTokenLogic(BaseLogic):
                 try:
                     ExamInfoData.StartTime = SignInTime
                     ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
+                    ExamInfoData.StartState = 2
                     _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)

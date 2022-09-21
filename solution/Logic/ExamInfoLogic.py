@@ -132,7 +132,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int) -> ResultList:
+    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int, StartState: int, SuspendedState: int) -> ResultList:
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -141,7 +141,7 @@ class ExamInfoLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass)
+            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass, StartState, SuspendedState)
         _dbsession.close()
         return result
 

@@ -39,8 +39,10 @@ async def ExamInfoList(
         ExamState: int = Form(0),
         ExamType: int = Form(0),
         Pass: int = Form(0),
+        StartState: int = Form(0),
+        SuspendedState: int = Form(0),
 ) -> ResultList:
-    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType, Pass)
+    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState)
 
 
 # 报名详情
