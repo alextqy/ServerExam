@@ -41,6 +41,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import asc, desc, and_, or_
 # from sqlalchemy.exc import *
 
+import redis
 import xlrd
 
 from fastapi.exceptions import RequestValidationError

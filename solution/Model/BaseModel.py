@@ -5,6 +5,7 @@ from Service.Database import *
 from Service.FileHelper import *
 from Service.Lang import *
 from Service.UDPTool import *
+from Service.RedisHelper import *
 
 from Entity.BaseEntity import DBsession
 from Entity.ClassEntity import ClassEntity
@@ -39,6 +40,7 @@ class BaseModel:
     _file: FileHelper = FileHelper()
     _lang: Lang = Lang()
     _udp: UDPTool = UDPTool()
+    _redis: RedisHelper = RedisHelper()
 
     def __init__(self):
         super().__init__()

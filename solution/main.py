@@ -3,6 +3,7 @@
 pip install python-multipart
 pip install pymysql
 pip install sqlalchemy
+pip install redis
 pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
@@ -10,6 +11,7 @@ uvicorn main:app --host=0.0.0.0 --port=6001 --reload-exclude TEXT
 '''
 from Service.Common import *
 from Service.UDPTool import *
+from Service.RedisHelper import *
 from PreOperation.DaoHandler import DaoHandler
 
 app = FastAPI()
@@ -33,12 +35,13 @@ async def ProcessTimeHeader(request: Request, call_next):
 
 # 测试
 @app.get('/Test')
-async def Test(request: Request, Param: str):
+async def Test(request: Request, Param1: str, Param2: str, Param3: str):
     result = Result()
-    # common = Common()
+    # c = Common()
+    # r = RedisHelper()
     result.State = True
     result.Memo = 'Success'
-    result.Data = Param
+    result.Data = Param1 + Param2 + Param3
     return result  # json.dumps(result.__dict__)
 
 
