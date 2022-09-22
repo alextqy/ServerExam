@@ -86,3 +86,25 @@ class RedisHelper(BaseService):
     # 获取当前所有的Key
     def HKeys(self) -> list:
         return self.RedisObject.keys()
+
+    # ====================== 队列 ======================
+
+    # 左入 返回最后的ID
+    def LPush(self, Key: str, Value: any) -> int:
+        return self.RedisObject.lpush(Key, Value)
+
+    # 从右侧头部取出
+    def RPOP(self, Key: str) -> any:
+        return self.RedisObject.rpop(Key)
+
+    # 右入 返回最后的ID
+    def RPush(self, Key: str, Value: any) -> int:
+        return self.RedisObject.rpush(Key, Value)
+
+    # 从左侧头部取出
+    def LPOP(self, Key: str) -> any:
+        return self.RedisObject.lpop(Key)
+
+    # 队列长度
+    def CountQueue(self, QueueName: str) -> int:
+        return self.RedisObject.llen(QueueName)
