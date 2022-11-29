@@ -7,6 +7,7 @@ pip install redis
 pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
+pip install requests
 uvicorn main:app --host=0.0.0.0 --port=6001 --reload-exclude TEXT
 '''
 from Service.Common import *
