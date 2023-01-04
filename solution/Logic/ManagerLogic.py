@@ -265,9 +265,11 @@ class ManagerLogic(BaseLogic):
             result.Memo = self._lang.WrongToken
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
-        elif ID <= 0:
-            result.Memo = self._lang.WrongID
+        # elif ID <= 0:
+        #     result.Memo = self._lang.WrongID
         else:
+            if ID <= 0:
+                ID = AdminID
             ManagerData: ManagerEntity = self._managerModel.Find(_dbsession, ID)
             if ManagerData is None:
                 result.Memo = self._lang.ManagerDataError
