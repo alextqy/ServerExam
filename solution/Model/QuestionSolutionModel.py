@@ -8,7 +8,7 @@ class QuestionSolutionModel(BaseModel):
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
+    def Insert(self, _dbsession: DBsession, Data: EType):
         _result = Result()
         Data.CreateTime = self._common.Time()
         Data.Option = Data.Option.strip()
@@ -44,7 +44,7 @@ class QuestionSolutionModel(BaseModel):
         _result.Data = Data.ID
         return _result
 
-    def Delete(self, _dbsession: DBsession, ID: int) -> Result:
+    def Delete(self, _dbsession: DBsession, ID: int):
         _result = Result()
         try:
             Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
@@ -61,7 +61,7 @@ class QuestionSolutionModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, QuestionID: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, QuestionID: int):
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -90,7 +90,7 @@ class QuestionSolutionModel(BaseModel):
     def FindCorrectItem(self, _dbsession: DBsession, QuestionID: int, Option: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.QuestionID == QuestionID).filter(self.EType.Option == Option).first()
 
-    def Solutions(self, _dbsession: DBsession, QuestionID: int, Position: int) -> ResultList:
+    def Solutions(self, _dbsession: DBsession, QuestionID: int, Position: int):
         _result = ResultList()
         _result.State = True
         sql = _dbsession.query(self.EType)

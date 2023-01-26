@@ -7,7 +7,7 @@ class ExamInfoLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeID: int, ExamType: int) -> Result:
+    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeID: int, ExamType: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -69,7 +69,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -132,7 +132,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int, StartState: int, SuspendedState: int) -> ResultList:
+    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int, StartState: int, SuspendedState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -145,7 +145,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamInfo(self, Token: str, ID: int) -> Result:
+    def ExamInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -165,7 +165,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def GenerateTestPaper(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def GenerateTestPaper(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -178,7 +178,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def GenerateTestPaperAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+    def GenerateTestPaperAction(self, ClientHost: str, ID: int, AdminID: int = 0):
         result = Result()
         _dbsession = DBsession()
         ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
@@ -307,7 +307,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ResetExamQuestionData(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ResetExamQuestionData(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -374,7 +374,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamIntoHistory(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ExamIntoHistory(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -387,7 +387,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+    def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0):
         result = Result()
         _dbsession = DBsession()
         if ID <= 0:
@@ -494,7 +494,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def GradeTheExam(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def GradeTheExam(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -507,7 +507,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def GradeTheExamAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+    def GradeTheExamAction(self, ClientHost: str, ID: int, AdminID: int = 0):
         result = Result()
         _dbsession = DBsession()
         if ID <= 0:
@@ -618,7 +618,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ImportExamInfo(self, ClientHost: str, Token: str, FileType: str, Contents: bytes) -> Result:
+    def ImportExamInfo(self, ClientHost: str, Token: str, FileType: str, Contents: bytes):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -782,7 +782,7 @@ class ExamInfoLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def DownloadExamInfoDemo(self, Token: str) -> Result:
+    def DownloadExamInfoDemo(self, Token: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

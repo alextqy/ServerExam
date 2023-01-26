@@ -11,7 +11,7 @@ async def NewHeadline(
         request: Request,
         Token: str = Form(''),
         Content: str = Form(''),
-) -> Result:
+):
     return headlineLogic.NewHeadline(request.client.host, Token.strip(), Content.strip())
 
 
@@ -22,7 +22,7 @@ async def UpdateHeadlineInfo(
         Token: str = Form(''),
         ID: int = Form(0),
         Content: str = Form(''),
-) -> Result:
+):
     return headlineLogic.UpdateHeadlineInfo(request.client.host, Token.strip(), ID, Content.strip())
 
 
@@ -34,7 +34,7 @@ async def HeadlineList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         Stext: str = Form(''),
-) -> ResultList:
+):
     return headlineLogic.HeadlineList(Token.strip(), Page, PageSize, Stext.strip())
 
 
@@ -44,7 +44,7 @@ async def HeadlineInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return headlineLogic.HeadlineInfo(Token.strip(), ID)
 
 
@@ -52,5 +52,5 @@ async def HeadlineInfo(
 async def Headlines(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return headlineLogic.Headlines(Token.strip())

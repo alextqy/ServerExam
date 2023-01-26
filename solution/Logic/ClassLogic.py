@@ -7,7 +7,7 @@ class ClassLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewClass(self, ClientHost: str, Token: str, ClassName: str, Description: str) -> Result:
+    def NewClass(self, ClientHost: str, Token: str, ClassName: str, Description: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -42,7 +42,7 @@ class ClassLogic(BaseLogic):
 
         return result
 
-    def UpdateClassInfo(self, ClientHost: str, Token: str, ID: int, ClassName: str, Description: str) -> Result:
+    def UpdateClassInfo(self, ClientHost: str, Token: str, ID: int, ClassName: str, Description: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -91,7 +91,7 @@ class ClassLogic(BaseLogic):
             result.State = True
         return result
 
-    def ClassList(self, Token: str, Page: int, PageSize: int, Stext: str) -> Result:
+    def ClassList(self, Token: str, Page: int, PageSize: int, Stext: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -104,7 +104,7 @@ class ClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ClassInfo(self, Token: str, ID: int) -> Result:
+    def ClassInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -124,7 +124,7 @@ class ClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def Classes(self, Token: str) -> ResultList:
+    def Classes(self, Token: str):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

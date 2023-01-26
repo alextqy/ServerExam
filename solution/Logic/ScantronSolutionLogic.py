@@ -7,7 +7,7 @@ class ScantronSolutionLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ScantronSolutionList(self, Token: str, Page: int, PageSize: int, ScantronID: int, Position: int) -> ResultList:
+    def ScantronSolutionList(self, Token: str, Page: int, PageSize: int, ScantronID: int, Position: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -20,7 +20,7 @@ class ScantronSolutionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ScantronSolutionInfo(self, Token: str, ID: int) -> Result:
+    def ScantronSolutionInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

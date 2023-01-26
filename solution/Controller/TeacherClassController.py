@@ -12,7 +12,7 @@ async def NewTeacher(
         Token: str = Form(''),
         TeacherID: int = Form(0),
         ClassID: int = Form(0),
-) -> Result:
+):
     return teacherClassLogic.NewTeacherClass(request.client.host, Token.strip(), TeacherID, ClassID)
 
 
@@ -22,7 +22,7 @@ async def DeleteTeacherClass(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return teacherClassLogic.DeleteTeacherClass(request.client.host, Token.strip(), ID)
 
 
@@ -35,5 +35,5 @@ async def TeacherClassList(
         PageSize: int = Form(10),
         TeacherID: int = Form(0),
         ClassID: int = Form(0),
-) -> Result:
+):
     return teacherClassLogic.TeacherClassList(Token.strip(), Page, PageSize, TeacherID, ClassID)

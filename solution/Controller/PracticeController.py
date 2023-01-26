@@ -10,7 +10,7 @@ PracticePrefix = ''
 async def SignInPractice(
         request: Request,
         ExamineeNo: str = Form(''),
-) -> Result:
+):
     return practiceLogic.SignInPractice(ExamineeNo)
 
 
@@ -20,7 +20,7 @@ async def NewPractice(
         request: Request,
         Token: str = Form(''),
         QuestionType: int = Form(0),
-) -> Result:
+):
     return practiceLogic.NewPractice(Token, QuestionType)
 
 
@@ -30,7 +30,7 @@ async def PracticeInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return practiceLogic.PracticeInfo(Token, ID)
 
 
@@ -42,7 +42,7 @@ async def PracticeAnswer(
         PracticeID: int = Form(0),
         ID: int = Form(0),
         Answer: str = Form(''),
-) -> Result:
+):
     return practiceLogic.PracticeAnswer(Token, PracticeID, ID, Answer)
 
 
@@ -52,7 +52,7 @@ async def GradeThePractice(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return practiceLogic.GradeThePractice(Token, ID)
 
 
@@ -61,5 +61,5 @@ async def GradeThePractice(
 async def PracticeDelete(
         request: Request,
         ID: int = Form(0),
-) -> Result:
+):
     return practiceLogic.PracticeDeleteAction(ID)

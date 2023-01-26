@@ -7,7 +7,7 @@ class ExamInfoHistoryLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ExamInfoHistoryList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int) -> ResultList:
+    def ExamInfoHistoryList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -20,7 +20,7 @@ class ExamInfoHistoryLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamInfoHistory(self, Token: str, ID: int) -> Result:
+    def ExamInfoHistory(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

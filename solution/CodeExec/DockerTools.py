@@ -15,7 +15,7 @@ async def ImageIsExists(
         request: Request,
         Language: str = Form(''),
         Version: str = Form(''),
-) -> Result:
+):
     result = Result()
     result = ImageIsExistsAction(Language.strip(), Version.strip())
     return result
@@ -24,7 +24,7 @@ async def ImageIsExists(
 def ImageIsExistsAction(
         Language: str = Form(''),
         Version: str = Form(''),
-) -> Result:
+):
     result = Result()
 
     if Language == '' or Version == '':
@@ -64,7 +64,7 @@ async def BuildEnvironment(
         request: Request,
         Language: str = Form(''),
         Version: str = Form(''),
-) -> Result:
+):
     result = Result()
     result = BuildEnvironmentAction(Language.strip(), Version.strip())
     return result
@@ -74,7 +74,7 @@ async def BuildEnvironment(
 def BuildRanges(
         Language: str = Form(''),
         Version: str = Form(''),
-) -> Result:
+):
     result = Result()
 
     LanguageList = [
@@ -130,7 +130,7 @@ def BuildRanges(
 def BuildEnvironmentAction(
         Language: str = Form(''),
         Version: str = Form(''),
-) -> Result:
+):
     result = Result()
 
     if Language == '' or Version == '':
@@ -179,7 +179,7 @@ async def CodeExec(
         Version: str = Form(''),
         CodeStr: str = Form(''),
         RandomStr: str = Form(''),
-) -> Result:
+):
     return CodeExecAction(Key.strip(), Language.strip(), Version.strip(), CodeStr.strip(), RandomStr.strip())
 
 
@@ -192,7 +192,7 @@ async def CodeExec(
         Version: str = Form(''),
         CodeStr: str = Form(''),
         RandomStr: str = Form(''),
-) -> Result:
+):
     CodeStrBytes = CodeStr.strip().encode(encoding='utf-8')
     CodeStr64 = base64.b64encode(CodeStrBytes)
     return CodeExecAction(Key.strip(), Language.strip(), Version.strip(), CodeStr64, RandomStr.strip())
@@ -214,7 +214,7 @@ def CodeExecAction(
     Version: str,
     CodeStr: str,
     RandomStr: str,
-) -> Result:
+):
     ServerKey = 'TXNGG3KidItKrCGf5wXT53eZTYCOynOAIjbKJPdy'
     CodeFilePath = getcwd() + '/CodeExec/CodeFile/'  # 模板文件夹
     CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
@@ -393,7 +393,7 @@ def CodeExecAction(
 
 # 清理执行缓存文件
 @CodeExecRouter.get('/Clean/Temp/File')
-async def CleanTempFile(request: Request) -> Result:
+async def CleanTempFile(request: Request):
     result = Result()
     CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
     try:

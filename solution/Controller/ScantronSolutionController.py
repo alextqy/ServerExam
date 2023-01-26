@@ -14,7 +14,7 @@ async def ScantronSolutionList(
         PageSize: int = Form(10),
         ScantronID: int = Form(0),
         Position: int = Form(0),
-) -> ResultList:
+):
     return scantronSolutionLogic.ScantronSolutionList(Token.strip(), Page, PageSize, ScantronID, Position)
 
 
@@ -24,5 +24,5 @@ async def ScantronSolutionInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return scantronSolutionLogic.ScantronSolutionInfo(Token.strip(), ID)

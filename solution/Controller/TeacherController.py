@@ -13,7 +13,7 @@ async def NewTeacher(
         Account: str = Form(''),
         Password: str = Form(''),
         Name: str = Form(''),
-) -> Result:
+):
     return teacherLogic.NewTeacher(request.client.host, Token.strip(), Account.strip(), Password.strip(), Name.strip())
 
 
@@ -23,7 +23,7 @@ async def TeacherDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return teacherLogic.TeacherDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -35,7 +35,7 @@ async def UpdateTeacherInfo(
         Password: str = Form(''),
         Name: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return teacherLogic.UpdateTeacherInfo(request.client.host, Token.strip(), Password.strip(), Name.strip(), ID)
 
 
@@ -48,7 +48,7 @@ async def TeacherList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         State: int = Form(0),
-) -> ResultList:
+):
     return teacherLogic.TeacherList(Token.strip(), Page, PageSize, Stext.strip(), State)
 
 
@@ -58,7 +58,7 @@ async def TeacherInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return teacherLogic.TeacherInfo(Token.strip(), ID)
 
 
@@ -68,7 +68,7 @@ async def TeacherSignIn(
         request: Request,
         Account: str = Form(''),
         Password: str = Form(''),
-) -> Result:
+):
     return teacherLogic.TeacherSignIn(request.client.host, Account.strip(), Password.strip())
 
 
@@ -77,7 +77,7 @@ async def TeacherSignIn(
 async def TeacherSignOut(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return teacherLogic.TeacherSignOut(request.client.host, Token.strip())
 
 
@@ -87,5 +87,5 @@ async def TeacherChangePassword(
         request: Request,
         Token: str = Form(''),
         NewPassword: str = Form(''),
-) -> Result:
+):
     return teacherLogic.TeacherChangePassword(request.client.host, Token.strip(), NewPassword.strip())

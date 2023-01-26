@@ -7,7 +7,7 @@ class SysLogLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def SysLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int, ManagerID: int) -> ResultList:
+    def SysLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int, ManagerID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -20,7 +20,7 @@ class SysLogLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def SysLogInfo(self, Token: str, ID: int) -> Result:
+    def SysLogInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

@@ -8,7 +8,7 @@ class QuestionModel(BaseModel):
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
+    def Insert(self, _dbsession: DBsession, Data: EType):
         _result = Result()
         Data.CreateTime = self._common.Time()
         Data.QuestionTitle = Data.QuestionTitle.strip()
@@ -54,7 +54,7 @@ class QuestionModel(BaseModel):
         _result.Data = Data.ID
         return _result
 
-    def Delete(self, _dbsession: DBsession, ID: int) -> Result:
+    def Delete(self, _dbsession: DBsession, ID: int):
         _result = Result()
         try:
             Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
@@ -71,7 +71,7 @@ class QuestionModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, Marking: int, KnowledgeID: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, Marking: int, KnowledgeID: int):
         _result = ResultList()
         _result.State = True
         _result.Page = Page

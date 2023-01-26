@@ -14,7 +14,7 @@ async def NewExamInfo(
         ExamNo: str = Form(''),
         ExamineeID: int = Form(0),
         ExamType: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeID, ExamType)
 
 
@@ -24,7 +24,7 @@ async def ExamInfoDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ExamInfoDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -41,7 +41,7 @@ async def ExamInfoList(
         Pass: int = Form(0),
         StartState: int = Form(0),
         SuspendedState: int = Form(0),
-) -> ResultList:
+):
     return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState)
 
 
@@ -51,7 +51,7 @@ async def ExamInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ExamInfo(Token.strip(), ID)
 
 
@@ -61,7 +61,7 @@ async def GenerateTestPaper(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.GenerateTestPaper(request.client.host, Token.strip(), ID)
 
 
@@ -71,7 +71,7 @@ async def ResetExamQuestionData(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ResetExamQuestionData(request.client.host, Token.strip(), ID)
 
 
@@ -81,7 +81,7 @@ async def ExamIntoHistory(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ExamIntoHistory(request.client.host, Token.strip(), ID)
 
 
@@ -91,7 +91,7 @@ async def GradeTheExam(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.GradeTheExam(request.client.host, Token.strip(), ID)
 
 
@@ -101,7 +101,7 @@ async def ImportExamInfo(
         request: Request,
         Token: str = Form(''),
         ExcelFile: UploadFile = File(...),
-) -> Result:
+):
     Contents: bytes = await ExcelFile.read()
     return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ExcelFile.content_type, Contents)
 
@@ -111,5 +111,5 @@ async def ImportExamInfo(
 async def DownloadExamInfoDemo(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return examInfoLogic.DownloadExamInfoDemo(Token.strip())

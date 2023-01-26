@@ -8,7 +8,7 @@ class ClassModel(BaseModel):
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
+    def Insert(self, _dbsession: DBsession, Data: EType):
         _result = Result()
         Data.CreateTime = self._common.Time()
         Data.ClassName = Data.ClassName.strip()
@@ -32,7 +32,7 @@ class ClassModel(BaseModel):
         _result.Data = Data.ID
         return _result
 
-    def Delete(self, _dbsession: DBsession, ID: int) -> Result:
+    def Delete(self, _dbsession: DBsession, ID: int):
         _result = Result()
         try:
             Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
@@ -49,7 +49,7 @@ class ClassModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str):
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -76,7 +76,7 @@ class ClassModel(BaseModel):
     def FindClassCode(self, _dbsession: DBsession, ClassName: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ClassCode == self._common.StrMD5(ClassName.strip())).first()
 
-    def Classes(self, _dbsession: DBsession) -> ResultList:
+    def Classes(self, _dbsession: DBsession):
         _result = ResultList()
         _result.State = True
         sql = _dbsession.query(self.EType)

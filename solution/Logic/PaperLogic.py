@@ -7,7 +7,7 @@ class PaperLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewPaper(self, ClientHost: str, Token: str, PaperName: str, SubjectID: int, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
+    def NewPaper(self, ClientHost: str, Token: str, PaperName: str, SubjectID: int, TotalScore: float, PassLine: float, ExamDuration: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -57,7 +57,7 @@ class PaperLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def PaperDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -119,7 +119,7 @@ class PaperLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
+    def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -170,7 +170,7 @@ class PaperLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> ResultList:
+    def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -186,7 +186,7 @@ class PaperLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperInfo(self, Token: str, ID: int) -> Result:
+    def PaperInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

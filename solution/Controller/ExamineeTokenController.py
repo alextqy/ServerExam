@@ -10,7 +10,7 @@ ExamineeTokenPrefix = ''
 async def SignInStudentID(
         request: Request,
         Account: str = Form(''),
-) -> Result:
+):
     return examineeTokenLogic.SignInStudentID(Account.strip())
 
 
@@ -19,7 +19,7 @@ async def SignInStudentID(
 async def SignInAdmissionTicket(
         request: Request,
         ExamNo: str = Form(''),
-) -> Result:
+):
     return examineeTokenLogic.SignInAdmissionTicket(request.client.host, ExamNo.strip())
 
 
@@ -28,7 +28,7 @@ async def SignInAdmissionTicket(
 async def ExamScantronList(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return examineeTokenLogic.ExamScantronList(Token.strip())
 
 
@@ -38,7 +38,7 @@ async def ExamScantronSolutionInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examineeTokenLogic.ExamScantronSolutionInfo(Token.strip(), ID)
 
 
@@ -50,7 +50,7 @@ async def ExamAnswer(
         ScantronID: int = Form(0),
         ID: int = Form(0),
         Answer: str = Form(''),
-) -> Result:
+):
     return examineeTokenLogic.ExamAnswer(Token.strip(), ScantronID, ID, Answer.strip())
 
 
@@ -59,5 +59,5 @@ async def ExamAnswer(
 async def EndTheExam(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return examineeTokenLogic.EndTheExam(request.client.host, Token.strip())

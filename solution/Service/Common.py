@@ -6,14 +6,13 @@ class Result:
     State: bool
     Memo: str
     Code: int
-    Data: None
+    Data: object
 
     def __init__(self) -> None:
         super().__init__()
         self.State = False
         self.Memo = ''
         self.Code = 200
-        self.Data = None
 
 
 class ResultList:
@@ -23,7 +22,7 @@ class ResultList:
     Page: int
     PageSize: int
     TotalPage: int
-    Data: None
+    Data: object
 
     def __init__(self) -> None:
         super().__init__()
@@ -33,7 +32,6 @@ class ResultList:
         self.Page = 0
         self.PageSize = 0
         self.TotalPage = 0
-        self.Data = None
 
 
 class Common(BaseService):
@@ -53,6 +51,7 @@ class Common(BaseService):
         else:
             return 'Other'
 
+    '''
     # 获取CPU序列号
     def CPUID(self) -> str:
         osType = self.OSType()
@@ -81,6 +80,7 @@ class Common(BaseService):
             return boardInfo.strip().replace('Serial Number:', '').replace(' ', '')
         else:
             return ''
+    '''
 
     # 字符串过滤 只匹配大小写字母和数字的组合
     def MatchAll(self, Param: str) -> bool:

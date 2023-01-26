@@ -7,7 +7,7 @@ class ManagerLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ManagerSignIn(self, ClientHost: str, Account: str, Password: str) -> Result:
+    def ManagerSignIn(self, ClientHost: str, Account: str, Password: str):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
@@ -45,7 +45,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ManagerSignOut(self, ClientHost: str, Token: str) -> Result:
+    def ManagerSignOut(self, ClientHost: str, Token: str):
         result = Result()
         _dbsession = DBsession()
         if Token == '':
@@ -75,7 +75,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def NewManager(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str) -> Result:
+    def NewManager(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -121,7 +121,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ManagerDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ManagerDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -165,7 +165,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ManagerChangePassword(self, ClientHost: str, Token: str, NewPassword: str, ID: int) -> Result:
+    def ManagerChangePassword(self, ClientHost: str, Token: str, NewPassword: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -202,7 +202,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateManagerInfo(self, ClientHost: str, Token: str, Name: str, Permission: int, ID: int) -> Result:
+    def UpdateManagerInfo(self, ClientHost: str, Token: str, Name: str, Permission: int, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -244,7 +244,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
+    def ManagerList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int, Permission: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -257,7 +257,7 @@ class ManagerLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ManagerInfo(self, Token: str, ID: int) -> Result:
+    def ManagerInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

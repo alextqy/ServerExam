@@ -7,7 +7,7 @@ class QuestionSolutionLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewQuestionSolution(self, ClientHost: str, Token: str, QuestionID: int, Option: str, CorrectAnswer: int, CorrectItem: str, ScoreRatio: float, Position: int) -> Result:
+    def NewQuestionSolution(self, ClientHost: str, Token: str, QuestionID: int, Option: str, CorrectAnswer: int, CorrectItem: str, ScoreRatio: float, Position: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -331,7 +331,7 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionSolutionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
+    def QuestionSolutionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -444,7 +444,7 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionSolutionList(self, Token: str, Page: int, PageSize: int, QuestionID: int) -> ResultList:
+    def QuestionSolutionList(self, Token: str, Page: int, PageSize: int, QuestionID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -459,7 +459,7 @@ class QuestionSolutionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionSolutions(self, Token: str, QuestionID: int, Position: int = 0) -> ResultList:
+    def QuestionSolutions(self, Token: str, QuestionID: int, Position: int = 0):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

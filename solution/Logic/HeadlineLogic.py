@@ -7,7 +7,7 @@ class HeadlineLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewHeadline(self, ClientHost: str, Token: str, Content: str) -> Result:
+    def NewHeadline(self, ClientHost: str, Token: str, Content: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -39,7 +39,7 @@ class HeadlineLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str) -> Result:
+    def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -85,7 +85,7 @@ class HeadlineLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str) -> ResultList:
+    def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -98,7 +98,7 @@ class HeadlineLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def HeadlineInfo(self, Token: str, ID: int) -> Result:
+    def HeadlineInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -118,7 +118,7 @@ class HeadlineLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def Headlines(self, Token: str) -> ResultList:
+    def Headlines(self, Token: str):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

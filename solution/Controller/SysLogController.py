@@ -15,7 +15,7 @@ async def SysLogList(
         Stext: str = Form(''),
         Type: int = Form(0),
         ManagerID: int = Form(0),
-) -> ResultList:
+):
     return sysLogLogic.SysLogList(Token.strip(), Page, PageSize, Stext.strip(), Type, ManagerID)
 
 
@@ -25,5 +25,5 @@ async def SysLogInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return sysLogLogic.SysLogInfo(Token.strip(), ID)

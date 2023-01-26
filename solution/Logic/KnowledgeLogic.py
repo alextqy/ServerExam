@@ -7,7 +7,7 @@ class KnowledgeLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewKnowledge(self, ClientHost: str, Token: str, KnowledgeName: str, SubjectID: int) -> Result:
+    def NewKnowledge(self, ClientHost: str, Token: str, KnowledgeName: str, SubjectID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -46,7 +46,7 @@ class KnowledgeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def KnowledgeDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def KnowledgeDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -86,7 +86,7 @@ class KnowledgeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateKnowledgeInfo(self, ClientHost: str, Token: str, ID: int, KnowledgeName: str) -> Result:
+    def UpdateKnowledgeInfo(self, ClientHost: str, Token: str, ID: int, KnowledgeName: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -130,7 +130,7 @@ class KnowledgeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def KnowledgeList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, KnowledgeState: int) -> ResultList:
+    def KnowledgeList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, KnowledgeState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -143,7 +143,7 @@ class KnowledgeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def KnowledgeInfo(self, Token: str, ID: int) -> Result:
+    def KnowledgeInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -163,7 +163,7 @@ class KnowledgeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def Knowledge(self, Token: str, SubjectID: int = 0) -> ResultList:
+    def Knowledge(self, Token: str, SubjectID: int = 0):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

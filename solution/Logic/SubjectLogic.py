@@ -7,7 +7,7 @@ class SubjectLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewSubject(self, ClientHost: str, Token: str, SubjectName: str) -> Result:
+    def NewSubject(self, ClientHost: str, Token: str, SubjectName: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -39,7 +39,7 @@ class SubjectLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def SubjectDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def SubjectDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -81,7 +81,7 @@ class SubjectLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str) -> Result:
+    def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -127,7 +127,7 @@ class SubjectLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> ResultList:
+    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -140,7 +140,7 @@ class SubjectLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def SubjectInfo(self, Token: str, ID: int) -> Result:
+    def SubjectInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -160,7 +160,7 @@ class SubjectLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def Subjects(self, Token: str) -> ResultList:
+    def Subjects(self, Token: str):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

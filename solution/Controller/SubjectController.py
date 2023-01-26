@@ -11,7 +11,7 @@ async def NewSubject(
         request: Request,
         Token: str = Form(''),
         SubjectName: str = Form(''),
-) -> Result:
+):
     return subjectLogic.NewSubject(request.client.host, Token.strip(), SubjectName.strip())
 
 
@@ -21,7 +21,7 @@ async def SubjectDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return subjectLogic.SubjectDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -32,7 +32,7 @@ async def UpdateSubjectInfo(
         Token: str = Form(''),
         ID: int = Form(0),
         SubjectName: str = Form(''),
-) -> Result:
+):
     return subjectLogic.UpdateSubjectInfo(request.client.host, Token.strip(), ID, SubjectName.strip())
 
 
@@ -45,7 +45,7 @@ async def SubjectList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         SubjectState: int = Form(0),
-) -> ResultList:
+):
     return subjectLogic.SubjectList(Token.strip(), Page, PageSize, Stext.strip(), SubjectState)
 
 
@@ -55,7 +55,7 @@ async def SubjectInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return subjectLogic.SubjectInfo(Token.strip(), ID)
 
 
@@ -64,5 +64,5 @@ async def SubjectInfo(
 async def Subjects(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return subjectLogic.Subjects(Token.strip())

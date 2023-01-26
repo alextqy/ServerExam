@@ -14,7 +14,7 @@ async def ExamLogList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         Type: int = Form(0),
-) -> ResultList:
+):
     return examLogLogic.ExamLogList(Token.strip(), Page, PageSize, Stext.strip(), Type)
 
 
@@ -24,5 +24,5 @@ async def ExamLogInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examLogLogic.ExamLogInfo(Token.strip(), ID)

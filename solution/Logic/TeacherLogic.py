@@ -7,7 +7,7 @@ class TeacherLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewTeacher(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str) -> Result:
+    def NewTeacher(self, ClientHost: str, Token: str, Account: str, Password: str, Name: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -52,7 +52,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def TeacherDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -94,7 +94,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateTeacherInfo(self, ClientHost: str, Token: str, Password: str, Name: str, ID: int) -> Result:
+    def UpdateTeacherInfo(self, ClientHost: str, Token: str, Password: str, Name: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -133,7 +133,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int) -> ResultList:
+    def TeacherList(self, Token: str, Page: int, PageSize: int, Stext: str, State: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -146,7 +146,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherInfo(self, Token: str, ID: int) -> Result:
+    def TeacherInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -166,7 +166,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherSignIn(self, ClientHost: str, Account: str, Password: str) -> Result:
+    def TeacherSignIn(self, ClientHost: str, Account: str, Password: str):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
@@ -204,7 +204,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherSignOut(self, ClientHost: str, Token: str) -> Result:
+    def TeacherSignOut(self, ClientHost: str, Token: str):
         result = Result()
         _dbsession = DBsession()
         if Token == '':
@@ -234,7 +234,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherChangePassword(self, ClientHost: str, Token: str, NewPassword: str) -> Result:
+    def TeacherChangePassword(self, ClientHost: str, Token: str, NewPassword: str):
         result = Result()
         _dbsession = DBsession()
         TeacherID = self.TeacherPermissionValidation(_dbsession, Token)

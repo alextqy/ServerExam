@@ -13,7 +13,7 @@ async def ScantronHistoryList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         ExamID: int = Form(0),
-) -> ResultList:
+):
     return scantronHistoryLogic.ScantronHistoryList(Token.strip(), Page, PageSize, ExamID)
 
 
@@ -23,5 +23,5 @@ async def ScantronHistoryInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return scantronHistoryLogic.ScantronHistoryInfo(Token.strip(), ID)

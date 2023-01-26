@@ -7,7 +7,7 @@ class ScantronSolutionHistoryLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ScantronSolutionHistoryList(self, Token: str, Page: int, PageSize: int, ScantronID: int, Position: int) -> ResultList:
+    def ScantronSolutionHistoryList(self, Token: str, Page: int, PageSize: int, ScantronID: int, Position: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -20,7 +20,7 @@ class ScantronSolutionHistoryLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ScantronSolutionHistoryInfo(self, Token: str, ID: int) -> Result:
+    def ScantronSolutionHistoryInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

@@ -7,7 +7,7 @@ class QuestionLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str, Language: str = '', LanguageVersion: str = '') -> Result:
+    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str, Language: str = '', LanguageVersion: str = ''):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -93,7 +93,7 @@ class QuestionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
+    def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -174,7 +174,7 @@ class QuestionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def QuestionDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -359,7 +359,7 @@ class QuestionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str, Language: str, LanguageVersion: str) -> Result:
+    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str, Language: str, LanguageVersion: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -441,7 +441,7 @@ class QuestionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int) -> ResultList:
+    def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -454,7 +454,7 @@ class QuestionLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def QuestionInfo(self, Token: str, ID: int) -> Result:
+    def QuestionInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

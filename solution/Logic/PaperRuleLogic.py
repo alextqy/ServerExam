@@ -7,7 +7,7 @@ class PaperRuleLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewPaperRule(self, ClientHost: str, Token: str, HeadlineID: int, QuestionType: int, KnowledgeID: int, QuestionNum: int, SingleScore: float, PaperID: int, SerialNumber: int) -> Result:
+    def NewPaperRule(self, ClientHost: str, Token: str, HeadlineID: int, QuestionType: int, KnowledgeID: int, QuestionNum: int, SingleScore: float, PaperID: int, SerialNumber: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -114,7 +114,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperRuleDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def PaperRuleDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -168,7 +168,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperRuleDelete(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def PaperRuleDelete(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -212,7 +212,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int) -> ResultList:
+    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -227,7 +227,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperRuleInfo(self, Token: str, ID: int) -> Result:
+    def PaperRuleInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -247,7 +247,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperRules(self, Token: str, PaperID: int) -> ResultList:
+    def PaperRules(self, Token: str, PaperID: int):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -262,7 +262,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdatePaperRule(self, ClientHost: str, Token: str, ID: int, QuestionType: int, QuestionNum: int, SingleScore: float, SerialNumber: int) -> Result:
+    def UpdatePaperRule(self, ClientHost: str, Token: str, ID: int, QuestionType: int, QuestionNum: int, SingleScore: float, SerialNumber: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

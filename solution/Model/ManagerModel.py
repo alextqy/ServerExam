@@ -8,7 +8,7 @@ class ManagerModel(BaseModel):
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
+    def Insert(self, _dbsession: DBsession, Data: EType):
         _result = Result()
         Data.CreateTime = self._common.Time()
         Data.Account = Data.Account.strip()
@@ -43,7 +43,7 @@ class ManagerModel(BaseModel):
         _result.Data = Data.ID
         return _result
 
-    def Delete(self, _dbsession: DBsession, ID: int) -> Result:
+    def Delete(self, _dbsession: DBsession, ID: int):
         _result = Result()
         try:
             Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
@@ -60,7 +60,7 @@ class ManagerModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int):
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -96,7 +96,7 @@ class ManagerModel(BaseModel):
     def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
 
-    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> Result:
+    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str):
         _result = Result()
         try:
             Data.Password = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.Password else Data.Password

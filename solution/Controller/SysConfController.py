@@ -11,5 +11,5 @@ async def ConfigInfo(
         request: Request,
         Token: str = Form(''),
         Key: str = Form(''),
-) -> Result:
+):
     return sysConfLogic.ConfigInfo(Token.strip(), Key.strip())

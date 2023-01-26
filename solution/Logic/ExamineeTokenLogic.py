@@ -8,7 +8,7 @@ class ExamineeTokenLogic(BaseLogic):
         super().__init__()
 
     # 获取当前考生的报名列表
-    def SignInStudentID(self, Account: str) -> Result:
+    def SignInStudentID(self, Account: str):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
@@ -28,7 +28,7 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def SignInAdmissionTicket(self, ClientHost: str, ExamNo: str) -> Result:
+    def SignInAdmissionTicket(self, ClientHost: str, ExamNo: str):
         result = Result()
         _dbsession = DBsession()
         if ExamNo == '':
@@ -42,7 +42,7 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PostLoginOperationAction(self, ClientHost: str, ExamInfoID: int) -> Result:
+    def PostLoginOperationAction(self, ClientHost: str, ExamInfoID: int):
         result = Result()
         _dbsession = DBsession()
         if ExamInfoID <= 0:
@@ -101,7 +101,7 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamScantronList(self, Token: str) -> Result:
+    def ExamScantronList(self, Token: str):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -114,7 +114,7 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamScantronSolutionInfo(self, Token: str, ID: int) -> Result:
+    def ExamScantronSolutionInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -142,7 +142,7 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamAnswer(self, Token: str, ScantronID: int, ID: int, Answer: str = '') -> Result:
+    def ExamAnswer(self, Token: str, ScantronID: int, ID: int, Answer: str = ''):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -240,7 +240,7 @@ class ExamineeTokenLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def EndTheExam(self, ClientHost: str, Token: str) -> Result:
+    def EndTheExam(self, ClientHost: str, Token: str):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)

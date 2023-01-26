@@ -16,7 +16,7 @@ async def NewQuestionSolution(
         CorrectItem: str = Form(''),
         ScoreRatio: float = Form(0),
         Position: int = Form(0),
-) -> Result:
+):
     return questionSolutionLogic.NewQuestionSolution(request.client.host, Token.strip(), QuestionID, Option.strip(), CorrectAnswer, CorrectItem, ScoreRatio, Position)
 
 
@@ -27,7 +27,7 @@ async def QuestionSolutionAttachment(
         Token: str = Form(''),
         ID: int = Form(0),
         Attachment: UploadFile = File(...),
-) -> Result:
+):
     Contents: bytes = await Attachment.read()
     return questionSolutionLogic.QuestionSolutionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
 
@@ -38,7 +38,7 @@ async def QuestionSolutionDelete(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return questionSolutionLogic.QuestionSolutionDelete(request.client.host, Token.strip(), ID)
 
 
@@ -50,7 +50,7 @@ async def QuestionSolutionList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         QuestionID: int = Form(0),
-) -> ResultList:
+):
     return questionSolutionLogic.QuestionSolutionList(Token.strip(), Page, PageSize, QuestionID)
 
 

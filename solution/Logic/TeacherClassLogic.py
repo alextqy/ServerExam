@@ -7,7 +7,7 @@ class TeacherClassLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewTeacherClass(self, ClientHost: str, Token: str, TeacherID: int, ClassID: int) -> Result:
+    def NewTeacherClass(self, ClientHost: str, Token: str, TeacherID: int, ClassID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -46,7 +46,7 @@ class TeacherClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def DeleteTeacherClass(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def DeleteTeacherClass(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -76,7 +76,7 @@ class TeacherClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def TeacherClassList(self, Token: str, Page: int, PageSize: int, TeacherID: int, ClassID: int) -> ResultList:
+    def TeacherClassList(self, Token: str, Page: int, PageSize: int, TeacherID: int, ClassID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

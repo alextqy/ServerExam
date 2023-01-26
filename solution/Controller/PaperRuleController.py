@@ -17,7 +17,7 @@ async def NewPaperRule(
         SingleScore: float = Form(0),
         PaperID: int = Form(0),
         SerialNumber: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.NewPaperRule(request.client.host, Token.strip(), HeadlineID, QuestionType, KnowledgeID, QuestionNum, SingleScore, PaperID, SerialNumber)
 
 
@@ -27,7 +27,7 @@ async def PaperRuleDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -37,7 +37,7 @@ async def PaperRuleDelete(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleDelete(request.client.host, Token.strip(), ID)
 
 
@@ -50,7 +50,7 @@ async def PaperRuleList(
         PageSize: int = Form(10),
         PaperID: int = Form(0),
         PaperRuleState: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleList(Token.strip(), Page, PageSize, PaperID, PaperRuleState)
 
 
@@ -60,7 +60,7 @@ async def PaperRuleInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleInfo(Token.strip(), ID)
 
 
@@ -70,7 +70,7 @@ async def PaperRuleInfo(
         request: Request,
         Token: str = Form(''),
         PaperID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRules(Token.strip(), PaperID)
 
 
@@ -84,5 +84,5 @@ async def UpdatePaperRule(
         QuestionNum: int = Form(0),
         SingleScore: float = Form(0),
         SerialNumber: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.UpdatePaperRule(request.client.host, Token.strip(), ID, QuestionType, QuestionNum, SingleScore, SerialNumber)

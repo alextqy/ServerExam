@@ -7,7 +7,7 @@ class ExamineeLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewExaminee(self, ClientHost: str, Token: str, ExamineeNo: str, Name: str, ClassID: int, Contact: str) -> Result:
+    def NewExaminee(self, ClientHost: str, Token: str, ExamineeNo: str, Name: str, ClassID: int, Contact: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -51,7 +51,7 @@ class ExamineeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str) -> Result:
+    def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -93,7 +93,7 @@ class ExamineeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamineeList(self, Token: str, Page: int, PageSize: int, Stext: str, ClassID: int) -> ResultList:
+    def ExamineeList(self, Token: str, Page: int, PageSize: int, Stext: str, ClassID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -106,7 +106,7 @@ class ExamineeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamineeInfo(self, Token: str, ID: int) -> Result:
+    def ExamineeInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -126,7 +126,7 @@ class ExamineeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def Examinees(self, Token: str) -> ResultList:
+    def Examinees(self, Token: str):
         result = ResultList()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)

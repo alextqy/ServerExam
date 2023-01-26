@@ -7,7 +7,7 @@ class PracticeLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def SignInPractice(self, ExamineeNo: str) -> Result:
+    def SignInPractice(self, ExamineeNo: str):
         result = Result()
         _dbsession = DBsession()
         if ExamineeNo == '':
@@ -35,7 +35,7 @@ class PracticeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def NewPractice(self, Token: str, QuestionType: int) -> Result:
+    def NewPractice(self, Token: str, QuestionType: int):
         result = Result()
         _dbsession = DBsession()
         ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
@@ -112,7 +112,7 @@ class PracticeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PracticeInfo(self, Token: str, ID: int) -> Result:
+    def PracticeInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
@@ -138,7 +138,7 @@ class PracticeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PracticeAnswer(self, Token: str, PracticeID: int, ID: int, Answer: str = '') -> Result:
+    def PracticeAnswer(self, Token: str, PracticeID: int, ID: int, Answer: str = ''):
         result = Result()
         _dbsession = DBsession()
         ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
@@ -244,7 +244,7 @@ class PracticeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def GradeThePractice(self, Token: str, ID: int) -> Result:
+    def GradeThePractice(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         ExamineeTokenID: int = self.PracticeValidation(_dbsession, Token)
@@ -321,7 +321,7 @@ class PracticeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PracticeDeleteAction(self, ID: int) -> Result:
+    def PracticeDeleteAction(self, ID: int):
         result = Result()
         _dbsession = DBsession()
         if ID <= 0:
