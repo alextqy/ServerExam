@@ -34,7 +34,7 @@ async def QuestionAttachment(
 
 # 查看附件
 @QuestionRouter.post('/Question/View/Attachments')
-async def QuestionAttachment(
+async def QuestionViewAttachments(
         request: Request,
         Token: str = Form(''),
         FilePath: str = Form(''),
