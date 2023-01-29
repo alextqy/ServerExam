@@ -7,7 +7,7 @@ TeacherClassPrefix = ''
 
 # 新建教师班级关联数据
 @TeacherClassRouter.post('/New/Teacher/Class')
-async def NewTeacher(
+async def NewTeacherClass(
         request: Request,
         Token: str = Form(''),
         TeacherID: int = Form(0),
