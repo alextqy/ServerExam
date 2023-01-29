@@ -66,7 +66,7 @@ async def PaperRuleInfo(
 
 # 获取所有试题规则
 @PaperRuleRouter.post('/Paper/Rules')
-async def PaperRuleInfo(
+async def PaperRules(
         request: Request,
         Token: str = Form(''),
         PaperID: int = Form(0),
