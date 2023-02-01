@@ -161,7 +161,7 @@ class SubjectLogic(BaseLogic):
         return result
 
     def Subjects(self, Token: str):
-        result = ResultList()
+        result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
@@ -169,6 +169,6 @@ class SubjectLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._subjectModel.Subjects(_dbsession)
+            result: Result = self._subjectModel.Subjects(_dbsession)
         _dbsession.close()
         return result

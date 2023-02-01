@@ -164,7 +164,7 @@ class KnowledgeLogic(BaseLogic):
         return result
 
     def Knowledge(self, Token: str, SubjectID: int = 0):
-        result = ResultList()
+        result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
@@ -172,6 +172,6 @@ class KnowledgeLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._knowledgeModel.Knowledge(_dbsession, SubjectID)
+            result: Result = self._knowledgeModel.Knowledge(_dbsession, SubjectID)
         _dbsession.close()
         return result

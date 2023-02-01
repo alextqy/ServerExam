@@ -248,7 +248,7 @@ class PaperRuleLogic(BaseLogic):
         return result
 
     def PaperRules(self, Token: str, PaperID: int):
-        result = ResultList()
+        result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
@@ -258,7 +258,7 @@ class PaperRuleLogic(BaseLogic):
         elif PaperID <= 0:
             result.Memo = self._lang.WrongPaperID
         else:
-            result: ResultList = self._paperRuleModel.PaperRules(_dbsession, PaperID)
+            result: Result = self._paperRuleModel.PaperRules(_dbsession, PaperID)
         _dbsession.close()
         return result
 

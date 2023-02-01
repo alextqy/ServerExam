@@ -37,3 +37,13 @@ async def TeacherClassList(
         ClassID: int = Form(0),
 ):
     return teacherClassLogic.TeacherClassList(Token.strip(), Page, PageSize, TeacherID, ClassID)
+
+
+# 教师列表
+@TeacherClassRouter.post('/Teachers')
+async def TeacherClassList(
+        request: Request,
+        Token: str = Form(''),
+        ClassID: int = Form(0),
+):
+    return teacherClassLogic.Teachers(Token.strip(), ClassID)

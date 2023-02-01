@@ -82,3 +82,11 @@ class TeacherClassModel(BaseModel):
 
     def CheckData(self, _dbsession: DBsession, TeacherID: int, ClassID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.TeacherID == TeacherID).filter(self.EType.ClassID == ClassID).first()
+
+    def Teachers(self, _dbsession: DBsession, ClassID: int):
+        _result = Result()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.ClassID == ClassID)
+        _result.Data = sql.all()
+        return _result

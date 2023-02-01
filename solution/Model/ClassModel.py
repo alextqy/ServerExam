@@ -77,7 +77,7 @@ class ClassModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.ClassCode == self._common.StrMD5(ClassName.strip())).first()
 
     def Classes(self, _dbsession: DBsession):
-        _result = ResultList()
+        _result = Result()
         _result.State = True
         sql = _dbsession.query(self.EType)
         _result.Data = sql.all()

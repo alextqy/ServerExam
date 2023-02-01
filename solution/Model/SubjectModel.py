@@ -83,7 +83,7 @@ class SubjectModel(BaseModel):
     #     return _dbsession.query(self.EType).filter(self.EType.SubjectState == SubjectState).all()
 
     def Subjects(self, _dbsession: DBsession):
-        _result = ResultList()
+        _result = Result()
         _result.State = True
         sql = _dbsession.query(self.EType)
         sql = sql.filter(self.EType.SubjectState == 1)

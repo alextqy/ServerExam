@@ -460,7 +460,7 @@ class QuestionSolutionLogic(BaseLogic):
         return result
 
     def QuestionSolutions(self, Token: str, QuestionID: int, Position: int = 0):
-        result = ResultList()
+        result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
@@ -470,7 +470,7 @@ class QuestionSolutionLogic(BaseLogic):
         elif QuestionID <= 0:
             result.Memo = self._lang.QuestionIDError
         else:
-            result = self._questionSolutionModel.Solutions(_dbsession, QuestionID, Position)
+            result: Result = self._questionSolutionModel.Solutions(_dbsession, QuestionID, Position)
         _dbsession.close()
         return result
 

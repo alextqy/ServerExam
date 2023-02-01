@@ -91,7 +91,7 @@ class QuestionSolutionModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.QuestionID == QuestionID).filter(self.EType.Option == Option).first()
 
     def Solutions(self, _dbsession: DBsession, QuestionID: int, Position: int):
-        _result = ResultList()
+        _result = Result()
         _result.State = True
         sql = _dbsession.query(self.EType)
         sql = sql.filter(self.EType.QuestionID == QuestionID)

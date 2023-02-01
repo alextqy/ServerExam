@@ -125,7 +125,7 @@ class ClassLogic(BaseLogic):
         return result
 
     def Classes(self, Token: str):
-        result = ResultList()
+        result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
         if Token == '':
@@ -133,6 +133,6 @@ class ClassLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._classModel.Classes(_dbsession)
+            result: Result = self._classModel.Classes(_dbsession)
         _dbsession.close()
         return result

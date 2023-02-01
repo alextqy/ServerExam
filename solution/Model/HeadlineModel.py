@@ -71,7 +71,7 @@ class HeadlineModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.ContentCode == self._common.StrMD5(Content.strip())).first()
 
     def Headlines(self, _dbsession: DBsession):
-        _result = ResultList()
+        _result = Result()
         _result.State = True
         sql = _dbsession.query(self.EType)
         _result.Data = sql.all()

@@ -88,3 +88,16 @@ class TeacherClassLogic(BaseLogic):
             result: ResultList = self._teacherClassModel.List(_dbsession, Page, PageSize, TeacherID, ClassID)
         _dbsession.close()
         return result
+
+    def Teachers(self, Token: str, ClassID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: Result = self._teacherClassModel.Teachers(_dbsession, ClassID)
+        _dbsession.close()
+        return result

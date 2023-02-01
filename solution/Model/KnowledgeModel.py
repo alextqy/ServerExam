@@ -82,7 +82,7 @@ class KnowledgeModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.KnowledgeCode == self._common.StrMD5(KnowledgeName.strip())).first()
 
     def Knowledge(self, _dbsession: DBsession, SubjectID: int):
-        _result = ResultList()
+        _result = Result()
         _result.State = True
         sql = _dbsession.query(self.EType)
         if SubjectID > 0:

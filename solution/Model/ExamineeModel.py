@@ -80,7 +80,7 @@ class ExamineeModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.ExamineeNo == ExamineeNo).first()
 
     def Examinees(self, _dbsession: DBsession):
-        _result = ResultList()
+        _result = Result()
         _result.State = True
         sql = _dbsession.query(self.EType)
         _result.Data = sql.all()
