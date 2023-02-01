@@ -90,3 +90,11 @@ class TeacherClassModel(BaseModel):
         sql = sql.filter(self.EType.ClassID == ClassID)
         _result.Data = sql.all()
         return _result
+
+    def Classes(self, _dbsession: DBsession, TeacherID: int):
+        _result = Result()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.TeacherID == TeacherID)
+        _result.Data = sql.all()
+        return _result
