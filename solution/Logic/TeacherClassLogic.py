@@ -89,6 +89,7 @@ class TeacherClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
+    # 指定班级下所有教师列表
     def Teachers(self, Token: str, ClassID: int):
         result = Result()
         _dbsession = DBsession()
@@ -100,8 +101,9 @@ class TeacherClassLogic(BaseLogic):
         else:
             TempResult: Result = self._teacherClassModel.Teachers(_dbsession, ClassID)
             DataList = []
-            for obj in TempResult.Data:
-                TeacherData: ClassModel = self._teacherModel.Find(_dbsession, obj.TeacherID)
+            for i in TempResult.Data:
+                Data: TeacherClassEntity = i
+                TeacherData: ClassModel = self._teacherModel.Find(_dbsession, Data.TeacherID)
                 DataList.append(TeacherData)
             result.State = True
             result.Memo = ''
@@ -109,6 +111,7 @@ class TeacherClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
+    # 指定教师所在的班级列表
     def Classes(self, Token: str, TeacherID: int):
         result = Result()
         _dbsession = DBsession()
@@ -120,8 +123,9 @@ class TeacherClassLogic(BaseLogic):
         else:
             TempResult: Result = self._teacherClassModel.Classes(_dbsession, TeacherID)
             DataList = []
-            for obj in TempResult.Data:
-                ClassData: ClassModel = self._classModel.Find(_dbsession, obj.ClassID)
+            for i in TempResult.Data:
+                Data: TeacherClassEntity = i
+                ClassData: ClassModel = self._classModel.Find(_dbsession, Data.ClassID)
                 DataList.append(ClassData)
             result.State = True
             result.Memo = ''
