@@ -39,6 +39,16 @@ async def TeacherClassList(
     return teacherClassLogic.TeacherClassList(Token.strip(), Page, PageSize, TeacherID, ClassID)
 
 
+# 教师对应班级信息
+@TeacherClassRouter.post('/Check/Teacher')
+async def CheckTeacher(
+        request: Request,
+        Token: str = Form(''),
+        TeacherID: int = Form(0),
+):
+    return teacherClassLogic.CheckTeacher(Token.strip(), TeacherID)
+
+
 # 教师列表
 @TeacherClassRouter.post('/Teachers')
 async def Teachers(

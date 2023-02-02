@@ -89,6 +89,19 @@ class TeacherClassLogic(BaseLogic):
         _dbsession.close()
         return result
 
+    # 教师对应班级信息
+    def CheckTeacher(self, Token: str, TeacherID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result = self._teacherClassModel.CheckTeacher(_dbsession, TeacherID)
+        return result
+
     # 指定班级下所有教师列表
     def Teachers(self, Token: str, ClassID: int):
         result = Result()
