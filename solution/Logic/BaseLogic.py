@@ -1,4 +1,6 @@
 # -*- coding:utf-8 -*-
+from typing import List, Dict, Tuple
+
 from Service.Cache import *
 from Service.Common import *
 from Service.Database import *

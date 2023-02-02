@@ -98,7 +98,14 @@ class TeacherClassLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: Result = self._teacherClassModel.Teachers(_dbsession, ClassID)
+            TempResult: Result = self._teacherClassModel.Teachers(_dbsession, ClassID)
+            DataList = []
+            for obj in TempResult.Data:
+                TeacherData: ClassModel = self._teacherModel.Find(_dbsession, obj.TeacherID)
+                DataList.append(TeacherData)
+            result.State = True
+            result.Memo = ''
+            result.Data = DataList
         _dbsession.close()
         return result
 
@@ -111,6 +118,13 @@ class TeacherClassLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: Result = self._teacherClassModel.Classes(_dbsession, TeacherID)
+            TempResult: Result = self._teacherClassModel.Classes(_dbsession, TeacherID)
+            DataList = []
+            for obj in TempResult.Data:
+                ClassData: ClassModel = self._classModel.Find(_dbsession, obj.ClassID)
+                DataList.append(ClassData)
+            result.State = True
+            result.Memo = ''
+            result.Data = DataList
         _dbsession.close()
         return result
