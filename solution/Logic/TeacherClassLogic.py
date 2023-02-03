@@ -145,3 +145,38 @@ class TeacherClassLogic(BaseLogic):
             result.Data = DataList
         _dbsession.close()
         return result
+
+    # 删除指定数据
+    def DeleteByTeacherClass(self, ClientHost: str, Token: str, TeacherID: int, ClassID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif TeacherID <= 0:
+            result.Memo = self._lang.WrongTeacherID
+        elif ClassID <= 0:
+            result.Memo = self._lang.WrongClassID
+        else:
+            Data = self._teacherClassModel.CheckData(_dbsession, TeacherID, ClassID)
+            if Data is None:
+                result.Memo = self._lang.NoData
+            else:
+                _dbsession.begin_nested()
+
+                DelInfo: Result = self._teacherClassModel.Delete(_dbsession, Data.ID)
+                if DelInfo.State == False:
+                    result.Memo = DelInfo.Memo
+                    return result
+
+                Desc = 'delete teacher-class data ID:' + str(Data.ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+            _dbsession.close()
+        return result

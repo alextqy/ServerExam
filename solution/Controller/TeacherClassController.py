@@ -67,3 +67,14 @@ async def Classes(
         TeacherID: int = Form(0),
 ):
     return teacherClassLogic.Classes(Token.strip(), TeacherID)
+
+
+# 删除对应关系
+@TeacherClassRouter.post('/Delete/By/Teacher/Class')
+async def DeleteByTeacherClass(
+        request: Request,
+        Token: str = Form(''),
+        TeacherID: int = Form(0),
+        ClassID: int = Form(0),
+):
+    return teacherClassLogic.DeleteByTeacherClass(request.client.host, Token.strip(), TeacherID, ClassID)
