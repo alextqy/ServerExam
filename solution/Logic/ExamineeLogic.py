@@ -51,7 +51,7 @@ class ExamineeLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str):
+    def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str, ClassID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -63,6 +63,8 @@ class ExamineeLogic(BaseLogic):
             result.Memo = self._lang.WrongID
         elif Name == '':
             result.Memo = self._lang.WrongName
+        elif ClassID <= 0:
+            result.Memo = self._lang.WrongClassID
         else:
             if Contact == '':
                 Contact = 'none'
@@ -77,6 +79,7 @@ class ExamineeLogic(BaseLogic):
             try:
                 ExamineeData.Name = Name
                 ExamineeData.Contact = Contact
+                ExamineeData.ClassID = ClassID
                 _dbsession.commit()
             except Exception as e:
                 result.Memo = str(e)

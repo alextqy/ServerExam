@@ -26,8 +26,9 @@ async def UpdateExaminee(
         ID: int = Form(0),
         Name: str = Form(''),
         Contact: str = Form(''),
+        ClassID: int = Form(0),
 ):
-    return examineeLogic.UpdateExaminee(request.client.host, Token.strip(), ID, Name.strip(), Contact.strip())
+    return examineeLogic.UpdateExaminee(request.client.host, Token.strip(), ID, Name.strip(), Contact.strip(), ClassID)
 
 
 # 考生列表
