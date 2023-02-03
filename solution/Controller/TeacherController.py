@@ -89,3 +89,12 @@ async def TeacherChangePassword(
         NewPassword: str = Form(''),
 ):
     return teacherLogic.TeacherChangePassword(request.client.host, Token.strip(), NewPassword.strip())
+
+
+# 全部教师
+@TeacherRouter.post('/Teachers')
+async def Teachers(
+        request: Request,
+        Token: str = Form(''),
+):
+    return teacherLogic.Teachers(Token.strip())

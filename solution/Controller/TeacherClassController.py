@@ -50,7 +50,7 @@ async def TeacherClassList(
 
 
 # 教师列表
-@TeacherClassRouter.post('/Teachers')
+@TeacherClassRouter.post('/Class/Teachers')
 async def Teachers(
         request: Request,
         Token: str = Form(''),

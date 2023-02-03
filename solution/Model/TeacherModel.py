@@ -103,3 +103,10 @@ class TeacherModel(BaseModel):
             return _result
         _result.State = True
         return _result
+
+    def Teachers(self, _dbsession: DBsession):
+        _result = Result()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        _result.Data = sql.all()
+        return _result
