@@ -817,7 +817,7 @@ class ExamInfoLogic(BaseLogic):
             ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
             if ExamInfoData is None:
                 result.Memo = self._lang.ExamDataError
-            elif ExamInfoData.StartState == 2:
+            elif ExamInfoData.StartState != 2:
                 result.Memo = self._lang.TheExamDidNotStart
             else:
                 _dbsession.begin_nested()
