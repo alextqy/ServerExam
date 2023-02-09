@@ -841,5 +841,7 @@ class ExamInfoLogic(BaseLogic):
                     result.Memo = self._lang.LoggingFailed
                     return result
 
-                _dbsession.close()
+                _dbsession.commit()
+                result.State = True
+        _dbsession.close()
         return result
