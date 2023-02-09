@@ -802,3 +802,44 @@ class ExamInfoLogic(BaseLogic):
             result.Data = FileEncodeStr
         _dbsession.close()
         return result
+
+    def ExamInfoSuspend(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.ExamDataError
+            elif ExamInfoData.StartState == 2:
+                result.Memo = self._lang.TheExamDidNotStart
+            else:
+                _dbsession.begin_nested()
+                try:
+                    if ExamInfoData.SuspendedState == 2:
+                        ExamInfoData.SuspendedState = 1
+                    else:
+                        ExamInfoData.SuspendedState = 2
+                    ExamInfoData.UpdateTime = self._common.Time()
+                    _dbsession.commit()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                if ExamInfoData.SuspendedState == 1:
+                    Desc = 'resume exam-info ID:' + str(ID)
+                if ExamInfoData.SuspendedState == 2:
+                    Desc = 'suspend exam-info ID:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    return result
+
+                _dbsession.close()
+        return result

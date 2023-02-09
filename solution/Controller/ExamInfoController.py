@@ -113,3 +113,13 @@ async def DownloadExamInfoDemo(
         Token: str = Form(''),
 ):
     return examInfoLogic.DownloadExamInfoDemo(Token.strip())
+
+
+# 报名作废
+@ExamInfoRouter.post('/ExamInfo/Suspend')
+async def ExamInfoSuspend(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return examInfoLogic.ExamInfoSuspend(request.client.host, Token.strip(), ID)
