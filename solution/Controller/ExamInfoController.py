@@ -12,10 +12,10 @@ async def NewExamInfo(
         Token: str = Form(''),
         SubjectName: str = Form(''),
         ExamNo: str = Form(''),
-        ExamineeID: int = Form(0),
+        ExamineeNo: str = Form(''),
         ExamType: int = Form(0),
 ):
-    return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeID, ExamType)
+    return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeNo, ExamType)
 
 
 # 报名作废

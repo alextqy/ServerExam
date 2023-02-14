@@ -7,7 +7,7 @@ class ExamInfoLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeID: int, ExamType: int):
+    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeNo: str, ExamType: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -28,17 +28,21 @@ class ExamInfoLogic(BaseLogic):
             elif SubjectData.SubjectState == 2:
                 result.Memo = self._lang.SubjectDataIsDisabled
             else:
-                if ExamineeID > 0:
+                ExamineeID = 0
+                if ExamineeNo != '':
+                    print(ExamineeNo)
                     # 考生信息是否存在
-                    if self._examineeModel.Find(_dbsession, ExamineeID) is None:
+                    ExamineeInfo = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
+                    if ExamineeInfo is None:
                         result.Memo = self._lang.ExamineeDataDoesNotExist
                         return result
                     # 该考生是否有相同科目的报名且未考试
-                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeID, SubjectName, ExamType)
+                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeInfo.ID, SubjectName, ExamType)
                     if CheckData is not None:
                         if CheckData.ExamState < 3:
                             result.Memo = self._lang.AlreadyRegisteredForTheSameSubject
                             return result
+                    ExamineeID = ExamineeInfo.ID
 
                 CheckExamNo: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
                 if CheckExamNo is not None and CheckExamNo.ExamState != 4:
