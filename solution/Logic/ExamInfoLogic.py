@@ -797,13 +797,14 @@ class ExamInfoLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            FileName: str = self._rootPath + 'Resource/demo.xls'
+            import struct
+            FileName: str = self._rootPath + 'Resource/demo.zip'
             with open(FileName, 'rb') as f:
-                FileEncode = b64encode(f.read())
-                FileEncodeStr = str(FileEncode, 'utf-8')
+                BtFile = f.read()
+            content = struct.unpack("B" * len(BtFile), BtFile)
             result.State = True
             result.Memo = self._file.CheckFileType(FileName)
-            result.Data = FileEncodeStr
+            result.Data = content
         _dbsession.close()
         return result
 
