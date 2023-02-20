@@ -30,7 +30,6 @@ class ExamInfoLogic(BaseLogic):
             else:
                 ExamineeID = 0
                 if ExamineeNo != '':
-                    print(ExamineeNo)
                     # 考生信息是否存在
                     ExamineeInfo = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
                     if ExamineeInfo is None:
