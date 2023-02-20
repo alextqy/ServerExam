@@ -681,9 +681,19 @@ class ExamInfoLogic(BaseLogic):
                         ExamType: int = int(XSheetListValue[1])
                         ExamNo: str = str(XSheetListValue[2]).strip()
                         ExamineeNo: str = str(XSheetListValue[3]).strip()
-                        Name: str = str(XSheetListValue[4]).strip()
-                        ClassName: str = str(XSheetListValue[5]).strip()
-                        Contact: str = str(XSheetListValue[6]).strip()
+
+                        if XSheetListValue[4] is not None and XSheetListValue[4] != '':
+                            Name: str = str(XSheetListValue[4]).strip()
+                        else:
+                            Name: str = ''
+                        if XSheetListValue[5] is not None and XSheetListValue[5] != '':
+                            ClassName: str = str(XSheetListValue[5]).strip()
+                        else:
+                            ClassName: str = ''
+                        if XSheetListValue[6] is not None and XSheetListValue[6] != '':
+                            Contact: str = str(XSheetListValue[6]).strip()
+                        else:
+                            Contact: str = ''
 
                         RowInfo: str = str(j) + self._lang.Row + ' '
                         if SubjectName == '':
@@ -692,7 +702,7 @@ class ExamInfoLogic(BaseLogic):
                             return result
 
                         if ExamType != 1 and ExamType != 2:
-                            result.Code = RowInfo + self._lang.WrongExamType
+                            result.Memo = RowInfo + self._lang.WrongExamType
                             _dbsession.rollback()
                             return result
 
@@ -702,17 +712,17 @@ class ExamInfoLogic(BaseLogic):
                             return result
 
                         if ExamineeNo != '' and Name == '':
-                            result.Code = RowInfo + self._lang.WrongName
+                            result.Memo = RowInfo + self._lang.WrongName
                             _dbsession.rollback()
                             return result
 
                         if ExamineeNo == '' and Name != '':
-                            result.Code = RowInfo + self._lang.WrongExamineeNo
+                            result.Memo = RowInfo + self._lang.WrongExamineeNo
                             _dbsession.rollback()
                             return result
 
                         if ExamineeNo != '' and ClassName == '':
-                            result.Code = RowInfo + self._lang.WrongClassName
+                            result.Memo = RowInfo + self._lang.WrongClassName
                             _dbsession.rollback()
                             return result
 

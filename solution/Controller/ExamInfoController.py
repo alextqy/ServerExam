@@ -101,9 +101,10 @@ async def ImportExamInfo(
         request: Request,
         Token: str = Form(''),
         ExcelFile: UploadFile = File(...),
+        ContentType: str = Form(''),
 ):
     Contents: bytes = await ExcelFile.read()
-    return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ExcelFile.content_type, Contents)
+    return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ContentType, Contents)
 
 
 # 下载导入文件Demo
