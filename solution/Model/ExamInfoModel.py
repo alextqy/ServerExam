@@ -52,10 +52,10 @@ class ExamInfoModel(BaseModel):
         if Data.ExamType <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        # if Data.Pass <= 0:
-        #     Data.Pass = 1
-        # if Data.ExamState <= 0:
-        #     Data.ExamState = 1
+        if Data.Pass <= 0:
+            Data.Pass = 1
+        if Data.ExamState <= 0:
+            Data.ExamState = 1
         Data.StartState = 1
         Data.SuspendedState = 1
         try:
