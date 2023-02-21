@@ -812,7 +812,7 @@ class ExamInfoLogic(BaseLogic):
             FileName: str = self._rootPath + 'Resource/demo.zip'
             with open(FileName, 'rb') as f:
                 BtFile = f.read()
-            content = struct.unpack("B" * len(BtFile), BtFile)
+            content = struct.unpack('B' * len(BtFile), BtFile)
             result.State = True
             result.Memo = self._file.CheckFileType(FileName)
             result.Data = content

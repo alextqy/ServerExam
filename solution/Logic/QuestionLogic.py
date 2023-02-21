@@ -44,6 +44,11 @@ class QuestionLogic(BaseLogic):
                 Language = Language.lower()
                 LanguageVersion = LanguageVersion.lower()
 
+                LanguageList = ['php', 'javascript', 'python', 'java', 'c']
+                if Language not in LanguageList:
+                    result.Memo = self._lang.WrongLanguage
+                    return result
+
                 if Language == 'php' and LanguageVersion != 'latest':
                     if float(LanguageVersion) >= 6 and float(LanguageVersion) < 7:
                         result.Memo = self._lang.ParamErr + ' ver.5 ver.7 ver.8 required'
