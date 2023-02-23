@@ -45,7 +45,7 @@ class QuestionLogic(BaseLogic):
                 LanguageVersion = LanguageVersion.lower()
 
                 LanguageList = ['php', 'javascript', 'python', 'java', 'c']
-                if Language not in LanguageList:
+                if Language != '' and Language not in LanguageList:
                     result.Memo = self._lang.WrongLanguage
                     return result
 
