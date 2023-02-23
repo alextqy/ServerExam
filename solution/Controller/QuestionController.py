@@ -27,9 +27,10 @@ async def QuestionAttachment(
         Token: str = Form(''),
         ID: int = Form(0),
         Attachment: UploadFile = File(...),
+        ContentType: str = Form(''),
 ):
     Contents: bytes = await Attachment.read()
-    return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
+    return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, ContentType, Contents)
 
 
 # 查看附件
