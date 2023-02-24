@@ -169,13 +169,14 @@ class QuestionLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
+            import struct
             if FilePath != '' and FilePath != 'none':
                 with open(FilePath, 'rb') as f:
-                    FileEncode = b64encode(f.read())
-                    FileEncodeStr = str(FileEncode, 'utf-8')
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
                 result.State = True
                 result.Memo = self._file.CheckFileType(FilePath)
-                result.Data = FileEncodeStr
+                result.Data = content
         _dbsession.close()
         return result
 
