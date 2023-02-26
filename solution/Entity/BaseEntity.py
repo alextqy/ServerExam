@@ -35,7 +35,7 @@ DBsession = sessionmaker(
     autoflush=False,
     bind=DBEngine,
     expire_on_commit=False,
-    __allow_unmapped__=True,
+    # __allow_unmapped__=True,
 )
 BaseORM = declarative_base()
 
