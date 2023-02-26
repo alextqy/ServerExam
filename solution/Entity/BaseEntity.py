@@ -5,6 +5,7 @@ from Service.Database import *
 from Service.FileHelper import *
 from Service.Lang import *
 from Service.UDPTool import *
+from sqlalchemy.orm import Mapped
 
 _common = Common()
 ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
@@ -34,13 +35,14 @@ DBsession = sessionmaker(
     autoflush=False,
     bind=DBEngine,
     expire_on_commit=False,
+    __allow_unmapped__=True,
 )
 BaseORM = declarative_base()
 
 
 class BaseEntity:
-    ID: int = Column(INTEGER, primary_key=True, index=True, comment='ID')
-    CreateTime: int = Column(INTEGER, comment='创建时间', default=0)
+    ID: Mapped[int] = Column(INTEGER, primary_key=True, index=True, comment='ID')
+    CreateTime: Mapped[int] = Column(INTEGER, comment='创建时间', default=0)
 
     def __init__(self):
         super().__init__()
