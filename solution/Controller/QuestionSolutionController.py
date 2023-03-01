@@ -72,3 +72,14 @@ async def QuestionSolutionViewAttachments(
         FilePath: str = Form(''),
 ):
     return questionSolutionLogic.QuestionSolutionViewAttachments(Token.strip(), FilePath)
+
+
+# 删除试题选项
+@QuestionSolutionRouter.post('/Set/Score/Ratio')
+async def SetScoreRatio(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+        ScoreRatio: float = Form(0),
+):
+    return questionSolutionLogic.SetScoreRatio(request.client.host, Token.strip(), ID, ScoreRatio)

@@ -492,3 +492,43 @@ class QuestionSolutionLogic(BaseLogic):
                 result.Data = FileEncodeStr
         _dbsession.close()
         return result
+
+    def SetScoreRatio(self, ClientHost: str, Token: str, ID: int, ScoreRatio: float):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            QuestionSolutionData: QuestionSolutionEntity = self._questionSolutionModel.Find(_dbsession, ID)
+            if QuestionSolutionData is None:
+                result.Memo = self._lang.QuestionSolutionDataError
+            else:
+                QuestionData: QuestionEntity = self._questionModel.Find(_dbsession, QuestionSolutionData.QuestionID)
+                if QuestionData is None:
+                    result.Memo = self._lang.QuestionDataError
+                elif QuestionData.QuestionType != 4 and QuestionData.QuestionType != 5:
+                    result.Memo = self._lang.WrongQuestionType
+                else:
+                    _dbsession.begin_nested()
+
+                    try:
+                        QuestionSolutionData.ScoreRatio = ScoreRatio
+                        QuestionData.QuestionState = 2
+                        _dbsession.commit()
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _dbsession.rollback()
+                        return result
+
+                    Desc = 'update question solution ScoreRatio ID:' + str(ID)
+                    if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                        result.Memo = self._lang.LoggingFailed
+                        return result
+
+                    _dbsession.commit()
+                    result.State = True
+        _dbsession.close()
+        return result
