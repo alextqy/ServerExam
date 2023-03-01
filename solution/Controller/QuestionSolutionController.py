@@ -27,9 +27,10 @@ async def QuestionSolutionAttachment(
         Token: str = Form(''),
         ID: int = Form(0),
         Attachment: UploadFile = File(...),
+        ContentType: str = Form(''),
 ):
     Contents: bytes = await Attachment.read()
-    return questionSolutionLogic.QuestionSolutionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
+    return questionSolutionLogic.QuestionSolutionAttachment(request.client.host, Token.strip(), ID, ContentType, Contents)
 
 
 # 删除试题选项
@@ -65,6 +66,7 @@ async def QuestionSolutions(
     return questionSolutionLogic.QuestionSolutions(Token.strip(), QuestionID, Position)
 
 
+# 查看附件
 @QuestionSolutionRouter.post('/Question/Solution/View/Attachments')
 async def QuestionSolutionViewAttachments(
         request: Request,

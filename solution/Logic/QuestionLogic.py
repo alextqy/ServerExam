@@ -110,8 +110,8 @@ class QuestionLogic(BaseLogic):
             result.Memo = self._lang.WrongID
         elif FileType == '':
             result.Memo = self._lang.WrongFileType
-        elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
-            result.Memo = self._lang.TooLargeFile
+        # elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
+        #     result.Memo = self._lang.TooLargeFile
         else:
             FileType = self._common.MIME(FileType)
             if FileType == '':
