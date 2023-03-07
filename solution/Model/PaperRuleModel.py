@@ -79,7 +79,8 @@ class PaperRuleModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         sql = sql.filter(self.EType.PaperID == PaperID)
-        sql = sql.filter(self.EType.PaperRuleState == PaperRuleState)
+        if PaperRuleState > 0:
+            sql = sql.filter(self.EType.PaperRuleState == PaperRuleState)
         if sql.count() > 0:
             _result.TotalPage = math.ceil(sql.count() / PageSize)
         if _result.TotalPage > 0 and Page > _result.TotalPage:
