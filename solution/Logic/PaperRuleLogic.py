@@ -212,7 +212,7 @@ class PaperRuleLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int):
+    def PaperRuleList(self, Token: str, Page: int, PageSize: int, PaperID: int, PaperRuleState: int, OrderBySerialNumber: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -223,7 +223,7 @@ class PaperRuleLogic(BaseLogic):
         elif PaperID <= 0:
             result.Memo = self._lang.WrongPaperID
         else:
-            result: ResultList = self._paperRuleModel.List(_dbsession, Page, PageSize, PaperID, PaperRuleState)
+            result: ResultList = self._paperRuleModel.List(_dbsession, Page, PageSize, PaperID, PaperRuleState, OrderBySerialNumber)
         _dbsession.close()
         return result
 

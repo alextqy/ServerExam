@@ -50,8 +50,9 @@ async def PaperRuleList(
         PageSize: int = Form(10),
         PaperID: int = Form(0),
         PaperRuleState: int = Form(0),
+        OrderBySerialNumber: int = Form(0),
 ):
-    return paperRuleLogic.PaperRuleList(Token.strip(), Page, PageSize, PaperID, PaperRuleState)
+    return paperRuleLogic.PaperRuleList(Token.strip(), Page, PageSize, PaperID, PaperRuleState, OrderBySerialNumber)
 
 
 # 试题规则详情

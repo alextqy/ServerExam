@@ -66,7 +66,7 @@ class PaperRuleModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, PaperID: int, PaperRuleState: int):
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, PaperID: int, PaperRuleState: int, OrderBySerialNumber: int):
         _result = ResultList()
         _result.State = True
         _result.Page = Page
@@ -77,7 +77,12 @@ class PaperRuleModel(BaseModel):
         if PageSize <= 0:
             PageSize = 10
         sql = _dbsession.query(self.EType)
-        sql = sql.order_by(desc(self.EType.ID))
+        if OrderBySerialNumber == 1:
+            sql = sql.order_by(asc(self.EType.ID))
+        elif OrderBySerialNumber == 2:
+            sql = sql.order_by(desc(self.EType.ID))
+        else:
+            sql = sql.order_by(desc(self.EType.ID))
         sql = sql.filter(self.EType.PaperID == PaperID)
         if PaperRuleState > 0:
             sql = sql.filter(self.EType.PaperRuleState == PaperRuleState)
