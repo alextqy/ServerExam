@@ -56,7 +56,7 @@ class PaperRuleLogic(BaseLogic):
                 if KnowledgeData is None:
                     result.Memo = self._lang.KnowledgeDataError
                     return result
-                if KnowledgeData.ID != SubjectData.ID:
+                if KnowledgeData.SubjectID != SubjectData.ID:
                     result.Memo = self._lang.KnowledgeIDError
                     return result
                 # 是否有相同类型的试题规则
