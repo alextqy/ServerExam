@@ -278,3 +278,16 @@ class ManagerLogic(BaseLogic):
                 result.Data = ManagerData
         _dbsession.close()
         return result
+
+    def Managers(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: Result = self._managerModel.Managers(_dbsession)
+        _dbsession.close()
+        return result

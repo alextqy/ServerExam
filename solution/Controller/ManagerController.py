@@ -91,3 +91,12 @@ async def ManagerInfo(
         ID: int = Form(0),
 ):
     return managerLogic.ManagerInfo(Token.strip(), ID)
+
+
+# 所有管理员
+@ManagerRouter.post('/Managers')
+async def Managers(
+        request: Request,
+        Token: str = Form(''),
+):
+    return managerLogic.Managers(Token.strip())

@@ -108,3 +108,10 @@ class ManagerModel(BaseModel):
             return _result
         _result.State = True
         return _result
+
+    def Managers(self, _dbsession: DBsession):
+        _result = Result()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        _result.Data = sql.all()
+        return _result
