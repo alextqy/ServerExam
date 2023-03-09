@@ -68,7 +68,7 @@ class SysLogModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
-            sql = sql.filter(or_(self.EType.IP.ilike('%' + Stext.strip() + '%')))
+            sql = sql.filter(or_(self.EType.IP.ilike('%' + Stext.strip() + '%'), self.EType.Description.ilike('%' + Stext.strip() + '%')))
         if Type > 0:
             sql = sql.filter(self.EType.Type == Type)
         if ManagerID > 0:
