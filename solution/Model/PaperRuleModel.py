@@ -78,9 +78,9 @@ class PaperRuleModel(BaseModel):
             PageSize = 10
         sql = _dbsession.query(self.EType)
         if OrderBySerialNumber == 1:
-            sql = sql.order_by(asc(self.EType.ID))
+            sql = sql.order_by(asc(self.EType.SerialNumber))
         elif OrderBySerialNumber == 2:
-            sql = sql.order_by(desc(self.EType.ID))
+            sql = sql.order_by(desc(self.EType.SerialNumber))
         else:
             sql = sql.order_by(desc(self.EType.ID))
         sql = sql.filter(self.EType.PaperID == PaperID)
