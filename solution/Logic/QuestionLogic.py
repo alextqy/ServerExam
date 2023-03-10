@@ -323,14 +323,27 @@ class QuestionLogic(BaseLogic):
                             EmptyAnswer: bool = True  # 判断答案是否为空
                             LeftPositionCount: int = 0  # 左侧选项统计
                             RightPositionCount: int = 0  # 右侧选项统计
+                            LeftPositionOption = []  # 左侧选项
+                            RightPositionCorrectItem = []  # 右侧答案项
                             for i in QuestionSolutionDataList:
                                 Data: QuestionSolutionEntity = i
                                 if Data.Position == 1:
                                     LeftPositionCount += 1
+                                    LeftPositionOption.append(Data.Option)
                                 if Data.Position == 2:
                                     RightPositionCount += 1
+                                    RightPositionCorrectItem.append(Data.CorrectItem)
                                 if Data.CorrectItem != '':
                                     EmptyAnswer = False
+                            # 判断答案项是否为左侧选项
+                            for Item in RightPositionCorrectItem:
+                                if Item not in LeftPositionOption:
+                                    result.Memo = self._lang.WrongCorrectItem
+                                    return result
+                            # 判断答案项是否有相同值
+                            if len(RightPositionCorrectItem) != len(list(dict.fromkeys(RightPositionCorrectItem))):
+                                result.Memo = self._lang.WrongCorrectItem
+                                return result
                             # 两侧选项数量是否一致
                             if LeftPositionCount != RightPositionCount:
                                 result.Memo = self._lang.InconsistentNumberOfOptionsOnBothSides

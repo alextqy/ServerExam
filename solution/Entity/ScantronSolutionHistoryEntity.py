@@ -6,7 +6,7 @@ from Entity.BaseEntity import *
 class ScantronSolutionHistoryEntity(BaseEntity, BaseORM):
     __tablename__ = 'ScantronSolutionHistory'
 
-    ScantronHistoryID: int = Column(INTEGER, comment='试题ID', default=0)
+    ScantronID: int = Column(INTEGER, comment='试题ID', default=0)
     Option: str = Column(String(128), comment='试题选项', default='none')
     OptionAttachment: str = Column(String(65535), comment='试题附件', default='none')
     CorrectAnswer: int = Column(INTEGER, comment='正确答案 1错误 2正确', default=0)

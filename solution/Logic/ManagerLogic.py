@@ -85,7 +85,7 @@ class ManagerLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         elif Account == '':
             result.Memo = self._lang.WrongAccount
-        elif len(Account) < 6:
+        elif len(Account) < 5:
             result.Memo = self._lang.AccountLengthIsNotEnough
         elif self._common.MatchAll(Account) == False:
             result.Memo = self._lang.AccountFormatError

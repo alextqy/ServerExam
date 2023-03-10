@@ -76,7 +76,7 @@ async def QuestionSolutionViewAttachments(
     return questionSolutionLogic.QuestionSolutionViewAttachments(Token.strip(), FilePath)
 
 
-# 删除试题选项
+# 修改试题选项得分比例(填空题)
 @QuestionSolutionRouter.post('/Set/Score/Ratio')
 async def SetScoreRatio(
         request: Request,
@@ -85,3 +85,14 @@ async def SetScoreRatio(
         ScoreRatio: float = Form(0),
 ):
     return questionSolutionLogic.SetScoreRatio(request.client.host, Token.strip(), ID, ScoreRatio)
+
+
+# 修改试题选项正确答案(拖拽题 连线题)
+@QuestionSolutionRouter.post('/Set/Correct/Item')
+async def SetCorrectItem(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+        CorrectItem: str = Form(''),
+):
+    return questionSolutionLogic.SetCorrectItem(request.client.host, Token.strip(), ID, CorrectItem)

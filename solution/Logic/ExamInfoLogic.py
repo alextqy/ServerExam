@@ -414,6 +414,7 @@ class ExamInfoLogic(BaseLogic):
 
                         # 当前报名下的答题卡转入历史
                         ScantronHistoryData = ScantronHistoryEntity()
+                        ScantronHistoryData.ID = ScantronData.ID
                         ScantronHistoryData.QuestionTitle = ScantronData.QuestionTitle
                         ScantronHistoryData.QuestionCode = ScantronData.QuestionCode
                         ScantronHistoryData.QuestionType = ScantronData.QuestionType
@@ -427,6 +428,7 @@ class ExamInfoLogic(BaseLogic):
                         AddInfo: Result = self._scantronHistoryModel.Insert(_dbsession, ScantronHistoryData)
                         if AddInfo.State == False:
                             result.Memo = AddInfo.Memo
+                            _dbsession.rollback()
                             return result
 
                         # 当前报名下的答题卡选项转入历史
@@ -437,7 +439,7 @@ class ExamInfoLogic(BaseLogic):
 
                                 # 当前答题卡选项转入历史
                                 ScantronSolutionHistoryData = ScantronSolutionHistoryEntity()
-                                ScantronSolutionHistoryData.ScantronHistoryID = ScantronHistoryData.ID
+                                ScantronSolutionHistoryData.ID = ScantronSolutionData.ID
                                 ScantronSolutionHistoryData.Option = ScantronSolutionData.Option
                                 ScantronSolutionHistoryData.OptionAttachment = ScantronSolutionData.OptionAttachment
                                 ScantronSolutionHistoryData.CorrectAnswer = ScantronSolutionData.CorrectAnswer
@@ -448,22 +450,26 @@ class ExamInfoLogic(BaseLogic):
                                 AddInfo: Result = self._scantronSolutionHistoryModel.Insert(_dbsession, ScantronSolutionHistoryData)
                                 if AddInfo.State == False:
                                     result.Memo = AddInfo.Memo
+                                    _dbsession.rollback()
                                     return result
 
                                 # 删除当前答题卡选项
                                 DelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
                                 if DelInfo.State == False:
                                     result.Memo = DelInfo.Memo
+                                    _dbsession.rollback()
                                     return result
 
                         # 删除当前答题卡数据
                         DelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                         if DelInfo.State == False:
                             result.Memo = DelInfo.Memo
+                            _dbsession.rollback()
                             return result
 
                 # 当前报名数据添加到历史
                 ExamInfoHistoryData = ExamInfoHistoryEntity()
+                ExamInfoHistoryData.ID = ExamInfoData.ID
                 ExamInfoHistoryData.SubjectName = ExamInfoData.SubjectName
                 ExamInfoHistoryData.ExamNo = ExamInfoData.ExamNo
                 ExamInfoHistoryData.TotalScore = ExamInfoData.TotalScore
@@ -480,18 +486,21 @@ class ExamInfoLogic(BaseLogic):
                 AddInfo: Result = self._examInfoHistoryModel.Insert(_dbsession, ExamInfoHistoryData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 # 写入日志
                 Desc = 'exam info history No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 # 删除原有报名数据
                 DelInfo: Result = self._examInfoModel.Delete(_dbsession, ExamInfoData.ID)
                 if DelInfo.State == False:
                     result.Memo = DelInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
