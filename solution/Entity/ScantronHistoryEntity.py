@@ -17,6 +17,7 @@ class ScantronHistoryEntity(BaseEntity, BaseORM):
     Score: float = Column(DECIMAL(10, 2), comment='额定分数', default=0.00)
     ExamID: int = Column(INTEGER, comment='报名ID', default=0)
     HeadlineContent: str = Column(String(65535), comment='大标题内容', default='none')
+    Right: int = Column(INTEGER, comment='是否正确作答 1否 2是', default=0)
 
     def __init__(self):
         super().__init__()
