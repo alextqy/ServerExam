@@ -25,3 +25,13 @@ async def ScantronHistoryInfo(
         ID: int = Form(0),
 ):
     return scantronHistoryLogic.ScantronHistoryInfo(Token.strip(), ID)
+
+
+# 查看附件
+@ScantronHistoryRouter.post('/Scantron/History/View/Attachments')
+async def ScantronHistoryViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return scantronHistoryLogic.ScantronHistoryViewAttachments(Token.strip(), FilePath)

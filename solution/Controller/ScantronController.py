@@ -25,3 +25,13 @@ async def ScantronInfo(
         ID: int = Form(0),
 ):
     return scantronLogic.ScantronInfo(Token.strip(), ID)
+
+
+# 查看附件
+@ScantronRouter.post('/Scantron/View/Attachments')
+async def ScantronViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return scantronLogic.ScantronViewAttachments(Token.strip(), FilePath)
