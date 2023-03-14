@@ -26,3 +26,13 @@ async def ScantronSolutionInfo(
         ID: int = Form(0),
 ):
     return scantronSolutionLogic.ScantronSolutionInfo(Token.strip(), ID)
+
+
+# 查看附件
+@ScantronSolutionRouter.post('/Scantron/Solution/View/Attachments')
+async def ScantronSolutionViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        OptionAttachment: str = Form(''),
+):
+    return scantronSolutionLogic.ScantronSolutionViewAttachments(Token.strip(), OptionAttachment)

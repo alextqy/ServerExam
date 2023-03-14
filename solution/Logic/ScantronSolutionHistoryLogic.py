@@ -39,3 +39,23 @@ class ScantronSolutionHistoryLogic(BaseLogic):
                 result.Data = ExamInfoData
         _dbsession.close()
         return result
+
+    def ScantronSolutionHistoryViewAttachments(self, Token: str, OptionAttachment: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            if OptionAttachment != '' and OptionAttachment != 'none':
+                with open(OptionAttachment, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(OptionAttachment)
+                result.Data = content
+        _dbsession.close()
+        return result
