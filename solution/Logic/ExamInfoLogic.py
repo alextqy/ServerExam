@@ -425,6 +425,7 @@ class ExamInfoLogic(BaseLogic):
                         ScantronHistoryData.Score = ScantronData.Score
                         ScantronHistoryData.ExamID = ScantronData.ExamID
                         ScantronHistoryData.HeadlineContent = ScantronData.HeadlineContent
+                        ScantronHistoryData.Right = ScantronData.Right
                         AddInfo: Result = self._scantronHistoryModel.Insert(_dbsession, ScantronHistoryData)
                         if AddInfo.State == False:
                             result.Memo = AddInfo.Memo

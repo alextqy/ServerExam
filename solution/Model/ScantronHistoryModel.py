@@ -32,7 +32,8 @@ class ScantronHistoryModel(BaseModel):
         if Data.ExamID <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
-        Data.Right = 0
+        if Data.Right <= 0:
+            Data.Right = 0
         try:
             _dbsession.add(Data)
             _dbsession.commit()
