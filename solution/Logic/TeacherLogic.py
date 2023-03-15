@@ -166,6 +166,22 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
+    def Teachers(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: ResultList = self._teacherModel.Teachers(_dbsession)
+        _dbsession.close()
+        return result
+
+
+# ========================================================================= teacher side =========================================================================
+
     def TeacherSignIn(self, ClientHost: str, Account: str, Password: str):
         result = Result()
         _dbsession = DBsession()
@@ -234,6 +250,50 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
+    def CheckTeacherInfo(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, TeacherID)
+            if TeacherData is None:
+                result.Memo = self._lang.TeacherDataError
+            else:
+                result.State = True
+                result.Data = TeacherData
+        _dbsession.close()
+        return result
+
+    def TeacherUpdate(self, ClientHost: str, Token: str, Name: str):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif Name == '':
+            result.Memo = self._lang.WrongName
+        else:
+            _dbsession.begin_nested()
+
+            TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, TeacherID)
+            if TeacherData is None:
+                result.Memo = self._lang.TeacherDataError
+                _dbsession.rollback()
+                return result
+
+            TeacherData.Name = Name
+
+            _dbsession.commit()
+            result.State = True
+        _dbsession.close()
+        return result
+
     def TeacherChangePassword(self, ClientHost: str, Token: str, NewPassword: str):
         result = Result()
         _dbsession = DBsession()
@@ -247,7 +307,7 @@ class TeacherLogic(BaseLogic):
         elif len(NewPassword) < 6:
             result.Memo = self._lang.PasswordLengthIsNotEnough
         else:
-            TeacherData: TeacherEntity = self._teacherModel.FindToken(_dbsession, Token)
+            TeacherData: TeacherEntity = self._teacherModel.Find(_dbsession, TeacherID)
             if TeacherData is None:
                 result.Memo = self._lang.TeacherDataError
             else:
@@ -265,18 +325,5 @@ class TeacherLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
-        _dbsession.close()
-        return result
-
-    def Teachers(self, Token: str):
-        result = Result()
-        _dbsession = DBsession()
-        AdminID = self.PermissionValidation(_dbsession, Token)
-        if Token == '':
-            result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
-            result.Memo = self._lang.PermissionDenied
-        else:
-            result: ResultList = self._teacherModel.Teachers(_dbsession)
         _dbsession.close()
         return result
