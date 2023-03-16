@@ -159,7 +159,7 @@ async def TeacherExamineeList(
 
 # 教师添加考生
 @TeacherRouter.post('/Teacher/New/Examinee')
-async def NewExaminee(
+async def TeacherNewExaminee(
         request: Request,
         Token: str = Form(''),
         ExamineeNo: str = Form(''),
@@ -172,7 +172,7 @@ async def NewExaminee(
 
 # 更新考生信息
 @TeacherRouter.post('/Teacher/Update/Examinee')
-async def UpdateExaminee(
+async def TeacherUpdateExaminee(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
