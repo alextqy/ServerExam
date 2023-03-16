@@ -337,17 +337,18 @@ class QuestionLogic(BaseLogic):
                                     RightPositionCorrectItem.append(Data.CorrectItem)
                                 if Data.CorrectItem != '':
                                     EmptyAnswer = False
-                            # 判断答案项是否为左侧选项
-                            for Item in RightPositionCorrectItem:
-                                if Item not in LeftPositionOption:
+                            if len(RightPositionCorrectItem) > 0:
+                                # 判断答案项是否为左侧选项
+                                for Item in RightPositionCorrectItem:
+                                    if Item not in LeftPositionOption:
+                                        result.Memo = self._lang.WrongCorrectItem
+                                        _dbsession.rollback()
+                                        return result
+                                # 判断答案项是否有相同值
+                                if len(RightPositionCorrectItem) != len(list(dict.fromkeys(RightPositionCorrectItem))):
                                     result.Memo = self._lang.WrongCorrectItem
                                     _dbsession.rollback()
                                     return result
-                            # 判断答案项是否有相同值
-                            if len(RightPositionCorrectItem) != len(list(dict.fromkeys(RightPositionCorrectItem))):
-                                result.Memo = self._lang.WrongCorrectItem
-                                _dbsession.rollback()
-                                return result
                             # 两侧选项数量是否一致
                             if LeftPositionCount != RightPositionCount:
                                 result.Memo = self._lang.InconsistentNumberOfOptionsOnBothSides

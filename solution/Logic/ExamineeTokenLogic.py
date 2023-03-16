@@ -19,10 +19,11 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamineeDataDoesNotExist
             else:
                 ExamInfoList: list = self._examInfoModel.FindExamineeID(_dbsession, ExamineeData.ID)
-                for i in ExamInfoList[:]:
-                    ExamInfoData: ExamInfoEntity = i
-                    if ExamInfoData.EndTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
-                        ExamInfoList.remove(ExamInfoData)
+                if len(ExamInfoList) > 0:
+                    for i in ExamInfoList[:]:
+                        ExamInfoData: ExamInfoEntity = i
+                        if ExamInfoData.EndTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
+                            ExamInfoList.remove(ExamInfoData)
                 result.Data = ExamInfoList
                 result.State = True
         _dbsession.close()

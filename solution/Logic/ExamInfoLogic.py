@@ -264,44 +264,45 @@ class ExamInfoLogic(BaseLogic):
                                 if len(QuestionDataList) > PaperRuleData.QuestionNum:
                                     ScantronDataList: list = self._common.RandomDrawSample(QuestionDataList, PaperRuleData.QuestionNum)
                                 # 遍历写入答题卡数据
-                                for j in ScantronDataList:
-                                    QuestionData: QuestionEntity = j
-                                    ScantronData = ScantronEntity()
-                                    ScantronData.QuestionTitle = QuestionData.QuestionTitle
-                                    ScantronData.QuestionCode = QuestionData.QuestionCode
-                                    ScantronData.QuestionType = QuestionData.QuestionType
-                                    ScantronData.KnowledgeID = QuestionData.KnowledgeID
-                                    ScantronData.Score = PaperRuleData.SingleScore
-                                    ScantronData.Marking = QuestionData.Marking
-                                    ScantronData.Description = QuestionData.Description
-                                    ScantronData.Attachment = QuestionData.Attachment
-                                    ScantronData.ExamID = ID
-                                    AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
-                                    if AddInfo.State == False:
-                                        result.Memo = AddInfo.Memo
-                                        _dbsession.rollback()
-                                        return result
-                                    # 遍历写入答题卡选项数据
-                                    QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
-                                    if len(QuestionSolutionDataList) == 0:
-                                        result.Memo = self._lang.WrongQuestionOptions
-                                        _dbsession.rollback()
-                                        return result
-                                    for k in QuestionSolutionDataList:
-                                        QuestionSolutionData: QuestionSolutionEntity = k
-                                        ScantronSolutionData = ScantronSolutionEntity()
-                                        ScantronSolutionData.ScantronID = ScantronData.ID
-                                        ScantronSolutionData.Option = QuestionSolutionData.Option
-                                        ScantronSolutionData.OptionAttachment = QuestionSolutionData.OptionAttachment
-                                        ScantronSolutionData.CorrectAnswer = QuestionSolutionData.CorrectAnswer
-                                        ScantronSolutionData.CorrectItem = QuestionSolutionData.CorrectItem
-                                        ScantronSolutionData.ScoreRatio = QuestionSolutionData.ScoreRatio
-                                        ScantronSolutionData.Position = QuestionSolutionData.Position
-                                        AddInfo: Result = self._scantronSolutionModel.Insert(_dbsession, ScantronSolutionData)
+                                if len(ScantronDataList) > 0:
+                                    for j in ScantronDataList:
+                                        QuestionData: QuestionEntity = j
+                                        ScantronData = ScantronEntity()
+                                        ScantronData.QuestionTitle = QuestionData.QuestionTitle
+                                        ScantronData.QuestionCode = QuestionData.QuestionCode
+                                        ScantronData.QuestionType = QuestionData.QuestionType
+                                        ScantronData.KnowledgeID = QuestionData.KnowledgeID
+                                        ScantronData.Score = PaperRuleData.SingleScore
+                                        ScantronData.Marking = QuestionData.Marking
+                                        ScantronData.Description = QuestionData.Description
+                                        ScantronData.Attachment = QuestionData.Attachment
+                                        ScantronData.ExamID = ID
+                                        AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
                                         if AddInfo.State == False:
                                             result.Memo = AddInfo.Memo
                                             _dbsession.rollback()
                                             return result
+                                        # 遍历写入答题卡选项数据
+                                        QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
+                                        if len(QuestionSolutionDataList) == 0:
+                                            result.Memo = self._lang.WrongQuestionOptions
+                                            _dbsession.rollback()
+                                            return result
+                                        for k in QuestionSolutionDataList:
+                                            QuestionSolutionData: QuestionSolutionEntity = k
+                                            ScantronSolutionData = ScantronSolutionEntity()
+                                            ScantronSolutionData.ScantronID = ScantronData.ID
+                                            ScantronSolutionData.Option = QuestionSolutionData.Option
+                                            ScantronSolutionData.OptionAttachment = QuestionSolutionData.OptionAttachment
+                                            ScantronSolutionData.CorrectAnswer = QuestionSolutionData.CorrectAnswer
+                                            ScantronSolutionData.CorrectItem = QuestionSolutionData.CorrectItem
+                                            ScantronSolutionData.ScoreRatio = QuestionSolutionData.ScoreRatio
+                                            ScantronSolutionData.Position = QuestionSolutionData.Position
+                                            AddInfo: Result = self._scantronSolutionModel.Insert(_dbsession, ScantronSolutionData)
+                                            if AddInfo.State == False:
+                                                result.Memo = AddInfo.Memo
+                                                _dbsession.rollback()
+                                                return result
 
                         ExamInfoData.TotalScore = PaperData.TotalScore
                         ExamInfoData.PassLine = PaperData.PassLine
@@ -608,12 +609,13 @@ class ExamInfoLogic(BaseLogic):
                                                 # 答案数量是否相同
                                                 if len(ScantronSolutionData.CorrectItem.split('<->')) != len(CandidateAnswerList):
                                                     Correct = False
-                                                for c in CandidateAnswerList:
-                                                    SubID: int = int(c)
-                                                    if SubID > 0:
-                                                        ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, SubID)
-                                                        if ScantronSolutionDataSub is not None and ScantronSolutionDataSub.Option not in ScantronSolutionData.CorrectItem:
-                                                            Correct = False
+                                                if len(CandidateAnswerList) > 0:
+                                                    for c in CandidateAnswerList:
+                                                        SubID: int = int(c)
+                                                        if SubID > 0:
+                                                            ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, SubID)
+                                                            if ScantronSolutionDataSub is not None and ScantronSolutionDataSub.Option not in ScantronSolutionData.CorrectItem:
+                                                                Correct = False
                                 else:
                                     continue
                                 if Correct == True:

@@ -320,12 +320,13 @@ class PracticeLogic(BaseLogic):
                                     # 答案数量是否相同
                                     if len(PracticeSolutionData.CorrectItem.split('<->')) != len(CandidateAnswerList):
                                         Correct = False
-                                    for c in CandidateAnswerList:
-                                        SubID: int = int(c)
-                                        if SubID > 0:
-                                            PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, SubID)
-                                            if PracticeSolutionDataSub is not None and PracticeSolutionDataSub.Option not in PracticeSolutionData.CorrectItem:
-                                                Correct = False
+                                    if len(CandidateAnswerList) > 0:
+                                        for c in CandidateAnswerList:
+                                            SubID: int = int(c)
+                                            if SubID > 0:
+                                                PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, SubID)
+                                                if PracticeSolutionDataSub is not None and PracticeSolutionDataSub.Option not in PracticeSolutionData.CorrectItem:
+                                                    Correct = False
                     else:
                         Correct = False
 

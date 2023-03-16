@@ -118,10 +118,11 @@ class TeacherClassLogic(BaseLogic):
         else:
             TempResult: Result = self._teacherClassModel.Teachers(_dbsession, ClassID)
             DataList = []
-            for i in TempResult.Data:
-                Data: TeacherClassEntity = i
-                TeacherData: ClassModel = self._teacherModel.Find(_dbsession, Data.TeacherID)
-                DataList.append(TeacherData)
+            if TempResult.Data != '':
+                for i in TempResult.Data:
+                    Data: TeacherClassEntity = i
+                    TeacherData: ClassModel = self._teacherModel.Find(_dbsession, Data.TeacherID)
+                    DataList.append(TeacherData)
             result.State = True
             result.Memo = ''
             result.Data = DataList
@@ -140,10 +141,11 @@ class TeacherClassLogic(BaseLogic):
         else:
             TempResult: Result = self._teacherClassModel.Classes(_dbsession, TeacherID)
             DataList = []
-            for i in TempResult.Data:
-                Data: TeacherClassEntity = i
-                ClassData: ClassModel = self._classModel.Find(_dbsession, Data.ClassID)
-                DataList.append(ClassData)
+            if TempResult.Data != '':
+                for i in TempResult.Data:
+                    Data: TeacherClassEntity = i
+                    ClassData: ClassModel = self._classModel.Find(_dbsession, Data.ClassID)
+                    DataList.append(ClassData)
             result.State = True
             result.Memo = ''
             result.Data = DataList

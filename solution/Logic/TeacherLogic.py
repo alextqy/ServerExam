@@ -332,3 +332,19 @@ class TeacherLogic(BaseLogic):
                 result.State = True
         _dbsession.close()
         return result
+
+    def TheTeacherClass(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            TempResult: Result = self._teacherClassModel.Classes(_dbsession, TeacherID)
+            DataList = []
+
+            result.State = True
+        _dbsession.close()
+        return result

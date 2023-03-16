@@ -78,10 +78,11 @@ class TeacherModel(BaseModel):
         if _result.TotalPage > 0 and Page > _result.TotalPage:
             Page = _result.TotalPage
         DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
-        for i in DataList:
-            i.Password = ''
-            i.Token = ''
-        _result.Data = DataList
+        if len(DataList) > 0:
+            for i in DataList:
+                i.Password = ''
+                i.Token = ''
+            _result.Data = DataList
         return _result
 
     def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
