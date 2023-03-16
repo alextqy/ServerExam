@@ -129,3 +129,16 @@ async def TheTeacherClass(
         Token: str = Form(''),
 ):
     return teacherLogic.TheTeacherClass(Token.strip())
+
+
+# 班级考生列表
+@TeacherRouter.post('/Teacher/Examinee/List')
+async def TeacherExamineeList(
+        request: Request,
+        Token: str = Form(''),
+        Page: int = Form(1),
+        PageSize: int = Form(10),
+        Stext: str = Form(''),
+        ClassID: int = Form(0),
+):
+    return teacherLogic.TeacherExamineeList(Token.strip(), Page, PageSize, Stext.strip(), ClassID)

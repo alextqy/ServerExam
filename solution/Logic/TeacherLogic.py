@@ -357,3 +357,16 @@ class TeacherLogic(BaseLogic):
             result.State = True
         _dbsession.close()
         return result
+
+    def TeacherExamineeList(self, Token: str, Page: int, PageSize: int, Stext: str, ClassID: int):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
+        _dbsession.close()
+        return result
