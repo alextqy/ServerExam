@@ -29,17 +29,18 @@ class ClassLogic(BaseLogic):
             AddInfo: Result = self._classModel.Insert(_dbsession, ClassData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new class name:' + ClassName
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
-            _dbsession.close()
             result.State = True
-
+        _dbsession.close()
         return result
 
     def UpdateClassInfo(self, ClientHost: str, Token: str, ID: int, ClassName: str, Description: str):
@@ -75,7 +76,6 @@ class ClassLogic(BaseLogic):
             try:
                 ClassData.ClassName = ClassName
                 ClassData.Description = Description
-                _dbsession.commit()
             except Exception as e:
                 result.Memo = str(e)
                 _dbsession.rollback()
@@ -84,11 +84,12 @@ class ClassLogic(BaseLogic):
             Desc = 'update class ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
-            _dbsession.close()
             result.State = True
+        _dbsession.close()
         return result
 
     def ClassList(self, Token: str, Page: int, PageSize: int, Stext: str):

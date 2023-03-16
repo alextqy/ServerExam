@@ -34,11 +34,13 @@ class TeacherClassLogic(BaseLogic):
             AddInfo: Result = self._teacherClassModel.Insert(_dbsession, TeacherClassData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new teacher-class data ID:' + str(AddInfo.Data)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -64,11 +66,13 @@ class TeacherClassLogic(BaseLogic):
             DelInfo: Result = self._teacherClassModel.Delete(_dbsession, ID)
             if DelInfo.State == False:
                 result.Memo = DelInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'delete teacher-class data ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -169,14 +173,16 @@ class TeacherClassLogic(BaseLogic):
                 DelInfo: Result = self._teacherClassModel.Delete(_dbsession, Data.ID)
                 if DelInfo.State == False:
                     result.Memo = DelInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'delete teacher-class data ID:' + str(Data.ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
-            _dbsession.close()
+        _dbsession.close()
         return result

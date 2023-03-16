@@ -27,6 +27,7 @@ class PracticeLogic(BaseLogic):
                 AddInfo: Result = self._examineeTokenModel.Insert(_dbsession, ExamineeTokenData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -84,12 +85,14 @@ class PracticeLogic(BaseLogic):
             AddInfo: Result = self._practiceModel.Insert(_dbsession, PracticeData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             # 写入刷题选项数据
             QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, ChoiceData.ID)
             if len(QuestionSolutionDataList) == 0:
                 result.Memo = self._lang.WrongData
+                _dbsession.rollback()
                 return result
             for k in QuestionSolutionDataList:
                 QuestionSolutionData: QuestionSolutionEntity = k
@@ -104,6 +107,7 @@ class PracticeLogic(BaseLogic):
                 AddInfo: Result = self._practiceSolutionModel.Insert(_dbsession, PracticeSolutionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
             _dbsession.commit()
@@ -170,6 +174,7 @@ class PracticeLogic(BaseLogic):
             PracticeSolutionDataList: list = self._practiceSolutionModel.FindPracticeID(_dbsession, PracticeData.ID)
             if len(PracticeSolutionDataList) == 0:
                 result.Memo = self._lang.WrongData
+                _dbsession.rollback()
                 return result
             for i in PracticeSolutionDataList:
                 PracticeSolutionData: PracticeSolutionEntity = i
@@ -195,27 +200,33 @@ class PracticeLogic(BaseLogic):
                 elif PracticeData.QuestionType == 7 and PracticeSolutionData.ID == ID:
                     if PracticeSolutionData.Position != 2:
                         result.Memo = self._lang.WrongData
+                        _dbsession.rollback()
                         return result
                     else:
                         if Answer != '':
                             if int(Answer) == ID:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, int(Answer))
                             if PracticeSolutionDataSub is None:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             if PracticeSolutionDataSub.PracticeID != PracticeSolutionData.PracticeID:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             if PracticeSolutionDataSub.Position == 2:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                         PracticeSolutionData.CandidateAnswer = Answer
                 # 连线选项 =======================================================================================
                 elif PracticeData.QuestionType == 8 and PracticeSolutionData.ID == ID:
                     if PracticeSolutionData.Position != 2:
                         result.Memo = self._lang.WrongData
+                        _dbsession.rollback()
                         return result
                     else:
                         if Answer != '':
@@ -226,18 +237,20 @@ class PracticeLogic(BaseLogic):
                                     PracticeSolutionDataSub: PracticeSolutionEntity = self._practiceSolutionModel.Find(_dbsession, AnswerID)
                                     if PracticeSolutionDataSub is None:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     if PracticeSolutionDataSub.PracticeID != PracticeSolutionData.PracticeID:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     if PracticeSolutionDataSub.Position == 2:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                             PracticeSolutionData.CandidateAnswer = ','.join(AnswerList)
                 else:
                     continue
                 PracticeSolutionData.UpdateTime = self._common.Time()
-                _dbsession.commit()
 
             _dbsession.commit()
             result.State = True
@@ -340,11 +353,13 @@ class PracticeLogic(BaseLogic):
                         DelInfo: Result = self._practiceSolutionModel.Delete(_dbsession, PracticeSolutionData.ID)
                         if DelInfo.State == False:
                             result.Memo = DelInfo.Memo
+                            _dbsession.rollback()
                             return result
 
                 DelInfo: Result = self._practiceModel.Delete(_dbsession, PracticeData.ID)
                 if DelInfo.State == False:
                     result.Memo = DelInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

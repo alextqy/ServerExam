@@ -86,11 +86,13 @@ class QuestionLogic(BaseLogic):
                 AddInfo: Result = self._questionModel.Insert(_dbsession, QuestionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new question:' + QuestionTitle
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -142,7 +144,6 @@ class QuestionLogic(BaseLogic):
                 try:
                     QuestionData.Attachment = UploadPath
                     QuestionData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -151,10 +152,10 @@ class QuestionLogic(BaseLogic):
                 Desc = 'update question attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
-
                 result.State = True
                 result.Data = UploadPath
         _dbsession.close()
@@ -311,6 +312,7 @@ class QuestionLogic(BaseLogic):
                             ImageInfo: Result = ImageIsExistsAction(QuestionData.Language, QuestionData.LanguageVersion)
                             if ImageInfo.State == False:
                                 result.Memo = self._lang.TheCodeRuntimeEnvironmentHasNotBeenBuilt
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽 连线 ##################################################################
@@ -339,10 +341,12 @@ class QuestionLogic(BaseLogic):
                             for Item in RightPositionCorrectItem:
                                 if Item not in LeftPositionOption:
                                     result.Memo = self._lang.WrongCorrectItem
+                                    _dbsession.rollback()
                                     return result
                             # 判断答案项是否有相同值
                             if len(RightPositionCorrectItem) != len(list(dict.fromkeys(RightPositionCorrectItem))):
                                 result.Memo = self._lang.WrongCorrectItem
+                                _dbsession.rollback()
                                 return result
                             # 两侧选项数量是否一致
                             if LeftPositionCount != RightPositionCount:
@@ -359,7 +363,6 @@ class QuestionLogic(BaseLogic):
                     else:
                         QuestionData.QuestionState = 2
                     QuestionData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -371,6 +374,7 @@ class QuestionLogic(BaseLogic):
                     Desc = 'disable question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -444,7 +448,6 @@ class QuestionLogic(BaseLogic):
                     QuestionData.LanguageVersion = LanguageVersion
                     if QuestionType == 4:
                         QuestionData.QuestionState = 2
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -453,6 +456,7 @@ class QuestionLogic(BaseLogic):
                 Desc = 'update question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

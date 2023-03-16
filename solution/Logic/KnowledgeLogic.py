@@ -34,11 +34,13 @@ class KnowledgeLogic(BaseLogic):
                 AddInfo: Result = self._knowledgeModel.Insert(_dbsession, KnowledgeData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new knowledge:' + KnowledgeName
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -67,7 +69,6 @@ class KnowledgeLogic(BaseLogic):
                     else:
                         KnowledgeData.KnowledgeState = 2
                     KnowledgeData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -79,6 +80,7 @@ class KnowledgeLogic(BaseLogic):
                     Desc = 'disable knowledge ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -114,7 +116,6 @@ class KnowledgeLogic(BaseLogic):
                 try:
                     KnowledgeData.KnowledgeName = KnowledgeName
                     KnowledgeData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -123,6 +124,7 @@ class KnowledgeLogic(BaseLogic):
                 Desc = 'update knowledge ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

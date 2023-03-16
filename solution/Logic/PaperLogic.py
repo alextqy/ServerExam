@@ -45,11 +45,13 @@ class PaperLogic(BaseLogic):
                 AddInfo: Result = self._paperModel.Insert(_dbsession, PaperData)
                 if AddInfo.State == False:
                     result.Memo - AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new paper:' + PaperName
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -100,7 +102,6 @@ class PaperLogic(BaseLogic):
                     else:
                         PaperData.PaperState = 2
                     PaperData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -112,6 +113,7 @@ class PaperLogic(BaseLogic):
                     Desc = 'disable paper ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -154,7 +156,6 @@ class PaperLogic(BaseLogic):
                     PaperData.ExamDuration = ExamDuration
                     PaperData.UpdateTime = self._common.Time()
                     PaperData.PaperState = 2
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -163,6 +164,7 @@ class PaperLogic(BaseLogic):
                 Desc = 'update paper ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

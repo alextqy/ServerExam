@@ -27,11 +27,13 @@ class SubjectLogic(BaseLogic):
             AddInfo: Result = self._subjectModel.Insert(_dbsession, SubjectData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new subject:' + SubjectName
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -62,7 +64,6 @@ class SubjectLogic(BaseLogic):
                     else:
                         SubjectData.SubjectState = 2
                     SubjectData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -74,6 +75,7 @@ class SubjectLogic(BaseLogic):
                     Desc = 'disable subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -111,7 +113,6 @@ class SubjectLogic(BaseLogic):
                 try:
                     SubjectData.SubjectName = SubjectName
                     SubjectData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -120,6 +121,7 @@ class SubjectLogic(BaseLogic):
                 Desc = 'update subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

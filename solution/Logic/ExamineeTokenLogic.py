@@ -64,6 +64,7 @@ class ExamineeTokenLogic(BaseLogic):
                 if CheckToken is not None:
                     DelInfo: Result = self._examineeTokenModel.Delete(_dbsession, CheckToken.ID)
                     if DelInfo.State == False:
+                        _dbsession.rollback()
                         return result
 
                 SignInTime: str = self._common.Time()
@@ -76,6 +77,7 @@ class ExamineeTokenLogic(BaseLogic):
                 AddInfo: Result = self._examineeTokenModel.Insert(_dbsession, ExamineeTokenData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 # 修改报名考试起止时间
@@ -83,7 +85,6 @@ class ExamineeTokenLogic(BaseLogic):
                     ExamInfoData.StartTime = SignInTime
                     ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
                     ExamInfoData.StartState = 2
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -93,6 +94,7 @@ class ExamineeTokenLogic(BaseLogic):
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo
                 if self.LogExamAction(_dbsession, 2, ExamInfoData.ExamNo, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -166,6 +168,7 @@ class ExamineeTokenLogic(BaseLogic):
                     ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                     if len(ScantronSolutionDataList) == 0:
                         result.Memo = self._lang.WrongData
+                        _dbsession.rollback()
                         return result
                     for i in ScantronSolutionDataList:
                         ScantronSolutionData: ScantronSolutionEntity = i
@@ -191,27 +194,33 @@ class ExamineeTokenLogic(BaseLogic):
                         elif ScantronData.QuestionType == 7 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             else:
                                 if Answer != '':
                                     if int(Answer) == ID:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, int(Answer))
                                     if ScantronSolutionDataSub is None:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     if ScantronSolutionDataSub.Position == 2:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                 ScantronSolutionData.CandidateAnswer = Answer
                         # 连线选项 =======================================================================================
                         elif ScantronData.QuestionType == 8 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             else:
                                 if Answer != '':
@@ -222,18 +231,20 @@ class ExamineeTokenLogic(BaseLogic):
                                             ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, AnswerID)
                                             if ScantronSolutionDataSub is None:
                                                 result.Memo = self._lang.WrongData
+                                                _dbsession.rollback()
                                                 return result
                                             if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
                                                 result.Memo = self._lang.WrongData
+                                                _dbsession.rollback()
                                                 return result
                                             if ScantronSolutionDataSub.Position == 2:
                                                 result.Memo = self._lang.WrongData
+                                                _dbsession.rollback()
                                                 return result
                                     ScantronSolutionData.CandidateAnswer = ','.join(AnswerList)
                         else:
                             continue
                         ScantronSolutionData.UpdateTime = self._common.Time()
-                        _dbsession.commit()
 
                     _dbsession.commit()
                     result.State = True
@@ -255,7 +266,6 @@ class ExamineeTokenLogic(BaseLogic):
                 try:
                     ExamInfoData.ExamState = 3
                     ExamInfoData.ActualDuration = self._common.Time() - ExamInfoData.StartTime
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()

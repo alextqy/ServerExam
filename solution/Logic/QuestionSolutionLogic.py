@@ -310,12 +310,12 @@ class QuestionSolutionLogic(BaseLogic):
                 AddInfo: Result = self._questionSolutionModel.Insert(_dbsession, QuestionSolutionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 # 试题设置为禁用状态
                 try:
                     QuestionData.QuestionState = 2
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -324,6 +324,7 @@ class QuestionSolutionLogic(BaseLogic):
                 Desc = 'new question solution:' + Option
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -375,7 +376,6 @@ class QuestionSolutionLogic(BaseLogic):
                 try:
                     QuestionSolutionData.OptionAttachment = UploadPath
                     QuestionSolutionData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -384,6 +384,7 @@ class QuestionSolutionLogic(BaseLogic):
                 Desc = 'update question solution attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -413,11 +414,13 @@ class QuestionSolutionLogic(BaseLogic):
                 DeleteInfo: Result = self._questionSolutionModel.Delete(_dbsession, ID)
                 if DeleteInfo.State == False:
                     DeleteInfo.Memo = str(e)
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'delete question solution option&correct item:' + QuestionSolutionData.Option + '&' + QuestionSolutionData.CorrectItem
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 if QuestionSolutionData.OptionAttachment != 'none':
@@ -433,7 +436,6 @@ class QuestionSolutionLogic(BaseLogic):
                 if QuestionData is not None:
                     try:
                         QuestionData.QuestionState = 2
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -518,7 +520,6 @@ class QuestionSolutionLogic(BaseLogic):
                     try:
                         QuestionSolutionData.ScoreRatio = ScoreRatio
                         QuestionData.QuestionState = 2
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -527,6 +528,7 @@ class QuestionSolutionLogic(BaseLogic):
                     Desc = 'update question solution ScoreRatio ID:' + str(ID)
                     if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                         result.Memo = self._lang.LoggingFailed
+                        _dbsession.rollback()
                         return result
 
                     _dbsession.commit()
@@ -562,7 +564,6 @@ class QuestionSolutionLogic(BaseLogic):
                         try:
                             QuestionSolutionData.CorrectItem = CorrectItem
                             QuestionData.QuestionState = 2
-                            _dbsession.commit()
                         except Exception as e:
                             result.Memo = str(e)
                             _dbsession.rollback()
@@ -571,6 +572,7 @@ class QuestionSolutionLogic(BaseLogic):
                         Desc = 'update question solution CorrectItem ID:' + str(ID)
                         if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                             result.Memo = self._lang.LoggingFailed
+                            _dbsession.rollback()
                             return result
 
                         _dbsession.commit()

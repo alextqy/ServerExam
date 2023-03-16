@@ -62,11 +62,13 @@ class ExamInfoLogic(BaseLogic):
                 AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new exam No.:' + ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -117,11 +119,11 @@ class ExamInfoLogic(BaseLogic):
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
                                 result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
                                 return result
                 try:
                     ExamInfoData.ExamState = 4
                     ExamInfoData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -130,6 +132,7 @@ class ExamInfoLogic(BaseLogic):
                 Desc = 'disable exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -239,6 +242,7 @@ class ExamInfoLogic(BaseLogic):
                                 AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
                                 if AddInfo.State == False:
                                     result.Memo = AddInfo.Memo
+                                    _dbsession.rollback()
                                     return result
 
                             # 解析试卷数据 ===============================================================================
@@ -275,6 +279,7 @@ class ExamInfoLogic(BaseLogic):
                                     AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
                                     if AddInfo.State == False:
                                         result.Memo = AddInfo.Memo
+                                        _dbsession.rollback()
                                         return result
                                     # 遍历写入答题卡选项数据
                                     QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
@@ -295,6 +300,7 @@ class ExamInfoLogic(BaseLogic):
                                         AddInfo: Result = self._scantronSolutionModel.Insert(_dbsession, ScantronSolutionData)
                                         if AddInfo.State == False:
                                             result.Memo = AddInfo.Memo
+                                            _dbsession.rollback()
                                             return result
 
                         ExamInfoData.TotalScore = PaperData.TotalScore
@@ -305,6 +311,7 @@ class ExamInfoLogic(BaseLogic):
                         Desc = 'generate test paper exam No.:' + str(ExamInfoData.ID)
                         if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                             result.Memo = self._lang.LoggingFailed
+                            _dbsession.rollback()
                             return result
 
                         _dbsession.commit()
@@ -350,11 +357,13 @@ class ExamInfoLogic(BaseLogic):
                                     SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
                                     if SSDelInfo.State == False:
                                         result.Memo = SSDelInfo.Memo
+                                        _dbsession.rollback()
                                         return result
                             # 删除答题卡
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
                                 result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
                                 return result
 
                 try:
@@ -363,7 +372,6 @@ class ExamInfoLogic(BaseLogic):
                     ExamInfoData.PassLine = 0
                     ExamInfoData.TotalScore = 0
                     ExamInfoData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -372,6 +380,7 @@ class ExamInfoLogic(BaseLogic):
                 Desc = 'reset exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -617,7 +626,6 @@ class ExamInfoLogic(BaseLogic):
                     try:
                         ExamInfoData.ActualScore = TotalScore
                         ExamInfoData.UpdateTime = self._common.Time()
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -626,6 +634,7 @@ class ExamInfoLogic(BaseLogic):
                     Desc = 'grade the exam No.:' + ExamInfoData.ExamNo
                     if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                         result.Memo = self._lang.LoggingFailed
+                        _dbsession.rollback()
                         return result
 
                     _dbsession.commit()
@@ -770,6 +779,7 @@ class ExamInfoLogic(BaseLogic):
                                 AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
                                 if AddInfo.State == False:
                                     result.Memo = AddInfo.Memo
+                                    _dbsession.rollback()
                                     return result
                                 else:
                                     ExamInfoData.ExamineeID = ExamineeData.ID
@@ -791,11 +801,13 @@ class ExamInfoLogic(BaseLogic):
                         AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
                         if AddInfo.State == False:
                             result.Memo = AddInfo.Memo
+                            _dbsession.rollback()
                             return result
 
                         Desc = 'import exam No.:' + ExamNo
                         if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                             result.Memo = self._lang.LoggingFailed
+                            _dbsession.rollback()
                             return result
             except Exception as e:
                 self._file.DeleteFile(UploadPath)
@@ -853,7 +865,6 @@ class ExamInfoLogic(BaseLogic):
                     else:
                         ExamInfoData.SuspendedState = 2
                     ExamInfoData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -865,6 +876,7 @@ class ExamInfoLogic(BaseLogic):
                     Desc = 'suspend exam-info ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

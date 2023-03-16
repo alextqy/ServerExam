@@ -27,11 +27,13 @@ class HeadlineLogic(BaseLogic):
             AddInfo: Result = self._headlineModel.Insert(_dbsession, HeadlineData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new headline:' + Content
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -69,7 +71,6 @@ class HeadlineLogic(BaseLogic):
                 try:
                     HeadlineData.Content = Content
                     HeadlineData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -78,6 +79,7 @@ class HeadlineLogic(BaseLogic):
                 Desc = 'update headline ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

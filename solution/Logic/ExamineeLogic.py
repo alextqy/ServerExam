@@ -39,11 +39,13 @@ class ExamineeLogic(BaseLogic):
             AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new examinee No.:' + ExamineeNo
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -80,7 +82,6 @@ class ExamineeLogic(BaseLogic):
                 ExamineeData.Name = Name
                 ExamineeData.Contact = Contact
                 ExamineeData.ClassID = ClassID
-                _dbsession.commit()
             except Exception as e:
                 result.Memo = str(e)
                 _dbsession.rollback()
@@ -89,6 +90,7 @@ class ExamineeLogic(BaseLogic):
             Desc = 'update examinee ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()

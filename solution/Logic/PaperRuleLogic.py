@@ -93,12 +93,12 @@ class PaperRuleLogic(BaseLogic):
             AddInfo: Result = self._paperRuleModel.Insert(_dbsession, PaperRuleData)
             if AddInfo.State == False:
                 result.Memo - AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             try:
                 PaperData.PaperState = 2
                 PaperRuleData.UpdateTime = self._common.Time()
-                _dbsession.commit()
             except Exception as e:
                 result.Memo = str(e)
                 _dbsession.rollback()
@@ -107,6 +107,7 @@ class PaperRuleLogic(BaseLogic):
             Desc = 'new paper rule'
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -138,7 +139,6 @@ class PaperRuleLogic(BaseLogic):
                 else:
                     PaperRuleData.PaperRuleState = 2
                 PaperRuleData.UpdateTime = self._common.Time()
-                _dbsession.commit()
             except Exception as e:
                 result.Memo = str(e)
                 _dbsession.rollback()
@@ -149,7 +149,6 @@ class PaperRuleLogic(BaseLogic):
                 try:
                     PaperData.PaperState = 2
                     PaperRuleData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -161,6 +160,7 @@ class PaperRuleLogic(BaseLogic):
                 Desc = 'disable paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -189,6 +189,7 @@ class PaperRuleLogic(BaseLogic):
             DelInfo: Result = self._paperRuleModel.Delete(_dbsession, ID)
             if DelInfo.State == False:
                 result.Memo - DelInfo.Memo
+                _dbsession.rollback()
                 return result
 
             PaperData: PaperEntity = self._paperModel.Find(_dbsession, PaperRuleData.PaperID)
@@ -196,7 +197,6 @@ class PaperRuleLogic(BaseLogic):
                 try:
                     PaperData.PaperState = 2
                     PaperRuleData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -205,6 +205,7 @@ class PaperRuleLogic(BaseLogic):
             Desc = 'delete paper rule ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -293,7 +294,6 @@ class PaperRuleLogic(BaseLogic):
                     PaperRuleData.SingleScore = SingleScore
                     PaperRuleData.SerialNumber = SerialNumber
                     PaperRuleData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -304,7 +304,6 @@ class PaperRuleLogic(BaseLogic):
                     try:
                         PaperData.PaperState = 2
                         PaperRuleData.UpdateTime = self._common.Time()
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -313,6 +312,7 @@ class PaperRuleLogic(BaseLogic):
                 Desc = 'update paper rule ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

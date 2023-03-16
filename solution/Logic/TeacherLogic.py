@@ -40,11 +40,13 @@ class TeacherLogic(BaseLogic):
             AddInfo: Result = self._teacherModel.Insert(_dbsession, TeacherData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new teacher account:' + Account
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -75,7 +77,6 @@ class TeacherLogic(BaseLogic):
                     else:
                         TeacherData.State = 2
                     TeacherData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -87,6 +88,7 @@ class TeacherLogic(BaseLogic):
                     Desc = 'disable Teacher ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -126,6 +128,7 @@ class TeacherLogic(BaseLogic):
             Desc = 'update teacker info ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -203,7 +206,6 @@ class TeacherLogic(BaseLogic):
 
                     try:
                         TeacherData.Token = self._common.GenerateToken()
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -212,6 +214,7 @@ class TeacherLogic(BaseLogic):
                     Desc = 'teacher login account:' + Account
                     if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
                         result.Memo = self._lang.LoggingFailed
+                        _dbsession.rollback()
                         return result
 
                     _dbsession.commit()
@@ -234,7 +237,6 @@ class TeacherLogic(BaseLogic):
 
                 try:
                     TeacherData.Token = ''
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -243,6 +245,7 @@ class TeacherLogic(BaseLogic):
                 Desc = 'teacher logout account:' + TeacherData.Account
                 if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -316,11 +319,13 @@ class TeacherLogic(BaseLogic):
                 ChangeInfo: Result = self._teacherModel.ChangePassword(_dbsession, TeacherData, NewPassword)
                 if ChangeInfo.State == False:
                     result.Memo = self._lang.FailToEdit
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'teacher change password account:' + TeacherData.Account
                 if self.LogSysAction(_dbsession, 1, TeacherID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()

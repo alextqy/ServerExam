@@ -28,7 +28,6 @@ class ManagerLogic(BaseLogic):
 
                     try:
                         ManagerData.Token = self._common.GenerateToken()
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -37,6 +36,7 @@ class ManagerLogic(BaseLogic):
                     Desc = 'manager login account:' + Account
                     if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
                         result.Memo = self._lang.LoggingFailed
+                        _dbsession.rollback()
                         return result
 
                     _dbsession.commit()
@@ -59,7 +59,6 @@ class ManagerLogic(BaseLogic):
 
                 try:
                     ManagerData.Token = ''
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -68,6 +67,7 @@ class ManagerLogic(BaseLogic):
                 Desc = 'manager logout account:' + ManagerData.Account
                 if self.LogSysAction(_dbsession, 2, 0, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -109,11 +109,13 @@ class ManagerLogic(BaseLogic):
             AddInfo: Result = self._managerModel.Insert(_dbsession, ManagerData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new manager account:' + Account
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
@@ -146,7 +148,6 @@ class ManagerLogic(BaseLogic):
                     else:
                         ManagerData.State = 2
                     ManagerData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -158,6 +159,7 @@ class ManagerLogic(BaseLogic):
                     Desc = 'disable manager ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -190,11 +192,13 @@ class ManagerLogic(BaseLogic):
                 ChangeInfo: Result = self._managerModel.ChangePassword(_dbsession, ManagerData, NewPassword)
                 if ChangeInfo.State == False:
                     result.Memo = self._lang.FailToEdit
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'manager change password account:' + ManagerData.Account
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
@@ -228,7 +232,6 @@ class ManagerLogic(BaseLogic):
                     ManagerData.Name = Name
                     ManagerData.Permission = Permission
                     ManagerData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -237,6 +240,7 @@ class ManagerLogic(BaseLogic):
                 Desc = 'update manager ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
