@@ -155,3 +155,29 @@ async def TeacherExamineeList(
         ClassID: int = Form(0),
 ):
     return teacherLogic.TeacherExamineeList(Token.strip(), Page, PageSize, Stext.strip(), ClassID)
+
+
+# 教师添加考生
+@TeacherRouter.post('/Teacher/New/Examinee')
+async def NewExaminee(
+        request: Request,
+        Token: str = Form(''),
+        ExamineeNo: str = Form(''),
+        Name: str = Form(''),
+        ClassID: int = Form(0),
+        Contact: str = Form(''),
+):
+    return teacherLogic.TeacherNewExaminee(request.client.host, Token.strip(), ExamineeNo.strip(), Name.strip(), ClassID, Contact.strip())
+
+
+# 更新考生信息
+@TeacherRouter.post('/Teacher/Update/Examinee')
+async def UpdateExaminee(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+        Name: str = Form(''),
+        Contact: str = Form(''),
+        ClassID: int = Form(0),
+):
+    return teacherLogic.TeacherUpdateExaminee(request.client.host, Token.strip(), ID, Name.strip(), Contact.strip(), ClassID)

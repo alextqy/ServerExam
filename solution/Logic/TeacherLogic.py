@@ -370,3 +370,82 @@ class TeacherLogic(BaseLogic):
             result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
         _dbsession.close()
         return result
+
+    def TeacherNewExaminee(self, ClientHost: str, Token: str, ExamineeNo: str, Name: str, ClassID: int, Contact: str):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ExamineeNo == '':
+            result.Memo = self._lang.WrongExamineeNo
+        elif Name == '':
+            result.Memo = self._lang.WrongName
+        elif ClassID <= 0:
+            result.Memo = self._lang.WrongClassID
+        elif self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo) is not None:
+            result.Memo = self._lang.ExamineeNoDataAlreadyExists
+        elif self._classModel.Find(_dbsession, ClassID) is None:
+            result.Memo = self._lang.ClassDataDoesNotExist
+        else:
+            if Contact == '':
+                Contact = 'none'
+
+            _dbsession.begin_nested()
+
+            ExamineeData = ExamineeEntity()
+            ExamineeData.ExamineeNo = ExamineeNo
+            ExamineeData.Name = Name
+            ExamineeData.ClassID = ClassID
+            ExamineeData.Contact = Contact
+            AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
+            if AddInfo.State == False:
+                result.Memo = AddInfo.Memo
+                _dbsession.rollback()
+                return result
+
+            _dbsession.commit()
+            result.State = True
+        _dbsession.close()
+        return result
+
+    def TeacherUpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str, ClassID: int):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        elif Name == '':
+            result.Memo = self._lang.WrongName
+        elif ClassID <= 0:
+            result.Memo = self._lang.WrongClassID
+        else:
+            if Contact == '':
+                Contact = 'none'
+
+            ExamineeData: ExamineeEntity = self._examineeModel.Find(_dbsession, ID)
+            if ExamineeData is None:
+                result.Memo = self._lang.ExamineeDataError
+                return result
+
+            _dbsession.begin_nested()
+
+            try:
+                ExamineeData.Name = Name
+                ExamineeData.Contact = Contact
+                ExamineeData.ClassID = ClassID
+            except Exception as e:
+                result.Memo = str(e)
+                _dbsession.rollback()
+                return result
+
+            _dbsession.commit()
+            result.State = True
+        _dbsession.close()
+        return result
