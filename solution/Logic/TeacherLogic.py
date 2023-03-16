@@ -343,8 +343,17 @@ class TeacherLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             TempResult: Result = self._teacherClassModel.Classes(_dbsession, TeacherID)
-            DataList = []
-
+            ClassIDList = []
+            ClassList = []
+            if TempResult.Data != '':
+                for i in TempResult.Data:
+                    Data: TeacherClassEntity = i
+                    ClassIDList.append(Data.ClassID)
+            if len(ClassIDList) > 0:
+                for i in ClassIDList:
+                    Data: Result = self._classModel.Find(_dbsession, i)
+                    ClassList.append(Data)
+            result.Data = ClassList
             result.State = True
         _dbsession.close()
         return result
