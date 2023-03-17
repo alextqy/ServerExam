@@ -5,7 +5,7 @@ ExamInfoRouter = APIRouter()
 ExamInfoPrefix = ''
 
 
-# 新建管理员
+# 新建报名
 @ExamInfoRouter.post('/New/ExamInfo')
 async def NewExamInfo(
         request: Request,

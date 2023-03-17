@@ -488,7 +488,7 @@ class TeacherLogic(BaseLogic):
     def TeacherScantronViewAttachments(self, Token: str, FilePath: str):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.PermissionValidation(_dbsession, Token)
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
         elif AdminID == 0:
@@ -539,5 +539,87 @@ class TeacherLogic(BaseLogic):
                 result.State = True
                 result.Memo = self._file.CheckFileType(OptionAttachment)
                 result.Data = content
+        _dbsession.close()
+        return result
+
+    def TeacherSubjects(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: Result = self._subjectModel.Subjects(_dbsession)
+        _dbsession.close()
+        return result
+
+    def TeacherNewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeNo: str, ExamType: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif SubjectName == '':
+            result.Memo = self._lang.WrongSubjectName
+        elif ExamNo == '':
+            result.Memo = self._lang.WrongExamNo
+        elif ExamType <= 0:
+            result.Memo = self._lang.WrongExamType
+        else:
+            SubjectData: SubjectEntity = self._subjectModel.FindSubjectCode(_dbsession, SubjectName)
+            if SubjectData is None:
+                result.Memo = self._lang.SubjectDataError
+            elif SubjectData.SubjectState == 2:
+                result.Memo = self._lang.SubjectDataIsDisabled
+            else:
+                ExamineeID = 0
+                if ExamineeNo != '':
+                    # 考生信息是否存在
+                    ExamineeInfo = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
+                    if ExamineeInfo is None:
+                        result.Memo = self._lang.ExamineeDataDoesNotExist
+                        return result
+                    # 该考生是否有相同科目的报名且未考试
+                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeInfo.ID, SubjectName, ExamType)
+                    if CheckData is not None:
+                        if CheckData.ExamState < 3:
+                            result.Memo = self._lang.AlreadyRegisteredForTheSameSubject
+                            return result
+                    ExamineeID = ExamineeInfo.ID
+
+                CheckExamNo: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
+                if CheckExamNo is not None and CheckExamNo.ExamState != 4:
+                    result.Memo = self._lang.ExamNoDataAlreadyExists
+                    return result
+
+                _dbsession.begin_nested()
+
+                ExamInfoData = ExamInfoEntity()
+                ExamInfoData.SubjectName = SubjectName
+                ExamInfoData.ExamNo = ExamNo
+                ExamInfoData.ExamineeID = ExamineeID
+                ExamInfoData.ExamType = ExamType
+                ExamInfoData.Pass = 1
+                ExamInfoData.ExamState = 1
+                ExamInfoData.StartState = 1
+                ExamInfoData.SuspendedState = 1
+                AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
+                if AddInfo.State == False:
+                    result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
+                    return result
+
+                # Desc = 'new exam No.:' + ExamNo
+                # if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                #     result.Memo = self._lang.LoggingFailed
+                #     _dbsession.rollback()
+                #     return result
+
+                _dbsession.commit()
+                result.State = True
         _dbsession.close()
         return result

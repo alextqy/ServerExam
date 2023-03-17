@@ -234,3 +234,25 @@ async def TeacherScantronSolutionViewAttachments(
         OptionAttachment: str = Form(''),
 ):
     return teacherLogic.TeacherScantronSolutionViewAttachments(Token.strip(), OptionAttachment)
+
+
+# 教师获取全部科目
+@TeacherRouter.post('/Teacher/Subjects')
+async def TeacherSubjects(
+        request: Request,
+        Token: str = Form(''),
+):
+    return teacherLogic.TeacherSubjects(Token.strip())
+
+
+# 教师新建报名
+@TeacherRouter.post('/Teacher/New/ExamInfo')
+async def TeacherNewExamInfo(
+        request: Request,
+        Token: str = Form(''),
+        SubjectName: str = Form(''),
+        ExamNo: str = Form(''),
+        ExamineeNo: str = Form(''),
+        ExamType: int = Form(0),
+):
+    return teacherLogic.TeacherNewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeNo, ExamType)
