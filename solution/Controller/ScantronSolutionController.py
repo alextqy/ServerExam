@@ -5,7 +5,7 @@ ScantronSolutionRouter = APIRouter()
 ScantronSolutionPrefix = ''
 
 
-# 答题卡列表
+# 答题卡选项列表
 @ScantronSolutionRouter.post('/Scantron/Solution/List')
 async def ScantronSolutionList(
         request: Request,

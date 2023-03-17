@@ -144,19 +144,6 @@ async def TeacherExamineeList(
     return teacherLogic.TeacherExamineeList(Token.strip(), Page, PageSize, Stext.strip(), ClassID)
 
 
-# 班级考生列表
-@TeacherRouter.post('/Teacher/Examinee/List')
-async def TeacherExamineeList(
-        request: Request,
-        Token: str = Form(''),
-        Page: int = Form(1),
-        PageSize: int = Form(10),
-        Stext: str = Form(''),
-        ClassID: int = Form(0),
-):
-    return teacherLogic.TeacherExamineeList(Token.strip(), Page, PageSize, Stext.strip(), ClassID)
-
-
 # 教师添加考生
 @TeacherRouter.post('/Teacher/New/Examinee')
 async def TeacherNewExaminee(
@@ -200,3 +187,50 @@ async def TeacherExamInfoList(
         ExamineeID: int = Form(0),
 ):
     return teacherLogic.TeacherExamInfoList(Token.strip(), Type, Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState, ExamineeID)
+
+
+# 考生答题卡列表
+@TeacherRouter.post('/Teacher/Scantron/List')
+async def TeacherScantronList(
+        request: Request,
+        Token: str = Form(''),
+        Type: int = Form(0),
+        Page: int = Form(1),
+        PageSize: int = Form(10),
+        ExamID: int = Form(0),
+):
+    return teacherLogic.TeacherScantronList(Token.strip(), Type, Page, PageSize, ExamID)
+
+
+# 教师查看答题卡附件
+@TeacherRouter.post('/Teacher/Scantron/View/Attachments')
+async def TeacherScantronViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return teacherLogic.TeacherScantronViewAttachments(Token.strip(), FilePath)
+
+
+# 考生答题卡选项列表
+@TeacherRouter.post('/Teacher/Scantron/Solution/List')
+async def TeacherScantronSolutionList(
+        request: Request,
+        Token: str = Form(''),
+        Type: int = Form(0),
+        Page: int = Form(1),
+        PageSize: int = Form(10),
+        ScantronID: int = Form(0),
+        Position: int = Form(0),
+):
+    return teacherLogic.TeacherScantronSolutionList(Token.strip(), Type, Page, PageSize, ScantronID, Position)
+
+
+# 考生答题卡附件查看
+@TeacherRouter.post('/Teacher/Scantron/Solution/View/Attachments')
+async def TeacherScantronSolutionViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        OptionAttachment: str = Form(''),
+):
+    return teacherLogic.TeacherScantronSolutionViewAttachments(Token.strip(), OptionAttachment)

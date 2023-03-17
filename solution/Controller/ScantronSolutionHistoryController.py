@@ -5,7 +5,7 @@ ScantronSolutionHistoryRouter = APIRouter()
 ScantronSolutionHistoryPrefix = ''
 
 
-# 历史答题卡列表
+# 历史答题卡选项列表
 @ScantronSolutionHistoryRouter.post('/Scantron/Solution/History/List')
 async def ScantronSolutionHistoryList(
         request: Request,

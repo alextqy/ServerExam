@@ -367,7 +367,8 @@ class TeacherLogic(BaseLogic):
         elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
+            if ClassID > 0:
+                result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
         _dbsession.close()
         return result
 
@@ -464,5 +465,79 @@ class TeacherLogic(BaseLogic):
                 result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass, StartState, SuspendedState, ExamineeID)
             if Type == 2:
                 result: ResultList = self._examInfoHistoryModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass, ExamineeID)
+        _dbsession.close()
+        return result
+
+    # type 1 当前 2 历史
+    def TeacherScantronList(self, Token: str, Type: int, Page: int, PageSize: int, ExamID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            if Type == 1:
+                result: ResultList = self._scantronModel.List(_dbsession, Page, PageSize, ExamID)
+            if Type == 2:
+                result: ResultList = self._scantronHistoryModel.List(_dbsession, Page, PageSize, ExamID)
+        _dbsession.close()
+        return result
+
+    def TeacherScantronViewAttachments(self, Token: str, FilePath: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            if FilePath != '' and FilePath != 'none':
+                with open(FilePath, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(FilePath)
+                result.Data = content
+        _dbsession.close()
+        return result
+
+    # type 1 当前 2 历史
+    def TeacherScantronSolutionList(self, Token: str, Type: int, Page: int, PageSize: int, ScantronID: int, Position: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            if Type == 1:
+                result: ResultList = self._scantronSolutionModel.List(_dbsession, Page, PageSize, ScantronID, Position)
+            if Type == 2:
+                result: ResultList = self._scantronSolutionHistoryModel.List(_dbsession, Page, PageSize, ScantronID, Position)
+        _dbsession.close()
+        return result
+
+    def TeacherScantronSolutionViewAttachments(self, Token: str, OptionAttachment: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            if OptionAttachment != '' and OptionAttachment != 'none':
+                with open(OptionAttachment, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(OptionAttachment)
+                result.Data = content
         _dbsession.close()
         return result
