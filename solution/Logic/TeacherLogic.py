@@ -449,3 +449,20 @@ class TeacherLogic(BaseLogic):
             result.State = True
         _dbsession.close()
         return result
+
+    # type 1 当前 2 历史
+    def TeacherExamInfoList(self, Token: str, Type: int, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int, StartState: int, SuspendedState: int, ExamineeID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            if Type == 1:
+                result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass, StartState, SuspendedState, ExamineeID)
+            if Type == 2:
+                result: ResultList = self._examInfoHistoryModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass, ExamineeID)
+        _dbsession.close()
+        return result

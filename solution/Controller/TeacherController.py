@@ -181,3 +181,21 @@ async def TeacherUpdateExaminee(
         ClassID: int = Form(0),
 ):
     return teacherLogic.TeacherUpdateExaminee(request.client.host, Token.strip(), ID, Name.strip(), Contact.strip(), ClassID)
+
+
+# 班级下考生报名列表
+@TeacherRouter.post('/Teacher/ExamInfo/List')
+async def TeacherExamInfoList(
+        request: Request,
+        Token: str = Form(''),
+        Type: int = Form(0),
+        Page: int = Form(1),
+        PageSize: int = Form(10),
+        Stext: str = Form(''),
+        ExamState: int = Form(0),
+        ExamType: int = Form(0),
+        Pass: int = Form(0),
+        StartState: int = Form(0),
+        SuspendedState: int = Form(0),
+):
+    return teacherLogic.TeacherExamInfoList(Token.strip(), Type, Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState)
