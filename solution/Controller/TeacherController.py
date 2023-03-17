@@ -197,5 +197,6 @@ async def TeacherExamInfoList(
         Pass: int = Form(0),
         StartState: int = Form(0),
         SuspendedState: int = Form(0),
+        ExamineeID: int = Form(0),
 ):
-    return teacherLogic.TeacherExamInfoList(Token.strip(), Type, Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState)
+    return teacherLogic.TeacherExamInfoList(Token.strip(), Type, Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState, ExamineeID)
