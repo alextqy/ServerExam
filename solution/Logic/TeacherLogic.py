@@ -323,7 +323,7 @@ class TeacherLogic(BaseLogic):
                     return result
 
                 Desc = 'teacher change password account:' + TeacherData.Account
-                if self.LogSysAction(_dbsession, 1, TeacherID, Desc, ClientHost) == False:
+                if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
                     _dbsession.rollback()
                     return result
@@ -455,10 +455,10 @@ class TeacherLogic(BaseLogic):
     def TeacherExamInfoList(self, Token: str, Type: int, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int, StartState: int, SuspendedState: int, ExamineeID: int):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             if Type == 1:
@@ -472,10 +472,10 @@ class TeacherLogic(BaseLogic):
     def TeacherScantronList(self, Token: str, Type: int, Page: int, PageSize: int, ExamID: int):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             if Type == 1:
@@ -488,10 +488,10 @@ class TeacherLogic(BaseLogic):
     def TeacherScantronViewAttachments(self, Token: str, FilePath: str):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             import struct
@@ -509,10 +509,10 @@ class TeacherLogic(BaseLogic):
     def TeacherScantronSolutionList(self, Token: str, Type: int, Page: int, PageSize: int, ScantronID: int, Position: int):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             if Type == 1:
@@ -525,10 +525,10 @@ class TeacherLogic(BaseLogic):
     def TeacherScantronSolutionViewAttachments(self, Token: str, OptionAttachment: str):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             import struct
@@ -545,10 +545,10 @@ class TeacherLogic(BaseLogic):
     def TeacherSubjects(self, Token: str):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             result: Result = self._subjectModel.Subjects(_dbsession)
@@ -558,10 +558,10 @@ class TeacherLogic(BaseLogic):
     def TeacherNewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeNo: str, ExamType: int):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         elif SubjectName == '':
             result.Memo = self._lang.WrongSubjectName
@@ -613,11 +613,11 @@ class TeacherLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                # Desc = 'new exam No.:' + ExamNo
-                # if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                #     result.Memo = self._lang.LoggingFailed
-                #     _dbsession.rollback()
-                #     return result
+                Desc = 'teacher ' + str(TeacherID) + ' new exam No.:' + ExamNo
+                if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
+                    return result
 
                 _dbsession.commit()
                 result.State = True
