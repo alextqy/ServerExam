@@ -74,7 +74,7 @@ class ScantronSolutionModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if ScantronID > 0:
-            sql = sql.filter(self.EType.ScantronID == ScantronID)
+            sql = sql.filter(self.EType.ID == ScantronID)
         if Position > 0:
             sql = sql.filter(self.EType.Position == Position)
         if sql.count() > 0:
@@ -85,4 +85,4 @@ class ScantronSolutionModel(BaseModel):
         return _result
 
     def FindScantronID(self, _dbsession: DBsession, ScantronID: int) -> list:
-        return _dbsession.query(self.EType).filter(self.EType.ScantronID == ScantronID).all()
+        return _dbsession.query(self.EType).filter(self.EType.ID == ScantronID).all()

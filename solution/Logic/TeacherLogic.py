@@ -478,9 +478,9 @@ class TeacherLogic(BaseLogic):
         elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            if Type == 1:
+            if Type == 1 and ExamID > 0:
                 result: ResultList = self._scantronModel.List(_dbsession, Page, PageSize, ExamID)
-            if Type == 2:
+            if Type == 2 and ExamID > 0:
                 result: ResultList = self._scantronHistoryModel.List(_dbsession, Page, PageSize, ExamID)
         _dbsession.close()
         return result
@@ -515,9 +515,9 @@ class TeacherLogic(BaseLogic):
         elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            if Type == 1:
+            if Type == 1 and ScantronID > 0:
                 result: ResultList = self._scantronSolutionModel.List(_dbsession, Page, PageSize, ScantronID, Position)
-            if Type == 2:
+            if Type == 2 and ScantronID > 0:
                 result: ResultList = self._scantronSolutionHistoryModel.List(_dbsession, Page, PageSize, ScantronID, Position)
         _dbsession.close()
         return result
