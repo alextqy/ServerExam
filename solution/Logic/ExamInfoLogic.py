@@ -518,8 +518,8 @@ class ExamInfoLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                _dbsession.commit()
-                result.State = True
+            _dbsession.commit()
+            result.State = True
         _dbsession.close()
         return result
 
