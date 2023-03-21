@@ -421,6 +421,7 @@ class ExamInfoLogic(BaseLogic):
                 if len(ScantronDataList) > 0:
                     for i in ScantronDataList:
                         ScantronData: ScantronEntity = i
+                        # print('试题 ' + str(ScantronData.QuestionTitle))
 
                         # 当前报名下的答题卡转入历史
                         ScantronHistoryData = ScantronHistoryEntity()
@@ -447,10 +448,12 @@ class ExamInfoLogic(BaseLogic):
                         if len(ScantronSolutionDataList) > 0:
                             for s in ScantronSolutionDataList:
                                 ScantronSolutionData: ScantronSolutionEntity = s
+                                # print('选项 ' + str(ScantronSolutionData.Option))
 
                                 # 当前答题卡选项转入历史
                                 ScantronSolutionHistoryData = ScantronSolutionHistoryEntity()
                                 ScantronSolutionHistoryData.ID = ScantronSolutionData.ID
+                                ScantronSolutionHistoryData.ScantronID = ScantronSolutionData.ScantronID
                                 ScantronSolutionHistoryData.Option = ScantronSolutionData.Option
                                 ScantronSolutionHistoryData.OptionAttachment = ScantronSolutionData.OptionAttachment
                                 ScantronSolutionHistoryData.CorrectAnswer = ScantronSolutionData.CorrectAnswer
@@ -477,6 +480,7 @@ class ExamInfoLogic(BaseLogic):
                             result.Memo = DelInfo.Memo
                             _dbsession.rollback()
                             return result
+                        # print('=====================')
 
                 # 当前报名数据添加到历史
                 ExamInfoHistoryData = ExamInfoHistoryEntity()

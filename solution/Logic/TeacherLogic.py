@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from Logic.BaseLogic import *
+from Logic.ExamInfoLogic import ExamInfoLogic
 
 
 class TeacherLogic(BaseLogic):
@@ -621,5 +622,18 @@ class TeacherLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
+        return result
+
+    def TeacherGenerateTestPaper(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result = ExamInfoLogic().GenerateTestPaperAction(ClientHost, ID)
         _dbsession.close()
         return result

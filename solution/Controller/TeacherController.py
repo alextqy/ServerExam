@@ -256,3 +256,13 @@ async def TeacherNewExamInfo(
         ExamType: int = Form(0),
 ):
     return teacherLogic.TeacherNewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeNo, ExamType)
+
+
+# 生成试卷
+@TeacherRouter.post('/Teacher/Generate/Test/Paper')
+async def TeacherGenerateTestPaper(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return teacherLogic.TeacherGenerateTestPaper(request.client.host, Token.strip(), ID)

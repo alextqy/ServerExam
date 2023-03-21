@@ -71,7 +71,7 @@ class ScantronSolutionHistoryModel(BaseModel):
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if ScantronID > 0:
-            sql = sql.filter(self.EType.ID == ScantronID)
+            sql = sql.filter(self.EType.ScantronID == ScantronID)
         if Position > 0:
             sql = sql.filter(self.EType.Position == Position)
         if sql.count() > 0:
