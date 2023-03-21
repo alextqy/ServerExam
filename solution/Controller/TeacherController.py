@@ -266,3 +266,13 @@ async def TeacherGenerateTestPaper(
         ID: int = Form(0),
 ):
     return teacherLogic.TeacherGenerateTestPaper(request.client.host, Token.strip(), ID)
+
+
+# 重置报名试题数据
+@TeacherRouter.post('/Teacher/Reset/Exam/Question/Data')
+async def TeacherResetExamQuestionData(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return teacherLogic.TeacherResetExamQuestionData(request.client.host, Token.strip(), ID)

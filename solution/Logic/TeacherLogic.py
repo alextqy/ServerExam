@@ -628,12 +628,81 @@ class TeacherLogic(BaseLogic):
     def TeacherGenerateTestPaper(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
-        AdminID = self.TeacherPermissionValidation(_dbsession, Token)
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
         if Token == '':
             result.Memo = self._lang.WrongToken
-        elif AdminID == 0:
+        elif TeacherID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
             result = ExamInfoLogic().GenerateTestPaperAction(ClientHost, ID)
+        _dbsession.close()
+        return result
+
+    def TeacherResetExamQuestionData(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        else:
+            # 获取报名数据
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.ExamDataError
+            elif ExamInfoData.StartTime > 0:
+                result.Memo = self._lang.ExamHasStarted
+            elif ExamInfoData.ExamState == 3:
+                result.Memo = self._lang.ExamCompleted
+            elif ExamInfoData.ExamState == 4:
+                result.Memo = self._lang.ExamDataDisabled
+            else:
+                _dbsession.begin_nested()
+
+                # 获取对应答题卡列表数据
+                if ExamInfoData.ExamState == 2:
+                    ScantronDataList: list = self._scantronModel.FindExamID(_dbsession, ID)
+                    if len(ScantronDataList) > 0:
+                        for i in ScantronDataList:
+                            ScantronData: ScantronEntity = i
+                            # 删除答题卡选项
+                            ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
+                            if len(ScantronSolutionDataList) > 0:
+                                for j in ScantronSolutionDataList:
+                                    ScantronSolutionData: ScantronSolutionEntity = j
+                                    SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
+                                    if SSDelInfo.State == False:
+                                        result.Memo = SSDelInfo.Memo
+                                        _dbsession.rollback()
+                                        return result
+                            # 删除答题卡
+                            SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
+                            if SDelInfo.State == False:
+                                result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
+                                return result
+
+                try:
+                    ExamInfoData.ExamState = 1
+                    ExamInfoData.ExamDuration = 0
+                    ExamInfoData.PassLine = 0
+                    ExamInfoData.TotalScore = 0
+                    ExamInfoData.UpdateTime = self._common.Time()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                # Desc = 'reset exam No.:' + ExamInfoData.ExamNo
+                # if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                #     result.Memo = self._lang.LoggingFailed
+                #     _dbsession.rollback()
+                #     return result
+
+                _dbsession.commit()
+                result.State = True
         _dbsession.close()
         return result
