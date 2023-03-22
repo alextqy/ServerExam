@@ -71,7 +71,7 @@ async def Teachers(
     return teacherLogic.Teachers(Token.strip())
 
 
-# ========================================================================= teacher side =========================================================================
+# ================================================================================ teacher api ================================================================================
 
 
 # 教师登录
@@ -276,3 +276,13 @@ async def TeacherResetExamQuestionData(
         ID: int = Form(0),
 ):
     return teacherLogic.TeacherResetExamQuestionData(request.client.host, Token.strip(), ID)
+
+
+# 报名作废
+@TeacherRouter.post('/Teacher/ExamInfo/Disabled')
+async def TeacherExamInfoDisabled(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return examInfoLogic.TeacherExamInfoDisabled(request.client.host, Token.strip(), ID)

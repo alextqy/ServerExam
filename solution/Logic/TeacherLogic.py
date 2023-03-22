@@ -293,6 +293,12 @@ class TeacherLogic(BaseLogic):
 
             TeacherData.Name = Name
 
+            Desc = 'teacher ID ' + str(TeacherID) + ' update data'
+            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
+                return result
+
             _dbsession.commit()
             result.State = True
         _dbsession.close()
@@ -408,6 +414,12 @@ class TeacherLogic(BaseLogic):
                 _dbsession.rollback()
                 return result
 
+            Desc = 'teacher ID ' + str(TeacherID) + ' new examinee No.:' + ExamineeNo
+            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
+                return result
+
             _dbsession.commit()
             result.State = True
         _dbsession.close()
@@ -444,6 +456,12 @@ class TeacherLogic(BaseLogic):
                 ExamineeData.ClassID = ClassID
             except Exception as e:
                 result.Memo = str(e)
+                _dbsession.rollback()
+                return result
+
+            Desc = 'teacher ID ' + str(TeacherID) + ' update examinee data ID:' + str(ID)
+            if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                result.Memo = self._lang.LoggingFailed
                 _dbsession.rollback()
                 return result
 
@@ -614,7 +632,7 @@ class TeacherLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'teacher ' + str(TeacherID) + ' new exam No.:' + ExamNo
+                Desc = 'teacher ID ' + str(TeacherID) + ' new exam No.:' + ExamNo
                 if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
                     _dbsession.rollback()
@@ -696,11 +714,75 @@ class TeacherLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                # Desc = 'reset exam No.:' + ExamInfoData.ExamNo
-                # if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                #     result.Memo = self._lang.LoggingFailed
-                #     _dbsession.rollback()
-                #     return result
+                Desc = 'teacher ID ' + str(TeacherID) + ' reset exam No.:' + ExamInfoData.ExamNo
+                if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        _dbsession.close()
+        return result
+
+    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.ExamDataError
+            elif ExamInfoData.ExamState == 4:
+                result.State = True
+            elif ExamInfoData.ExamState == 3:
+                result.Memo = self._lang.ExamCompleted
+            elif ExamInfoData.StartTime > 0:
+                result.Memo = self._lang.DataCannotBeInvalidated
+            else:
+                _dbsession.begin_nested()
+
+                # 待考状态的报名 作废时要删除对应的答题卡和答题卡选项
+                if ExamInfoData.ExamState == 2:
+                    ScantronDataList: list = self._scantronModel.FindExamID(_dbsession, ID)
+                    if len(ScantronDataList) > 0:
+                        for i in ScantronDataList:
+                            ScantronData: ScantronEntity = i
+                            # 删除答题卡选项
+                            ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
+                            if len(ScantronSolutionDataList) > 0:
+                                for j in ScantronSolutionDataList:
+                                    ScantronSolutionData: ScantronSolutionEntity = j
+                                    SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
+                                    if SSDelInfo.State == False:
+                                        result.Memo = SSDelInfo.Memo
+                                        _dbsession.rollback()
+                                        return result
+                            # 删除答题卡
+                            SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
+                            if SDelInfo.State == False:
+                                result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
+                                return result
+                try:
+                    ExamInfoData.ExamState = 4
+                    ExamInfoData.UpdateTime = self._common.Time()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                Desc = 'teacher ID ' + str(TeacherID) + ' disable exam No.:' + ExamInfoData.ExamNo
+                if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
+                    return result
 
                 _dbsession.commit()
                 result.State = True
