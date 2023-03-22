@@ -10,6 +10,7 @@ pip install 'uvicorn[standard]'
 pip install requests
 uvicorn main:app --host=0.0.0.0 --port=6001 --reload-exclude TEXT
 '''
+import threading
 from Service.Common import *
 from Service.UDPTool import *
 from Service.RedisHelper import *
@@ -109,27 +110,31 @@ import sched
 s = sched.scheduler(time, sleep)
 
 
-# 可加入多个后台执行方法
-def StartEvent(sc):
+# 使劲池
+def EventPool(sc):
+    # print(Common().TimeMS()) # test
     UDPTool.SendBroadcast()  # 发送UDP信息
-    sc.enter(3, 1, StartEvent, (sc, ))
+    sc.enter(3, 1, EventPool, (sc, ))
 
 
-def StartScheduler():
-    s.enter(5, 1, StartEvent, (s, ))
+# 运行事件池
+def EventScheduler():
+    s.enter(5, 1, EventPool, (s, ))
     s.run()
 
 
+# 系统启动时执行
 @app.on_event('startup')
 async def StartupEvent():
-    thread = Thread(target=StartScheduler)
+    thread = Thread(target=EventScheduler)
     thread.start()
 
 
 def run():
+    StartupEvent()
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
-    uvicorn.run('main:app', host='0.0.0.0', port=int(ConfigObj['UDPPort']), reload=True)
+    uvicorn.run('main:app', host=Common().LocalIP(), port=int(ConfigObj['UDPPort']), reload=True)
 
 
 import uvicorn
