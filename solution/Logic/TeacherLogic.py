@@ -788,3 +788,59 @@ class TeacherLogic(BaseLogic):
                 result.State = True
         _dbsession.close()
         return result
+
+    def TeacherGradeTheExam(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result = ExamInfoLogic().GradeTheExamAction(ClientHost, ID)
+        _dbsession.close()
+        return result
+
+    def TeacherExamInfoSuspend(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        TeacherID = self.TeacherPermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif TeacherID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.ExamDataError
+            elif ExamInfoData.StartState != 2:
+                result.Memo = self._lang.TheExamDidNotStart
+            else:
+                _dbsession.begin_nested()
+                try:
+                    if ExamInfoData.SuspendedState == 2:
+                        ExamInfoData.SuspendedState = 1
+                    else:
+                        ExamInfoData.SuspendedState = 2
+                    ExamInfoData.UpdateTime = self._common.Time()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                if ExamInfoData.SuspendedState == 1:
+                    Desc = 'teacher ID ' + str(TeacherID) + ' resume exam-info ID:' + str(ID)
+                if ExamInfoData.SuspendedState == 2:
+                    Desc = 'teacher ID ' + str(TeacherID) + ' suspend exam-info ID:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, 0, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        _dbsession.close()
+        return result

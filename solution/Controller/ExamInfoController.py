@@ -117,7 +117,7 @@ async def DownloadExamInfoDemo(
     return examInfoLogic.DownloadExamInfoDemo(Token.strip())
 
 
-# 报名作废
+# 报名暫停
 @ExamInfoRouter.post('/ExamInfo/Suspend')
 async def ExamInfoSuspend(
         request: Request,

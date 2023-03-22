@@ -286,3 +286,23 @@ async def TeacherExamInfoDisabled(
         ID: int = Form(0),
 ):
     return teacherLogic.TeacherExamInfoDisabled(request.client.host, Token.strip(), ID)
+
+
+# 打分
+@TeacherRouter.post('/Teacher/Grade/The/Exam')
+async def TeacherGradeTheExam(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return teacherLogic.TeacherGradeTheExam(request.client.host, Token.strip(), ID)
+
+
+# 报名暫停
+@TeacherRouter.post('/Teacher/ExamInfo/Suspend')
+async def TeacherExamInfoSuspend(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return teacherLogic.TeacherExamInfoSuspend(request.client.host, Token.strip(), ID)
