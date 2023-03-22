@@ -10,11 +10,14 @@ pip install 'uvicorn[standard]'
 pip install requests
 uvicorn main:app --host=0.0.0.0 --port=6001 --reload-exclude TEXT
 '''
-import threading
 from Service.Common import *
 from Service.UDPTool import *
 from Service.RedisHelper import *
 from PreOperation.DaoHandler import DaoHandler
+
+import warnings
+
+warnings.filterwarnings("ignore")
 
 app = FastAPI()
 
