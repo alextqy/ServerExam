@@ -725,7 +725,7 @@ class TeacherLogic(BaseLogic):
         _dbsession.close()
         return result
 
-    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int):
+    def TeacherExamInfoDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         TeacherID = self.TeacherPermissionValidation(_dbsession, Token)

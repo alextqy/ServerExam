@@ -285,4 +285,4 @@ async def TeacherExamInfoDisabled(
         Token: str = Form(''),
         ID: int = Form(0),
 ):
-    return examInfoLogic.TeacherExamInfoDisabled(request.client.host, Token.strip(), ID)
+    return teacherLogic.TeacherExamInfoDisabled(request.client.host, Token.strip(), ID)
