@@ -101,10 +101,6 @@ app.include_router(TeacherClassRouter, prefix=TeacherClassPrefix)
 
 app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 
-# 修改数据库前置方法
-# daoHandler = DaoHandler()
-# daoHandler.AddFields()
-
 UDPTool = UDPTool()
 
 import sched
