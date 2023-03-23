@@ -10,7 +10,7 @@ class RedisHelper(BaseService):
         self.Common = Common()
         self.ConfigObj: dict = self.Common.ReadJsonFile(path[0] + '/config.json')
         self.RedisPool = redis.ConnectionPool(
-            host=self.ConfigObj['RedisAddr'],
+            host=self.Common.LocalIP(),
             port=self.ConfigObj['RedisPort'],
             password=self.ConfigObj['RedisPWD'],
             db=self.ConfigObj['RedisDB'],

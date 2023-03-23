@@ -8,12 +8,11 @@ pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
 pip install requests
-uvicorn main:app --host=0.0.0.0 --port=6001 --reload-exclude TEXT
+uvicorn main:app --host=0.0.0.0 --port=60000 --reload-exclude TEXT
 '''
 from Service.Common import *
 from Service.UDPTool import *
 from Service.RedisHelper import *
-from PreOperation.DaoHandler import DaoHandler
 
 import warnings
 
@@ -137,7 +136,7 @@ def run():
     StartupEvent()
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
-    uvicorn.run('main:app', host=Common().LocalIP(), port=int(ConfigObj['UDPPort']), reload=True)
+    uvicorn.run('main:app', host='192.168.0.29', port=int(ConfigObj['UDPPort']), reload=True)  # Common().LocalIP()
 
 
 import uvicorn

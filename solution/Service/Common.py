@@ -182,16 +182,18 @@ class Common(BaseService):
         return ParamStr.count(TargetStr)
 
     # 获取本机IP
-    # def LocalIP(self) -> str:
-    #     try:
-    #         s = socket(AF_INET, SOCK_DGRAM)
-    #         s.connect(('8.8.8.8', 80))
-    #         ip = s.getsockname()[0]
-    #     finally:
-    #         s.close()
-    #     return ip
-
     def LocalIP(self) -> str:
+        return '192.168.0.28'
+        try:
+            s = socket(AF_INET, SOCK_DGRAM)
+            s.connect(('8.8.8.8', 80))
+            ip = s.getsockname()[0]
+        finally:
+            s.close()
+        return ip
+
+    # 在线获取本地IP
+    def LocalIPOnline(self) -> str:
         import requests
         CallbackInfo = requests.get('https://www.baidu.com', stream=True)
         return CallbackInfo.raw._connection.sock.getsockname()[0]
