@@ -110,7 +110,7 @@ s = sched.scheduler(time, sleep)
 
 # 使劲池
 def EventPool(sc):
-    # print(Common().TimeMS()) # test
+    # print(Common().TimeMS())  # test
     UDPTool.SendBroadcast()  # 发送UDP信息
     sc.enter(3, 1, EventPool, (sc, ))
 
