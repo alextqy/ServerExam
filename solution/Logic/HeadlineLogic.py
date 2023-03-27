@@ -7,7 +7,7 @@ class HeadlineLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewHeadline(self, ClientHost: str, Token: str, Content: str) -> Result:
+    def NewHeadline(self, ClientHost: str, Token: str, Content: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -27,18 +27,21 @@ class HeadlineLogic(BaseLogic):
             AddInfo: Result = self._headlineModel.Insert(_dbsession, HeadlineData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new headline:' + Content
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
-    def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str) -> Result:
+    def UpdateHeadlineInfo(self, ClientHost: str, Token: str, ID: int, Content: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -68,7 +71,6 @@ class HeadlineLogic(BaseLogic):
                 try:
                     HeadlineData.Content = Content
                     HeadlineData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -77,13 +79,15 @@ class HeadlineLogic(BaseLogic):
                 Desc = 'update headline ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str) -> ResultList:
+    def HeadlineList(self, Token: str, Page: int, PageSize: int, Stext: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -93,9 +97,10 @@ class HeadlineLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._headlineModel.List(_dbsession, Page, PageSize, Stext)
+        _dbsession.close()
         return result
 
-    def HeadlineInfo(self, Token: str, ID: int) -> Result:
+    def HeadlineInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -112,4 +117,18 @@ class HeadlineLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = HeadlineData
+        _dbsession.close()
+        return result
+
+    def Headlines(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: Result = self._headlineModel.Headlines(_dbsession)
+        _dbsession.close()
         return result

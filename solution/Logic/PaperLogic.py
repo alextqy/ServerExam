@@ -7,7 +7,7 @@ class PaperLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewPaper(self, ClientHost: str, Token: str, PaperName: str, SubjectID: int, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
+    def NewPaper(self, ClientHost: str, Token: str, PaperName: str, SubjectID: int, TotalScore: float, PassLine: float, ExamDuration: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -45,18 +45,21 @@ class PaperLogic(BaseLogic):
                 AddInfo: Result = self._paperModel.Insert(_dbsession, PaperData)
                 if AddInfo.State == False:
                     result.Memo - AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new paper:' + PaperName
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def PaperDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def PaperDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -99,7 +102,6 @@ class PaperLogic(BaseLogic):
                     else:
                         PaperData.PaperState = 2
                     PaperData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -111,13 +113,15 @@ class PaperLogic(BaseLogic):
                     Desc = 'disable paper ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int) -> Result:
+    def UpdatePaperInfo(self, ClientHost: str, Token: str, ID: int, PaperName: str, TotalScore: float, PassLine: float, ExamDuration: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -149,9 +153,9 @@ class PaperLogic(BaseLogic):
                     PaperData.PaperName = PaperName
                     PaperData.TotalScore = TotalScore
                     PaperData.PassLine = PassLine
-                    PaperData.ExamDuration = ExamDuration * 60
+                    PaperData.ExamDuration = ExamDuration
                     PaperData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
+                    PaperData.PaperState = 2
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -160,13 +164,15 @@ class PaperLogic(BaseLogic):
                 Desc = 'update paper ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int) -> ResultList:
+    def PaperList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectID: int, PaperState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -176,9 +182,14 @@ class PaperLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._paperModel.List(_dbsession, Page, PageSize, Stext, SubjectID, PaperState)
+            if result.Data != '':
+                for i in result.Data:
+                    PaperData: PaperEntity = i
+                    PaperData.SubjectName = self._subjectModel.Find(_dbsession, PaperData.SubjectID).SubjectName
+        _dbsession.close()
         return result
 
-    def PaperInfo(self, Token: str, ID: int) -> Result:
+    def PaperInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -195,4 +206,5 @@ class PaperLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = PaperData
+        _dbsession.close()
         return result

@@ -7,7 +7,7 @@ class ExamLogLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ExamLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int) -> ResultList:
+    def ExamLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -17,9 +17,10 @@ class ExamLogLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examLogModel.List(_dbsession, Page, PageSize, Stext, Type)
+        _dbsession.close()
         return result
 
-    def ExamLogInfo(self, Token: str, ID: int) -> Result:
+    def ExamLogInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -36,4 +37,5 @@ class ExamLogLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamLogData
+        _dbsession.close()
         return result

@@ -3,13 +3,20 @@
 pip install python-multipart
 pip install pymysql
 pip install sqlalchemy
+pip install redis
 pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
-uvicorn main:app --host=0.0.0.0 --port=6000 --reload-exclude TEXT
+pip install requests
+uvicorn main:app --host=0.0.0.0 --port=60000 --reload-exclude TEXT
 '''
 from Service.Common import *
-from PreOperation.DaoHandler import DaoHandler
+from Service.UDPTool import *
+from Service.RedisHelper import *
+
+import warnings
+
+warnings.filterwarnings("ignore")
 
 app = FastAPI()
 
@@ -32,12 +39,13 @@ async def ProcessTimeHeader(request: Request, call_next):
 
 # 测试
 @app.get('/Test')
-async def Test(request: Request, Param: str):
+async def Test(request: Request, Param1: str, Param2: str, Param3: str):
     result = Result()
-    # common = Common()
+    # c = Common()
+    # r = RedisHelper()
     result.State = True
     result.Memo = 'Success'
-    result.Data = Param
+    result.Data = Param1 + Param2 + Param3
     return result  # json.dumps(result.__dict__)
 
 
@@ -93,6 +101,40 @@ app.include_router(TeacherClassRouter, prefix=TeacherClassPrefix)
 
 app.include_router(CodeExecRouter, prefix=CodeExecPrefix)
 
-# 修改数据库前置方法
-# daoHandler = DaoHandler()
-# daoHandler.AddFields()
+UDPTool = UDPTool()
+
+import sched
+
+s = sched.scheduler(time, sleep)
+
+
+# 使劲池
+def EventPool(sc):
+    # print(Common().TimeMS())  # test
+    UDPTool.SendBroadcast()  # 发送UDP信息
+    sc.enter(3, 1, EventPool, (sc, ))
+
+
+# 运行事件池
+def EventScheduler():
+    s.enter(5, 1, EventPool, (s, ))
+    s.run()
+
+
+# 系统启动时执行
+@app.on_event('startup')
+async def StartupEvent():
+    thread = Thread(target=EventScheduler)
+    thread.start()
+
+
+def run():
+    StartupEvent()
+    _common = Common()
+    ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
+    uvicorn.run('main:app', host=Common().LocalIP(), port=int(ConfigObj['UDPPort']), reload=True)
+
+
+import uvicorn
+if __name__ == '__main__':
+    run()

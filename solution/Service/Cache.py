@@ -8,7 +8,7 @@ class Cache(BaseService):
         self.jsonFile = Path + jsonFile
         self.configData = OrderedDict()
         if Path == '':
-            self.configData = {'Debug': False, 'URL': '', 'SwitchHttps': False, 'Account': '', 'Title': 'bitbox', 'Lang': '', 'Token': '', 'TokenType': '', 'Sync': False, 'UDPPort': 6002, 'SynchronizationCycle': 3}
+            self.configData = {'Debug': False, 'URL': '', 'SwitchHttps': False, 'Account': '', 'Title': 'BIT EXAM', 'Lang': '', 'Token': '', 'TokenType': '', 'Sync': False, 'UDPPort': 6002, 'SynchronizationCycle': 3}
 
         selectFile = isfile(self.jsonFile)
         if selectFile == False:

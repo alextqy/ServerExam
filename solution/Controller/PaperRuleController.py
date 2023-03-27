@@ -16,8 +16,9 @@ async def NewPaperRule(
         QuestionNum: int = Form(0),
         SingleScore: float = Form(0),
         PaperID: int = Form(0),
-) -> Result:
-    return paperRuleLogic.NewPaperRule(request.client.host, Token.strip(), HeadlineID, QuestionType, KnowledgeID, QuestionNum, SingleScore, PaperID)
+        SerialNumber: int = Form(0),
+):
+    return paperRuleLogic.NewPaperRule(request.client.host, Token.strip(), HeadlineID, QuestionType, KnowledgeID, QuestionNum, SingleScore, PaperID, SerialNumber)
 
 
 # 禁用试题规则
@@ -26,7 +27,7 @@ async def PaperRuleDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -36,7 +37,7 @@ async def PaperRuleDelete(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleDelete(request.client.host, Token.strip(), ID)
 
 
@@ -49,8 +50,9 @@ async def PaperRuleList(
         PageSize: int = Form(10),
         PaperID: int = Form(0),
         PaperRuleState: int = Form(0),
-) -> Result:
-    return paperRuleLogic.PaperRuleList(Token.strip(), Page, PageSize, PaperID, PaperRuleState)
+        OrderBySerialNumber: int = Form(0),
+):
+    return paperRuleLogic.PaperRuleList(Token.strip(), Page, PageSize, PaperID, PaperRuleState, OrderBySerialNumber)
 
 
 # 试题规则详情
@@ -59,5 +61,29 @@ async def PaperRuleInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperRuleLogic.PaperRuleInfo(Token.strip(), ID)
+
+
+# 获取所有试题规则
+@PaperRuleRouter.post('/Paper/Rules')
+async def PaperRules(
+        request: Request,
+        Token: str = Form(''),
+        PaperID: int = Form(0),
+):
+    return paperRuleLogic.PaperRules(Token.strip(), PaperID)
+
+
+# 修改试卷规则
+@PaperRuleRouter.post('/Update/Paper/Rule')
+async def UpdatePaperRule(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+        QuestionType: int = Form(0),
+        QuestionNum: int = Form(0),
+        SingleScore: float = Form(0),
+        SerialNumber: int = Form(0),
+):
+    return paperRuleLogic.UpdatePaperRule(request.client.host, Token.strip(), ID, QuestionType, QuestionNum, SingleScore, SerialNumber)

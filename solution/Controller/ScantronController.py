@@ -13,7 +13,7 @@ async def ScantronList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         ExamID: int = Form(0),
-) -> ResultList:
+):
     return scantronLogic.ScantronList(Token.strip(), Page, PageSize, ExamID)
 
 
@@ -23,5 +23,15 @@ async def ScantronInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return scantronLogic.ScantronInfo(Token.strip(), ID)
+
+
+# 查看附件
+@ScantronRouter.post('/Scantron/View/Attachments')
+async def ScantronViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return scantronLogic.ScantronViewAttachments(Token.strip(), FilePath)

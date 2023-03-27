@@ -5,7 +5,7 @@ ScantronSolutionRouter = APIRouter()
 ScantronSolutionPrefix = ''
 
 
-# 答题卡列表
+# 答题卡选项列表
 @ScantronSolutionRouter.post('/Scantron/Solution/List')
 async def ScantronSolutionList(
         request: Request,
@@ -14,7 +14,7 @@ async def ScantronSolutionList(
         PageSize: int = Form(10),
         ScantronID: int = Form(0),
         Position: int = Form(0),
-) -> ResultList:
+):
     return scantronSolutionLogic.ScantronSolutionList(Token.strip(), Page, PageSize, ScantronID, Position)
 
 
@@ -24,5 +24,15 @@ async def ScantronSolutionInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return scantronSolutionLogic.ScantronSolutionInfo(Token.strip(), ID)
+
+
+# 查看附件
+@ScantronSolutionRouter.post('/Scantron/Solution/View/Attachments')
+async def ScantronSolutionViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        OptionAttachment: str = Form(''),
+):
+    return scantronSolutionLogic.ScantronSolutionViewAttachments(Token.strip(), OptionAttachment)

@@ -16,7 +16,7 @@ async def NewQuestion(
         Description: str = Form(''),
         Language: str = Form(''),
         LanguageVersion: str = Form(''),
-) -> Result:
+):
     return questionLogic.NewQuestion(request.client.host, Token.strip(), QuestionTitle.strip(), QuestionType, KnowledgeID, Description.strip(), Language.strip().lower(), LanguageVersion.strip().lower())
 
 
@@ -27,9 +27,20 @@ async def QuestionAttachment(
         Token: str = Form(''),
         ID: int = Form(0),
         Attachment: UploadFile = File(...),
-) -> Result:
+        ContentType: str = Form(''),
+):
     Contents: bytes = await Attachment.read()
-    return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, Attachment.content_type, Contents)
+    return questionLogic.QuestionAttachment(request.client.host, Token.strip(), ID, ContentType, Contents)
+
+
+# 查看附件
+@QuestionRouter.post('/Question/View/Attachments')
+async def QuestionViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return questionLogic.QuestionViewAttachments(Token.strip(), FilePath)
 
 
 # 禁用/启用 试题
@@ -38,7 +49,7 @@ async def QuestionDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return questionLogic.QuestionDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -53,7 +64,7 @@ async def UpdateQuestionInfo(
         Description: str = Form(''),
         Language: str = Form(''),
         LanguageVersion: str = Form(''),
-) -> Result:
+):
     return questionLogic.UpdateQuestionInfo(request.client.host, Token.strip(), ID, QuestionTitle.strip(), QuestionType, Description.strip(), Language.strip().lower(), LanguageVersion.strip().lower())
 
 
@@ -68,7 +79,7 @@ async def QuestionList(
         QuestionType: int = Form(0),
         QuestionState: int = Form(0),
         KnowledgeID: int = Form(0),
-) -> ResultList:
+):
     return questionLogic.QuestionList(Token.strip(), Page, PageSize, Stext.strip(), QuestionType, QuestionState, KnowledgeID)
 
 
@@ -78,5 +89,5 @@ async def QuestionInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return questionLogic.QuestionInfo(Token.strip(), ID)

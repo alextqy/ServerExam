@@ -8,8 +8,9 @@ class ManagerModel(BaseModel):
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
+    def Insert(self, _dbsession: DBsession, Data: EType):
         _result = Result()
+        Data.CreateTime = self._common.Time()
         Data.Account = Data.Account.strip()
         Data.Password = Data.Password.strip()
         Data.Name = Data.Name.strip()
@@ -42,7 +43,7 @@ class ManagerModel(BaseModel):
         _result.Data = Data.ID
         return _result
 
-    def Delete(self, _dbsession: DBsession, ID: int) -> Result:
+    def Delete(self, _dbsession: DBsession, ID: int):
         _result = Result()
         try:
             Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
@@ -59,20 +60,16 @@ class ManagerModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, Stext: str, State: int, Permission: int):
         _result = ResultList()
         _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = 0
-        if _dbsession.query(self.EType).count() > 0:
-            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         if Page <= 0:
             Page = 1
         if PageSize <= 0:
             PageSize = 10
-        if _result.TotalPage > 0 and Page > _result.TotalPage:
-            Page = _result.TotalPage
         sql = _dbsession.query(self.EType)
         sql = sql.order_by(desc(self.EType.ID))
         if Stext != '':
@@ -81,11 +78,16 @@ class ManagerModel(BaseModel):
             sql = sql.filter(self.EType.State == State)
         if Permission > 0:
             sql = sql.filter(self.EType.Permission == Permission)
+        if sql.count() > 0:
+            _result.TotalPage = math.ceil(sql.count() / PageSize)
+        if _result.TotalPage > 0 and Page > _result.TotalPage:
+            Page = _result.TotalPage
         DataList = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
-        for i in DataList:
-            i.Password = ''
-            i.Token = ''
-        _result.Data = DataList
+        if len(DataList) > 0:
+            for i in DataList:
+                i.Password = ''
+                i.Token = ''
+            _result.Data = DataList
         return _result
 
     def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
@@ -95,7 +97,7 @@ class ManagerModel(BaseModel):
     def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
 
-    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str) -> Result:
+    def ChangePassword(self, _dbsession: DBsession, Data: EType, Password: str):
         _result = Result()
         try:
             Data.Password = self._common.UserPWD(Password.strip()) if Password.strip() != '' and self._common.UserPWD(Password.strip()) != Data.Password else Data.Password
@@ -106,4 +108,11 @@ class ManagerModel(BaseModel):
             _result.Memo = str(e)
             return _result
         _result.State = True
+        return _result
+
+    def Managers(self, _dbsession: DBsession):
+        _result = Result()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        _result.Data = sql.all()
         return _result

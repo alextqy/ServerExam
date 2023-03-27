@@ -7,7 +7,7 @@ class ExamInfoLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeID: int, ExamType: int) -> Result:
+    def NewExamInfo(self, ClientHost: str, Token: str, SubjectName: str, ExamNo: str, ExamineeNo: str, ExamType: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -28,17 +28,20 @@ class ExamInfoLogic(BaseLogic):
             elif SubjectData.SubjectState == 2:
                 result.Memo = self._lang.SubjectDataIsDisabled
             else:
-                if ExamineeID > 0:
+                ExamineeID = 0
+                if ExamineeNo != '':
                     # 考生信息是否存在
-                    if self._examineeModel.Find(_dbsession, ExamineeID) is None:
+                    ExamineeInfo = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
+                    if ExamineeInfo is None:
                         result.Memo = self._lang.ExamineeDataDoesNotExist
                         return result
                     # 该考生是否有相同科目的报名且未考试
-                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeID, SubjectName)
+                    CheckData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamineeInfo.ID, SubjectName, ExamType)
                     if CheckData is not None:
                         if CheckData.ExamState < 3:
                             result.Memo = self._lang.AlreadyRegisteredForTheSameSubject
                             return result
+                    ExamineeID = ExamineeInfo.ID
 
                 CheckExamNo: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
                 if CheckExamNo is not None and CheckExamNo.ExamState != 4:
@@ -52,21 +55,28 @@ class ExamInfoLogic(BaseLogic):
                 ExamInfoData.ExamNo = ExamNo
                 ExamInfoData.ExamineeID = ExamineeID
                 ExamInfoData.ExamType = ExamType
+                ExamInfoData.Pass = 1
+                ExamInfoData.ExamState = 1
+                ExamInfoData.StartState = 1
+                ExamInfoData.SuspendedState = 1
                 AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new exam No.:' + ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ExamInfoDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -109,12 +119,11 @@ class ExamInfoLogic(BaseLogic):
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
                                 result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
                                 return result
-
                 try:
                     ExamInfoData.ExamState = 4
                     ExamInfoData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -123,13 +132,15 @@ class ExamInfoLogic(BaseLogic):
                 Desc = 'disable exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int) -> ResultList:
+    def ExamInfoList(self, Token: str, Page: int, PageSize: int, Stext: str, ExamState: int, ExamType: int, Pass: int, StartState: int, SuspendedState: int, ExamineeID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -138,10 +149,11 @@ class ExamInfoLogic(BaseLogic):
         elif AdminID == 0:
             result.Memo = self._lang.PermissionDenied
         else:
-            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType)
+            result: ResultList = self._examInfoModel.List(_dbsession, Page, PageSize, Stext, ExamState, ExamType, Pass, StartState, SuspendedState, ExamineeID)
+        _dbsession.close()
         return result
 
-    def ExamInfo(self, Token: str, ID: int) -> Result:
+    def ExamInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -158,9 +170,10 @@ class ExamInfoLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
         return result
 
-    def GenerateTestPaper(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def GenerateTestPaper(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -170,9 +183,10 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result = self.GenerateTestPaperAction(ClientHost, ID, AdminID)
+        _dbsession.close()
         return result
 
-    def GenerateTestPaperAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+    def GenerateTestPaperAction(self, ClientHost: str, ID: int, AdminID: int = 0):
         result = Result()
         _dbsession = DBsession()
         ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
@@ -228,6 +242,7 @@ class ExamInfoLogic(BaseLogic):
                                 AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
                                 if AddInfo.State == False:
                                     result.Memo = AddInfo.Memo
+                                    _dbsession.rollback()
                                     return result
 
                             # 解析试卷数据 ===============================================================================
@@ -249,42 +264,45 @@ class ExamInfoLogic(BaseLogic):
                                 if len(QuestionDataList) > PaperRuleData.QuestionNum:
                                     ScantronDataList: list = self._common.RandomDrawSample(QuestionDataList, PaperRuleData.QuestionNum)
                                 # 遍历写入答题卡数据
-                                for j in ScantronDataList:
-                                    QuestionData: QuestionEntity = j
-                                    ScantronData = ScantronEntity()
-                                    ScantronData.QuestionTitle = QuestionData.QuestionTitle
-                                    ScantronData.QuestionCode = QuestionData.QuestionCode
-                                    ScantronData.QuestionType = QuestionData.QuestionType
-                                    ScantronData.KnowledgeID = QuestionData.KnowledgeID
-                                    ScantronData.Score = PaperRuleData.SingleScore
-                                    ScantronData.Marking = QuestionData.Marking
-                                    ScantronData.Description = QuestionData.Description
-                                    ScantronData.Attachment = QuestionData.Attachment
-                                    ScantronData.ExamID = ID
-                                    AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
-                                    if AddInfo.State == False:
-                                        result.Memo = AddInfo.Memo
-                                        return result
-                                    # 遍历写入答题卡选项数据
-                                    QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
-                                    if len(QuestionSolutionDataList) == 0:
-                                        result.Memo = self._lang.WrongQuestionOptions
-                                        _dbsession.rollback()
-                                        return result
-                                    for k in QuestionSolutionDataList:
-                                        QuestionSolutionData: QuestionSolutionEntity = k
-                                        ScantronSolutionData = ScantronSolutionEntity()
-                                        ScantronSolutionData.ScantronID = ScantronData.ID
-                                        ScantronSolutionData.Option = QuestionSolutionData.Option
-                                        ScantronSolutionData.OptionAttachment = QuestionSolutionData.OptionAttachment
-                                        ScantronSolutionData.CorrectAnswer = QuestionSolutionData.CorrectAnswer
-                                        ScantronSolutionData.CorrectItem = QuestionSolutionData.CorrectItem
-                                        ScantronSolutionData.ScoreRatio = QuestionSolutionData.ScoreRatio
-                                        ScantronSolutionData.Position = QuestionSolutionData.Position
-                                        AddInfo: Result = self._scantronSolutionModel.Insert(_dbsession, ScantronSolutionData)
+                                if len(ScantronDataList) > 0:
+                                    for j in ScantronDataList:
+                                        QuestionData: QuestionEntity = j
+                                        ScantronData = ScantronEntity()
+                                        ScantronData.QuestionTitle = QuestionData.QuestionTitle
+                                        ScantronData.QuestionCode = QuestionData.QuestionCode
+                                        ScantronData.QuestionType = QuestionData.QuestionType
+                                        ScantronData.KnowledgeID = QuestionData.KnowledgeID
+                                        ScantronData.Score = PaperRuleData.SingleScore
+                                        ScantronData.Marking = QuestionData.Marking
+                                        ScantronData.Description = QuestionData.Description
+                                        ScantronData.Attachment = QuestionData.Attachment
+                                        ScantronData.ExamID = ID
+                                        AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
                                         if AddInfo.State == False:
                                             result.Memo = AddInfo.Memo
+                                            _dbsession.rollback()
                                             return result
+                                        # 遍历写入答题卡选项数据
+                                        QuestionSolutionDataList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
+                                        if len(QuestionSolutionDataList) == 0:
+                                            result.Memo = self._lang.WrongQuestionOptions
+                                            _dbsession.rollback()
+                                            return result
+                                        for k in QuestionSolutionDataList:
+                                            QuestionSolutionData: QuestionSolutionEntity = k
+                                            ScantronSolutionData = ScantronSolutionEntity()
+                                            ScantronSolutionData.ScantronID = ScantronData.ID
+                                            ScantronSolutionData.Option = QuestionSolutionData.Option
+                                            ScantronSolutionData.OptionAttachment = QuestionSolutionData.OptionAttachment
+                                            ScantronSolutionData.CorrectAnswer = QuestionSolutionData.CorrectAnswer
+                                            ScantronSolutionData.CorrectItem = QuestionSolutionData.CorrectItem
+                                            ScantronSolutionData.ScoreRatio = QuestionSolutionData.ScoreRatio
+                                            ScantronSolutionData.Position = QuestionSolutionData.Position
+                                            AddInfo: Result = self._scantronSolutionModel.Insert(_dbsession, ScantronSolutionData)
+                                            if AddInfo.State == False:
+                                                result.Memo = AddInfo.Memo
+                                                _dbsession.rollback()
+                                                return result
 
                         ExamInfoData.TotalScore = PaperData.TotalScore
                         ExamInfoData.PassLine = PaperData.PassLine
@@ -294,13 +312,15 @@ class ExamInfoLogic(BaseLogic):
                         Desc = 'generate test paper exam No.:' + str(ExamInfoData.ID)
                         if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                             result.Memo = self._lang.LoggingFailed
+                            _dbsession.rollback()
                             return result
 
                         _dbsession.commit()
                         result.State = True
+        _dbsession.close()
         return result
 
-    def ResetExamQuestionData(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ResetExamQuestionData(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -338,17 +358,21 @@ class ExamInfoLogic(BaseLogic):
                                     SSDelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
                                     if SSDelInfo.State == False:
                                         result.Memo = SSDelInfo.Memo
+                                        _dbsession.rollback()
                                         return result
                             # 删除答题卡
                             SDelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                             if SDelInfo.State == False:
                                 result.Memo = SDelInfo.Memo
+                                _dbsession.rollback()
                                 return result
 
                 try:
                     ExamInfoData.ExamState = 1
+                    ExamInfoData.ExamDuration = 0
+                    ExamInfoData.PassLine = 0
+                    ExamInfoData.TotalScore = 0
                     ExamInfoData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -357,13 +381,15 @@ class ExamInfoLogic(BaseLogic):
                 Desc = 'reset exam No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def ExamIntoHistory(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def ExamIntoHistory(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -373,15 +399,13 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result = self.ExamIntoHistoryAction(ClientHost, ID, AdminID)
+        _dbsession.close()
         return result
 
-    def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+    def ExamIntoHistoryAction(self, ClientHost: str, ID: int, AdminID: int = 0):
         result = Result()
         _dbsession = DBsession()
-        ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
-        if ExamInfoData is None:
-            result.Memo = self._lang.ExamDataDoesNotExist
-        elif ID <= 0:
+        if ID <= 0:
             result.Memo = self._lang.WrongID
         else:
             _dbsession.begin_nested()
@@ -397,9 +421,11 @@ class ExamInfoLogic(BaseLogic):
                 if len(ScantronDataList) > 0:
                     for i in ScantronDataList:
                         ScantronData: ScantronEntity = i
+                        # print('试题 ' + str(ScantronData.QuestionTitle))
 
                         # 当前报名下的答题卡转入历史
                         ScantronHistoryData = ScantronHistoryEntity()
+                        ScantronHistoryData.ID = ScantronData.ID
                         ScantronHistoryData.QuestionTitle = ScantronData.QuestionTitle
                         ScantronHistoryData.QuestionCode = ScantronData.QuestionCode
                         ScantronHistoryData.QuestionType = ScantronData.QuestionType
@@ -410,9 +436,11 @@ class ExamInfoLogic(BaseLogic):
                         ScantronHistoryData.Score = ScantronData.Score
                         ScantronHistoryData.ExamID = ScantronData.ExamID
                         ScantronHistoryData.HeadlineContent = ScantronData.HeadlineContent
+                        ScantronHistoryData.Right = ScantronData.Right
                         AddInfo: Result = self._scantronHistoryModel.Insert(_dbsession, ScantronHistoryData)
                         if AddInfo.State == False:
                             result.Memo = AddInfo.Memo
+                            _dbsession.rollback()
                             return result
 
                         # 当前报名下的答题卡选项转入历史
@@ -420,10 +448,12 @@ class ExamInfoLogic(BaseLogic):
                         if len(ScantronSolutionDataList) > 0:
                             for s in ScantronSolutionDataList:
                                 ScantronSolutionData: ScantronSolutionEntity = s
+                                # print('选项 ' + str(ScantronSolutionData.Option))
 
                                 # 当前答题卡选项转入历史
                                 ScantronSolutionHistoryData = ScantronSolutionHistoryEntity()
-                                ScantronSolutionHistoryData.ScantronHistoryID = ScantronHistoryData.ID
+                                ScantronSolutionHistoryData.ID = ScantronSolutionData.ID
+                                ScantronSolutionHistoryData.ScantronID = ScantronSolutionData.ScantronID
                                 ScantronSolutionHistoryData.Option = ScantronSolutionData.Option
                                 ScantronSolutionHistoryData.OptionAttachment = ScantronSolutionData.OptionAttachment
                                 ScantronSolutionHistoryData.CorrectAnswer = ScantronSolutionData.CorrectAnswer
@@ -434,22 +464,27 @@ class ExamInfoLogic(BaseLogic):
                                 AddInfo: Result = self._scantronSolutionHistoryModel.Insert(_dbsession, ScantronSolutionHistoryData)
                                 if AddInfo.State == False:
                                     result.Memo = AddInfo.Memo
+                                    _dbsession.rollback()
                                     return result
 
                                 # 删除当前答题卡选项
                                 DelInfo: Result = self._scantronSolutionModel.Delete(_dbsession, ScantronSolutionData.ID)
                                 if DelInfo.State == False:
                                     result.Memo = DelInfo.Memo
+                                    _dbsession.rollback()
                                     return result
 
                         # 删除当前答题卡数据
                         DelInfo: Result = self._scantronModel.Delete(_dbsession, ScantronData.ID)
                         if DelInfo.State == False:
                             result.Memo = DelInfo.Memo
+                            _dbsession.rollback()
                             return result
+                        # print('=====================')
 
                 # 当前报名数据添加到历史
                 ExamInfoHistoryData = ExamInfoHistoryEntity()
+                ExamInfoHistoryData.ID = ExamInfoData.ID
                 ExamInfoHistoryData.SubjectName = ExamInfoData.SubjectName
                 ExamInfoHistoryData.ExamNo = ExamInfoData.ExamNo
                 ExamInfoHistoryData.TotalScore = ExamInfoData.TotalScore
@@ -466,25 +501,29 @@ class ExamInfoLogic(BaseLogic):
                 AddInfo: Result = self._examInfoHistoryModel.Insert(_dbsession, ExamInfoHistoryData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 # 写入日志
                 Desc = 'exam info history No.:' + ExamInfoData.ExamNo
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 # 删除原有报名数据
                 DelInfo: Result = self._examInfoModel.Delete(_dbsession, ExamInfoData.ID)
                 if DelInfo.State == False:
                     result.Memo = DelInfo.Memo
+                    _dbsession.rollback()
                     return result
 
-                _dbsession.commit()
-                result.State = True
+            _dbsession.commit()
+            result.State = True
+        _dbsession.close()
         return result
 
-    def GradeTheExam(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def GradeTheExam(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -494,9 +533,10 @@ class ExamInfoLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result = self.GradeTheExamAction(ClientHost, ID, AdminID)
+        _dbsession.close()
         return result
 
-    def GradeTheExamAction(self, ClientHost: str, ID: int, AdminID: int = 0) -> Result:
+    def GradeTheExamAction(self, ClientHost: str, ID: int, AdminID: int = 0):
         result = Result()
         _dbsession = DBsession()
         if ID <= 0:
@@ -573,12 +613,13 @@ class ExamInfoLogic(BaseLogic):
                                                 # 答案数量是否相同
                                                 if len(ScantronSolutionData.CorrectItem.split('<->')) != len(CandidateAnswerList):
                                                     Correct = False
-                                                for c in CandidateAnswerList:
-                                                    SubID: int = int(c)
-                                                    if SubID > 0:
-                                                        ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, SubID)
-                                                        if ScantronSolutionDataSub is not None and ScantronSolutionDataSub.Option not in ScantronSolutionData.CorrectItem:
-                                                            Correct = False
+                                                if len(CandidateAnswerList) > 0:
+                                                    for c in CandidateAnswerList:
+                                                        SubID: int = int(c)
+                                                        if SubID > 0:
+                                                            ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, SubID)
+                                                            if ScantronSolutionDataSub is not None and ScantronSolutionDataSub.Option not in ScantronSolutionData.CorrectItem:
+                                                                Correct = False
                                 else:
                                     continue
                                 if Correct == True:
@@ -591,7 +632,6 @@ class ExamInfoLogic(BaseLogic):
                     try:
                         ExamInfoData.ActualScore = TotalScore
                         ExamInfoData.UpdateTime = self._common.Time()
-                        _dbsession.commit()
                     except Exception as e:
                         result.Memo = str(e)
                         _dbsession.rollback()
@@ -600,13 +640,15 @@ class ExamInfoLogic(BaseLogic):
                     Desc = 'grade the exam No.:' + ExamInfoData.ExamNo
                     if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                         result.Memo = self._lang.LoggingFailed
+                        _dbsession.rollback()
                         return result
 
                     _dbsession.commit()
                     result.State = True
+        _dbsession.close()
         return result
 
-    def ImportExamInfo(self, ClientHost: str, Token: str, FileType: str, Contents: bytes) -> Result:
+    def ImportExamInfo(self, ClientHost: str, Token: str, FileType: str, Contents: bytes):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -623,7 +665,7 @@ class ExamInfoLogic(BaseLogic):
             if FileType == '':
                 result.Memo = self._lang.WrongFileType
                 return result
-            if FileType != '.xls' and FileType != '.xlsx':
+            if FileType.lower() != '.xls' and FileType.lower() != '.xlsx':
                 result.Memo = self._lang.WrongFileType
                 return result
 
@@ -652,113 +694,127 @@ class ExamInfoLogic(BaseLogic):
                 XSheet: xlrd.sheet.Sheet = XBook.sheets()[0]  # 获取第一页
                 XNrows = XSheet.nrows  # 有效行数
                 j = 0
-                for i in XSheet:
-                    j += 1
-                    if j == XNrows: break
+                if XNrows > 1:
+                    for i in XSheet:
+                        j += 1
+                        if j == XNrows: break
 
-                    XSheetListValue = XSheet.row_values(j, start_colx=0, end_colx=None)
-                    # print(XSheetListValue)
-                    SubjectName: str = str(XSheetListValue[0]).strip()
-                    ExamType: int = int(XSheetListValue[1])
-                    ExamNo: str = str(XSheetListValue[2]).strip()
-                    ExamineeNo: str = str(XSheetListValue[3]).strip()
-                    Name: str = str(XSheetListValue[4]).strip()
-                    ClassName: str = str(XSheetListValue[5]).strip()
-                    Contact: str = str(XSheetListValue[6]).strip()
+                        XSheetListValue = XSheet.row_values(j, start_colx=0, end_colx=None)
+                        # print(XSheetListValue)
+                        SubjectName: str = str(XSheetListValue[0]).strip()
+                        ExamType: int = int(XSheetListValue[1])
+                        ExamNo: str = str(XSheetListValue[2]).strip()
+                        ExamineeNo: str = str(XSheetListValue[3]).strip()
 
-                    RowInfo: str = str(j) + self._lang.Row + ' '
-                    if SubjectName == '':
-                        result.Memo = RowInfo + self._lang.WrongSubjectName
-                        _dbsession.rollback()
-                        return result
-
-                    if ExamType != 1 and ExamType != 2:
-                        result.Code = RowInfo + self._lang.WrongExamType
-                        _dbsession.rollback()
-                        return result
-
-                    if ExamNo == '':
-                        result.Memo = RowInfo + self._lang.WrongExamNo
-                        _dbsession.rollback()
-                        return result
-
-                    if ExamineeNo != '' and Name == '':
-                        result.Code = RowInfo + self._lang.WrongName
-                        _dbsession.rollback()
-                        return result
-
-                    if ExamineeNo == '' and Name != '':
-                        result.Code = RowInfo + self._lang.WrongExamineeNo
-                        _dbsession.rollback()
-                        return result
-
-                    if ExamineeNo != '' and ClassName == '':
-                        result.Code = RowInfo + self._lang.WrongClassName
-                        _dbsession.rollback()
-                        return result
-
-                    ExamInfoData = ExamInfoEntity()
-
-                    SubjectData: SubjectEntity = self._subjectModel.FindSubjectCode(_dbsession, SubjectName)
-                    if SubjectData is None:
-                        result.Memo = RowInfo + SubjectName + ' ' + self._lang.SubjectDataDoesNotExist
-                        _dbsession.rollback()
-                        return result
-
-                    ExamInfoObj: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
-                    if ExamInfoObj is not None:
-                        result.Memo = RowInfo + ExamNo + ' ' + self._lang.ExamNoDataAlreadyExists
-                        _dbsession.rollback()
-                        return result
-
-                    # 选填项 ===================================================================================
-                    if ClassName != '':
-                        ClassData: ClassEntity = self._classModel.FindClassCode(_dbsession, ClassName)
-                        if ClassData is None:
-                            result.Memo = RowInfo + ClassName + ' ' + self._lang.ClassDataDoesNotExist
-                            _dbsession.rollback()
-                            return result
-
-                    if ExamineeNo != '':
-                        ExamineeObj: ExamineeEntity = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
-                        if ExamineeObj is not None:
-                            ExamInfoData.ExamineeID = ExamineeObj.ID
+                        if XSheetListValue[4] is not None and XSheetListValue[4] != '':
+                            Name: str = str(XSheetListValue[4]).strip()
                         else:
-                            ExamineeData = ExamineeEntity()
-                            ExamineeData.ExamineeNo = ExamineeNo
-                            ExamineeData.Name = Name
-                            ExamineeData.ClassID = ClassData.ID
-                            ExamineeData.Contact = Contact
-                            AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
-                            if AddInfo.State == False:
-                                result.Memo = AddInfo.Memo
-                                return result
-                            else:
-                                ExamInfoData.ExamineeID = ExamineeData.ID
-                    # ===================================================================================
+                            Name: str = ''
+                        if XSheetListValue[5] is not None and XSheetListValue[5] != '':
+                            ClassName: str = str(XSheetListValue[5]).strip()
+                        else:
+                            ClassName: str = ''
+                        if XSheetListValue[6] is not None and XSheetListValue[6] != '':
+                            Contact: str = str(XSheetListValue[6]).strip()
+                        else:
+                            Contact: str = ''
 
-                    # 是否有相同科目未考试的报名记录
-                    CheckExamInfoData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamInfoData.ExamineeID, SubjectName)
-                    if CheckExamInfoData is not None:
-                        if CheckExamInfoData.ExamState == 1 or CheckExamInfoData.ExamState == 2:
-                            result.Memo = RowInfo + ExamNo + ' ' + self._lang.AlreadyRegisteredForTheSameSubject
+                        RowInfo: str = str(j) + self._lang.Row + ' '
+                        if SubjectName == '':
+                            result.Memo = RowInfo + self._lang.WrongSubjectName
                             _dbsession.rollback()
                             return result
 
-                    ExamInfoData.SubjectName = SubjectName
-                    ExamInfoData.ExamNo = ExamNo
-                    ExamInfoData.ExamineeID = ExamineeData.ID
-                    ExamInfoData.ExamType = ExamType
-                    AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
-                    if AddInfo.State == False:
-                        result.Memo = AddInfo.Memo
-                        return result
+                        if ExamType != 1 and ExamType != 2:
+                            result.Memo = RowInfo + self._lang.WrongExamType
+                            _dbsession.rollback()
+                            return result
 
-                    Desc = 'import exam No.:' + ExamNo
-                    if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
-                        result.Memo = self._lang.LoggingFailed
-                        return result
+                        if ExamNo == '':
+                            result.Memo = RowInfo + self._lang.WrongExamNo
+                            _dbsession.rollback()
+                            return result
 
+                        if ExamineeNo != '' and Name == '':
+                            result.Memo = RowInfo + self._lang.WrongName
+                            _dbsession.rollback()
+                            return result
+
+                        if ExamineeNo == '' and Name != '':
+                            result.Memo = RowInfo + self._lang.WrongExamineeNo
+                            _dbsession.rollback()
+                            return result
+
+                        if ExamineeNo != '' and ClassName == '':
+                            result.Memo = RowInfo + self._lang.WrongClassName
+                            _dbsession.rollback()
+                            return result
+
+                        ExamInfoData = ExamInfoEntity()
+
+                        SubjectData: SubjectEntity = self._subjectModel.FindSubjectCode(_dbsession, SubjectName)
+                        if SubjectData is None:
+                            result.Memo = RowInfo + SubjectName + ' ' + self._lang.SubjectDataDoesNotExist
+                            _dbsession.rollback()
+                            return result
+
+                        ExamInfoObj: ExamInfoEntity = self._examInfoModel.FindExamNo(_dbsession, ExamNo)
+                        if ExamInfoObj is not None:
+                            result.Memo = RowInfo + ExamNo + ' ' + self._lang.ExamNoDataAlreadyExists
+                            _dbsession.rollback()
+                            return result
+
+                        # 选填项 ===================================================================================
+                        if ClassName != '':
+                            ClassData: ClassEntity = self._classModel.FindClassCode(_dbsession, ClassName)
+                            if ClassData is None:
+                                result.Memo = RowInfo + ClassName + ' ' + self._lang.ClassDataDoesNotExist
+                                _dbsession.rollback()
+                                return result
+
+                        if ExamineeNo != '':
+                            ExamineeObj: ExamineeEntity = self._examineeModel.FindExamineeNo(_dbsession, ExamineeNo)
+                            if ExamineeObj is not None:
+                                ExamInfoData.ExamineeID = ExamineeObj.ID
+                            else:
+                                ExamineeData = ExamineeEntity()
+                                ExamineeData.ExamineeNo = ExamineeNo
+                                ExamineeData.Name = Name
+                                ExamineeData.ClassID = ClassData.ID
+                                ExamineeData.Contact = Contact
+                                AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
+                                if AddInfo.State == False:
+                                    result.Memo = AddInfo.Memo
+                                    _dbsession.rollback()
+                                    return result
+                                else:
+                                    ExamInfoData.ExamineeID = ExamineeData.ID
+                        # ===================================================================================
+
+                        # 是否有相同科目未考试的报名记录
+                        CheckExamInfoData: ExamInfoEntity = self._examInfoModel.CheckExam(_dbsession, ExamInfoData.ExamineeID, SubjectName, ExamType)
+                        if CheckExamInfoData is not None:
+                            if CheckExamInfoData.ExamState == 1 or CheckExamInfoData.ExamState == 2:
+                                result.Memo = RowInfo + ExamNo + ' ' + self._lang.AlreadyRegisteredForTheSameSubject
+                                _dbsession.rollback()
+                                return result
+
+                        ExamInfoData.SubjectName = SubjectName
+                        ExamInfoData.ExamNo = ExamNo
+                        ExamInfoData.ExamType = ExamType
+                        ExamInfoData.Pass = 1
+                        ExamInfoData.ExamState = 1
+                        AddInfo: Result = self._examInfoModel.Insert(_dbsession, ExamInfoData)
+                        if AddInfo.State == False:
+                            result.Memo = AddInfo.Memo
+                            _dbsession.rollback()
+                            return result
+
+                        Desc = 'import exam No.:' + ExamNo
+                        if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                            result.Memo = self._lang.LoggingFailed
+                            _dbsession.rollback()
+                            return result
             except Exception as e:
                 self._file.DeleteFile(UploadPath)
                 _dbsession.rollback()
@@ -768,4 +824,68 @@ class ExamInfoLogic(BaseLogic):
             self._file.DeleteFile(UploadPath)
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
+        return result
+
+    def DownloadExamInfoDemo(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            FileName: str = self._rootPath + 'Resource/demo.zip'
+            with open(FileName, 'rb') as f:
+                BtFile = f.read()
+            content = struct.unpack('B' * len(BtFile), BtFile)
+            result.State = True
+            result.Memo = self._file.CheckFileType(FileName)
+            result.Data = content
+        _dbsession.close()
+        return result
+
+    def ExamInfoSuspend(self, ClientHost: str, Token: str, ID: int):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        elif ID <= 0:
+            result.Memo = self._lang.WrongID
+        else:
+            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ID)
+            if ExamInfoData is None:
+                result.Memo = self._lang.ExamDataError
+            elif ExamInfoData.StartState != 2:
+                result.Memo = self._lang.TheExamDidNotStart
+            else:
+                _dbsession.begin_nested()
+                try:
+                    if ExamInfoData.SuspendedState == 2:
+                        ExamInfoData.SuspendedState = 1
+                    else:
+                        ExamInfoData.SuspendedState = 2
+                    ExamInfoData.UpdateTime = self._common.Time()
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
+
+                if ExamInfoData.SuspendedState == 1:
+                    Desc = 'resume exam-info ID:' + str(ID)
+                if ExamInfoData.SuspendedState == 2:
+                    Desc = 'suspend exam-info ID:' + str(ID)
+                if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
+                    result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
+                    return result
+
+                _dbsession.commit()
+                result.State = True
+        _dbsession.close()
         return result

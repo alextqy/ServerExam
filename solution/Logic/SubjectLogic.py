@@ -7,7 +7,7 @@ class SubjectLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewSubject(self, ClientHost: str, Token: str, SubjectName: str) -> Result:
+    def NewSubject(self, ClientHost: str, Token: str, SubjectName: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -27,18 +27,21 @@ class SubjectLogic(BaseLogic):
             AddInfo: Result = self._subjectModel.Insert(_dbsession, SubjectData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new subject:' + SubjectName
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
-    def SubjectDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def SubjectDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -61,7 +64,6 @@ class SubjectLogic(BaseLogic):
                     else:
                         SubjectData.SubjectState = 2
                     SubjectData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -73,13 +75,15 @@ class SubjectLogic(BaseLogic):
                     Desc = 'disable subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str) -> Result:
+    def UpdateSubjectInfo(self, ClientHost: str, Token: str, ID: int, SubjectName: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -109,7 +113,6 @@ class SubjectLogic(BaseLogic):
                 try:
                     SubjectData.SubjectName = SubjectName
                     SubjectData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -118,13 +121,15 @@ class SubjectLogic(BaseLogic):
                 Desc = 'update subject ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int) -> ResultList:
+    def SubjectList(self, Token: str, Page: int, PageSize: int, Stext: str, SubjectState: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -134,9 +139,10 @@ class SubjectLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._subjectModel.List(_dbsession, Page, PageSize, Stext, SubjectState)
+        _dbsession.close()
         return result
 
-    def SubjectInfo(self, Token: str, ID: int) -> Result:
+    def SubjectInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -153,4 +159,18 @@ class SubjectLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = SubjectData
+        _dbsession.close()
+        return result
+
+    def Subjects(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: Result = self._subjectModel.Subjects(_dbsession)
+        _dbsession.close()
         return result

@@ -7,7 +7,7 @@ class SysConfLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ConfigInfo(self, Token: str, Key: str) -> Result:
+    def ConfigInfo(self, Token: str, Key: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -20,4 +20,5 @@ class SysConfLogic(BaseLogic):
         else:
             result.Data = self._sysConfModel.FindKey(_dbsession, Key)
             result.State = True
+        _dbsession.close()
         return result

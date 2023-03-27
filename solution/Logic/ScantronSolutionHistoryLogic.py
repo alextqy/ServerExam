@@ -7,7 +7,7 @@ class ScantronSolutionHistoryLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ScantronSolutionHistoryList(self, Token: str, Page: int, PageSize: int, ScantronID: int, Position: int) -> ResultList:
+    def ScantronSolutionHistoryList(self, Token: str, Page: int, PageSize: int, ScantronID: int, Position: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -17,9 +17,10 @@ class ScantronSolutionHistoryLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._scantronSolutionHistoryModel.List(_dbsession, Page, PageSize, ScantronID, Position)
+        _dbsession.close()
         return result
 
-    def ScantronSolutionHistoryInfo(self, Token: str, ID: int) -> Result:
+    def ScantronSolutionHistoryInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -36,4 +37,25 @@ class ScantronSolutionHistoryLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
+        return result
+
+    def ScantronSolutionHistoryViewAttachments(self, Token: str, OptionAttachment: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            if OptionAttachment != '' and OptionAttachment != 'none':
+                with open(OptionAttachment, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(OptionAttachment)
+                result.Data = content
+        _dbsession.close()
         return result

@@ -7,7 +7,7 @@ class QuestionLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str, Language: str = '', LanguageVersion: str = '') -> Result:
+    def NewQuestion(self, ClientHost: str, Token: str, QuestionTitle: str, QuestionType: int, KnowledgeID: int, Description: str, Language: str = '', LanguageVersion: str = ''):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -41,6 +41,38 @@ class QuestionLogic(BaseLogic):
                     result.Memo = self._lang.TryAgain
                     return result
 
+                Language = Language.lower()
+                LanguageVersion = LanguageVersion.lower()
+
+                LanguageList = ['php', 'javascript', 'python', 'java', 'c']
+                if Language != '' and Language not in LanguageList:
+                    result.Memo = self._lang.WrongLanguage
+                    return result
+
+                if Language == 'php' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) >= 6 and float(LanguageVersion) < 7:
+                        result.Memo = self._lang.ParamErr + ' ver.5 ver.7 ver.8 required'
+                        return result
+                    if float(LanguageVersion) < 5 or float(LanguageVersion) > 8:
+                        result.Memo = self._lang.ParamErr + ' ver.5 ver.7 ver.8 required'
+                        return result
+                if Language == 'javascript' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) < 4 or float(LanguageVersion) > 18:
+                        result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.18 required'
+                        return result
+                if Language == 'python' and Language != 'latest':
+                    if float(LanguageVersion) != 3:
+                        result.Memo = self._lang.ParamErr + ' ver.3 required'
+                        return result
+                if Language == 'java' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) < 6 or float(LanguageVersion) > 20:
+                        result.Memo = self._lang.ParamErr + ' ver.6 ~ ver.20 required'
+                        return result
+                if Language == 'c' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) < 4 or float(LanguageVersion) > 12:
+                        result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.12 required'
+                        return result
+
                 _dbsession.begin_nested()
 
                 QuestionData: QuestionEntity = QuestionEntity()
@@ -54,18 +86,21 @@ class QuestionLogic(BaseLogic):
                 AddInfo: Result = self._questionModel.Insert(_dbsession, QuestionData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 Desc = 'new question:' + QuestionTitle
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes) -> Result:
+    def QuestionAttachment(self, ClientHost: str, Token: str, ID: int, FileType: str, AttachmentContents: bytes):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -77,8 +112,8 @@ class QuestionLogic(BaseLogic):
             result.Memo = self._lang.WrongID
         elif FileType == '':
             result.Memo = self._lang.WrongFileType
-        elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
-            result.Memo = self._lang.TooLargeFile
+        # elif len(AttachmentContents) > (UploadFile.spool_max_size / 2):
+        #     result.Memo = self._lang.TooLargeFile
         else:
             FileType = self._common.MIME(FileType)
             if FileType == '':
@@ -109,7 +144,6 @@ class QuestionLogic(BaseLogic):
                 try:
                     QuestionData.Attachment = UploadPath
                     QuestionData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -118,15 +152,36 @@ class QuestionLogic(BaseLogic):
                 Desc = 'update question attachment ID:' + str(ID) + ' file path:' + UploadPath
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
-
                 result.State = True
                 result.Data = UploadPath
+        _dbsession.close()
         return result
 
-    def QuestionDisabled(self, ClientHost: str, Token: str, ID: int) -> Result:
+    def QuestionViewAttachments(self, Token: str, FilePath: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            if FilePath != '' and FilePath != 'none':
+                with open(FilePath, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(FilePath)
+                result.Data = content
+        _dbsession.close()
+        return result
+
+    def QuestionDisabled(self, ClientHost: str, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -257,6 +312,7 @@ class QuestionLogic(BaseLogic):
                             ImageInfo: Result = ImageIsExistsAction(QuestionData.Language, QuestionData.LanguageVersion)
                             if ImageInfo.State == False:
                                 result.Memo = self._lang.TheCodeRuntimeEnvironmentHasNotBeenBuilt
+                                _dbsession.rollback()
                                 return result
 
                         if QuestionData.QuestionType == 7 or QuestionData.QuestionType == 8:  # 拖拽 连线 ##################################################################
@@ -269,14 +325,30 @@ class QuestionLogic(BaseLogic):
                             EmptyAnswer: bool = True  # 判断答案是否为空
                             LeftPositionCount: int = 0  # 左侧选项统计
                             RightPositionCount: int = 0  # 右侧选项统计
+                            LeftPositionOption = []  # 左侧选项
+                            RightPositionCorrectItem = []  # 右侧答案项
                             for i in QuestionSolutionDataList:
                                 Data: QuestionSolutionEntity = i
                                 if Data.Position == 1:
                                     LeftPositionCount += 1
+                                    LeftPositionOption.append(Data.Option)
                                 if Data.Position == 2:
                                     RightPositionCount += 1
+                                    RightPositionCorrectItem.append(Data.CorrectItem)
                                 if Data.CorrectItem != '':
                                     EmptyAnswer = False
+                            if len(RightPositionCorrectItem) > 0:
+                                # 判断答案项是否为左侧选项
+                                for Item in RightPositionCorrectItem:
+                                    if Item not in LeftPositionOption:
+                                        result.Memo = self._lang.WrongCorrectItem
+                                        _dbsession.rollback()
+                                        return result
+                                # 判断答案项是否有相同值
+                                if len(RightPositionCorrectItem) != len(list(dict.fromkeys(RightPositionCorrectItem))):
+                                    result.Memo = self._lang.WrongCorrectItem
+                                    _dbsession.rollback()
+                                    return result
                             # 两侧选项数量是否一致
                             if LeftPositionCount != RightPositionCount:
                                 result.Memo = self._lang.InconsistentNumberOfOptionsOnBothSides
@@ -292,7 +364,6 @@ class QuestionLogic(BaseLogic):
                     else:
                         QuestionData.QuestionState = 2
                     QuestionData.UpdateTime = self._common.Time()
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -304,13 +375,15 @@ class QuestionLogic(BaseLogic):
                     Desc = 'disable question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str, Language: str, LanguageVersion: str) -> Result:
+    def UpdateQuestionInfo(self, ClientHost: str, Token: str, ID: int, QuestionTitle: str, QuestionType: int, Description: str, Language: str, LanguageVersion: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -335,6 +408,34 @@ class QuestionLogic(BaseLogic):
             if QuestionData is None:
                 result.Memo = self._lang.QuestionDataError
             else:
+
+                Language = Language.lower()
+                LanguageVersion = LanguageVersion.lower()
+
+                if Language == 'php' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) >= 6 and float(LanguageVersion) < 7:
+                        result.Memo = self._lang.ParamErr + ' ver.5 ver.7 ver.8 required'
+                        return result
+                    if float(LanguageVersion) < 5 or float(LanguageVersion) > 8:
+                        result.Memo = self._lang.ParamErr + ' ver.5 ver.7 ver.8 required'
+                        return result
+                if Language == 'javascript' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) < 4 or float(LanguageVersion) > 18:
+                        result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.18 required'
+                        return result
+                if Language == 'python' and Language != 'latest':
+                    if float(LanguageVersion) != 3:
+                        result.Memo = self._lang.ParamErr + ' ver.3 required'
+                        return result
+                if Language == 'java' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) < 6 or float(LanguageVersion) > 20:
+                        result.Memo = self._lang.ParamErr + ' ver.6 ~ ver.20 required'
+                        return result
+                if Language == 'c' and LanguageVersion != 'latest':
+                    if float(LanguageVersion) < 4 or float(LanguageVersion) > 12:
+                        result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.12 required'
+                        return result
+
                 _dbsession.begin_nested()
 
                 if Description == '':
@@ -342,11 +443,12 @@ class QuestionLogic(BaseLogic):
 
                 try:
                     QuestionData.QuestionTitle = QuestionTitle
-                    QuestionData.QuestionType = QuestionType
+                    # QuestionData.QuestionType = QuestionType
                     QuestionData.Description = Description
                     QuestionData.Language = Language
                     QuestionData.LanguageVersion = LanguageVersion
-                    _dbsession.commit()
+                    if QuestionType == 4:
+                        QuestionData.QuestionState = 2
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -355,13 +457,15 @@ class QuestionLogic(BaseLogic):
                 Desc = 'update question ID:' + str(ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result
 
-    def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int) -> ResultList:
+    def QuestionList(self, Token: str, Page: int, PageSize: int, Stext: str, QuestionType: int, QuestionState: int, KnowledgeID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -371,9 +475,10 @@ class QuestionLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._questionModel.List(_dbsession, Page, PageSize, Stext, QuestionType, QuestionState, 1, KnowledgeID)
+        _dbsession.close()
         return result
 
-    def QuestionInfo(self, Token: str, ID: int) -> Result:
+    def QuestionInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -390,4 +495,5 @@ class QuestionLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = QuestionData
+        _dbsession.close()
         return result

@@ -7,7 +7,7 @@ class SysLogLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def SysLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int, ManagerID: int) -> ResultList:
+    def SysLogList(self, Token: str, Page: int, PageSize: int, Stext: str, Type: int, ManagerID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -17,9 +17,10 @@ class SysLogLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._sysLogModel.List(_dbsession, Page, PageSize, Stext, Type, ManagerID)
+        _dbsession.close()
         return result
 
-    def SysLogInfo(self, Token: str, ID: int) -> Result:
+    def SysLogInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -36,4 +37,5 @@ class SysLogLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = SysLogData
+        _dbsession.close()
         return result

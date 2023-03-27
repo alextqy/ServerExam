@@ -8,8 +8,9 @@ class PaperRuleModel(BaseModel):
     def __init__(self):
         super().__init__()
 
-    def Insert(self, _dbsession: DBsession, Data: EType) -> Result:
+    def Insert(self, _dbsession: DBsession, Data: EType):
         _result = Result()
+        Data.CreateTime = self._common.Time()
         if Data.HeadlineID <= 0:
             if Data.KnowledgeID <= 0:
                 _result.Memo = self._lang.ParamErr
@@ -23,11 +24,14 @@ class PaperRuleModel(BaseModel):
             if Data.SingleScore <= 0:
                 _result.Memo = self._lang.ParamErr
                 return _result
-        if Data.KnowledgeID <= 0:
-            if Data.HeadlineID <= 0:
-                _result.Memo = self._lang.ParamErr
-                return _result
+            if Data.KnowledgeID <= 0:
+                if Data.HeadlineID <= 0:
+                    _result.Memo = self._lang.ParamErr
+                    return _result
         if Data.PaperID <= 0:
+            _result.Memo = self._lang.ParamErr
+            return _result
+        if Data.SerialNumber <= 0:
             _result.Memo = self._lang.ParamErr
             return _result
 
@@ -45,7 +49,7 @@ class PaperRuleModel(BaseModel):
         _result.Data = Data.ID
         return _result
 
-    def Delete(self, _dbsession: DBsession, ID: int) -> Result:
+    def Delete(self, _dbsession: DBsession, ID: int):
         _result = Result()
         try:
             Data = _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
@@ -62,24 +66,30 @@ class PaperRuleModel(BaseModel):
     def Find(self, _dbsession: DBsession, ID: int) -> EType:
         return _dbsession.query(self.EType).filter(self.EType.ID == ID).first()
 
-    def List(self, _dbsession: DBsession, Page: int, PageSize: int, PaperID: int, PaperRuleState: int) -> ResultList:
+    def List(self, _dbsession: DBsession, Page: int, PageSize: int, PaperID: int, PaperRuleState: int, OrderBySerialNumber: int):
         _result = ResultList()
         _result.State = True
         _result.Page = Page
         _result.PageSize = PageSize
         _result.TotalPage = 0
-        if _dbsession.query(self.EType).count() > 0:
-            _result.TotalPage = math.ceil(_dbsession.query(self.EType).count() / PageSize)
         if Page <= 0:
             Page = 1
         if PageSize <= 0:
             PageSize = 10
+        sql = _dbsession.query(self.EType)
+        if OrderBySerialNumber == 1:
+            sql = sql.order_by(asc(self.EType.SerialNumber))
+        elif OrderBySerialNumber == 2:
+            sql = sql.order_by(desc(self.EType.SerialNumber))
+        else:
+            sql = sql.order_by(desc(self.EType.ID))
+        sql = sql.filter(self.EType.PaperID == PaperID)
+        if PaperRuleState > 0:
+            sql = sql.filter(self.EType.PaperRuleState == PaperRuleState)
+        if sql.count() > 0:
+            _result.TotalPage = math.ceil(sql.count() / PageSize)
         if _result.TotalPage > 0 and Page > _result.TotalPage:
             Page = _result.TotalPage
-        sql = _dbsession.query(self.EType)
-        sql = sql.order_by(desc(self.EType.ID))
-        sql = sql.filter(self.EType.PaperID == PaperID)
-        sql = sql.filter(self.EType.PaperRuleState == PaperRuleState)
         _result.Data = sql.limit(PageSize).offset((Page - 1) * PageSize).all()
         return _result
 
@@ -87,4 +97,12 @@ class PaperRuleModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.PaperRuleState == 1).all()
 
     def CheckPaperRule(self, _dbsession: DBsession, PaperID: int, KnowledgeID: int, QuestionType: int) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).filter(self.EType.PaperRuleState == 1).first()
+        return _dbsession.query(self.EType).filter(self.EType.PaperID == PaperID).filter(self.EType.KnowledgeID == KnowledgeID).filter(self.EType.QuestionType == QuestionType).first()
+
+    def PaperRules(self, _dbsession: DBsession, PaperID: int):
+        _result = Result()
+        _result.State = True
+        sql = _dbsession.query(self.EType)
+        sql = sql.filter(self.EType.PaperID == PaperID)
+        _result.Data = sql.all()
+        return _result

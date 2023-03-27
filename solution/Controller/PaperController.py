@@ -15,7 +15,7 @@ async def NewPaper(
         TotalScore: float = Form(0),
         PassLine: float = Form(0),
         ExamDuration: int = Form(0),
-) -> Result:
+):
     return paperLogic.NewPaper(request.client.host, Token.strip(), PaperName.strip(), SubjectID, TotalScore, PassLine, ExamDuration)
 
 
@@ -25,7 +25,7 @@ async def PaperDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperLogic.PaperDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -39,7 +39,7 @@ async def UpdatePaperInfo(
         TotalScore: float = Form(0),
         PassLine: float = Form(0),
         ExamDuration: int = Form(0),
-) -> Result:
+):
     return paperLogic.UpdatePaperInfo(request.client.host, Token.strip(), ID, PaperName.strip(), TotalScore, PassLine, ExamDuration)
 
 
@@ -53,7 +53,7 @@ async def PaperList(
         Stext: str = Form(''),
         SubjectID: int = Form(0),
         PaperState: int = Form(0),
-) -> ResultList:
+):
     return paperLogic.PaperList(Token.strip(), Page, PageSize, Stext.strip(), SubjectID, PaperState)
 
 
@@ -63,5 +63,5 @@ async def PaperInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return paperLogic.PaperInfo(Token.strip(), ID)

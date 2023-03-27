@@ -7,7 +7,7 @@ class ScantronHistoryLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def ScantronHistoryList(self, Token: str, Page: int, PageSize: int, ExamID: int) -> ResultList:
+    def ScantronHistoryList(self, Token: str, Page: int, PageSize: int, ExamID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -17,9 +17,10 @@ class ScantronHistoryLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._scantronHistoryModel.List(_dbsession, Page, PageSize, ExamID)
+        _dbsession.close()
         return result
 
-    def ScantronHistoryInfo(self, Token: str, ID: int) -> Result:
+    def ScantronHistoryInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -36,4 +37,25 @@ class ScantronHistoryLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamInfoData
+        _dbsession.close()
+        return result
+
+    def ScantronHistoryViewAttachments(self, Token: str, FilePath: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            import struct
+            if FilePath != '' and FilePath != 'none':
+                with open(FilePath, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(FilePath)
+                result.Data = content
+        _dbsession.close()
         return result

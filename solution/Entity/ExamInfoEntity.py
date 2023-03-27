@@ -19,7 +19,9 @@ class ExamInfoEntity(BaseEntity, BaseORM):
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
     ExamineeID: int = Column(INTEGER, comment='考生ID', default=0)
     ExamState: int = Column(INTEGER, comment='考试状态 1没有答题卡 2待考(已经生成答题卡) 3已考试 4作废', default=0)
-    ExamType: int = Column(INTEGER, comment='考试类型 1正式考试 2练习')
+    ExamType: int = Column(INTEGER, comment='考试类型 1正式考试 2练习', default=0)
+    StartState: int = Column(INTEGER, comment='开始状态 1未开始 2已开始', default=0)
+    SuspendedState: int = Column(INTEGER, comment='暂停状态 1正常 2暂停', default=0)
 
     def __init__(self):
         super().__init__()

@@ -5,17 +5,17 @@ ExamInfoRouter = APIRouter()
 ExamInfoPrefix = ''
 
 
-# 新建管理员
+# 新建报名
 @ExamInfoRouter.post('/New/ExamInfo')
 async def NewExamInfo(
         request: Request,
         Token: str = Form(''),
         SubjectName: str = Form(''),
         ExamNo: str = Form(''),
-        ExamineeID: int = Form(0),
+        ExamineeNo: str = Form(''),
         ExamType: int = Form(0),
-) -> Result:
-    return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeID, ExamType)
+):
+    return examInfoLogic.NewExamInfo(request.client.host, Token.strip(), SubjectName.strip(), ExamNo.strip(), ExamineeNo, ExamType)
 
 
 # 报名作废
@@ -24,7 +24,7 @@ async def ExamInfoDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ExamInfoDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -38,8 +38,12 @@ async def ExamInfoList(
         Stext: str = Form(''),
         ExamState: int = Form(0),
         ExamType: int = Form(0),
-) -> ResultList:
-    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType)
+        Pass: int = Form(0),
+        StartState: int = Form(0),
+        SuspendedState: int = Form(0),
+        ExamineeID: int = Form(0),
+):
+    return examInfoLogic.ExamInfoList(Token.strip(), Page, PageSize, Stext.strip(), ExamState, ExamType, Pass, StartState, SuspendedState, ExamineeID)
 
 
 # 报名详情
@@ -48,7 +52,7 @@ async def ExamInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ExamInfo(Token.strip(), ID)
 
 
@@ -58,7 +62,7 @@ async def GenerateTestPaper(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.GenerateTestPaper(request.client.host, Token.strip(), ID)
 
 
@@ -68,7 +72,7 @@ async def ResetExamQuestionData(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ResetExamQuestionData(request.client.host, Token.strip(), ID)
 
 
@@ -78,7 +82,7 @@ async def ExamIntoHistory(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.ExamIntoHistory(request.client.host, Token.strip(), ID)
 
 
@@ -88,7 +92,7 @@ async def GradeTheExam(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examInfoLogic.GradeTheExam(request.client.host, Token.strip(), ID)
 
 
@@ -98,6 +102,26 @@ async def ImportExamInfo(
         request: Request,
         Token: str = Form(''),
         ExcelFile: UploadFile = File(...),
-) -> Result:
+        ContentType: str = Form(''),
+):
     Contents: bytes = await ExcelFile.read()
-    return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ExcelFile.content_type, Contents)
+    return examInfoLogic.ImportExamInfo(request.client.host, Token.strip(), ContentType, Contents)
+
+
+# 下载导入文件Demo
+@ExamInfoRouter.post('/Download/Exam/Info/Demo')
+async def DownloadExamInfoDemo(
+        request: Request,
+        Token: str = Form(''),
+):
+    return examInfoLogic.DownloadExamInfoDemo(Token.strip())
+
+
+# 报名暫停
+@ExamInfoRouter.post('/ExamInfo/Suspend')
+async def ExamInfoSuspend(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
+    return examInfoLogic.ExamInfoSuspend(request.client.host, Token.strip(), ID)

@@ -1,10 +1,13 @@
 # -*- coding:utf-8 -*-
+from typing import List, Dict, Tuple
+
 from Service.Cache import *
 from Service.Common import *
 from Service.Database import *
 from Service.FileHelper import *
 from Service.Lang import *
 from Service.UDPTool import *
+from Service.RedisHelper import *
 
 from Entity.BaseEntity import DBsession
 from Entity.ClassEntity import ClassEntity
@@ -64,6 +67,7 @@ class BaseLogic:
     _file: FileHelper = FileHelper()
     _lang: Lang = Lang()
     _udp: UDPTool = UDPTool()
+    _redis: RedisHelper = RedisHelper()
 
     _classModel = ClassModel()
     _examineeModel = ExamineeModel()

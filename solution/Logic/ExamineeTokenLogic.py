@@ -8,7 +8,7 @@ class ExamineeTokenLogic(BaseLogic):
         super().__init__()
 
     # 获取当前考生的报名列表
-    def SignInStudentID(self, Account: str) -> Result:
+    def SignInStudentID(self, Account: str):
         result = Result()
         _dbsession = DBsession()
         if Account == '':
@@ -19,15 +19,17 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamineeDataDoesNotExist
             else:
                 ExamInfoList: list = self._examInfoModel.FindExamineeID(_dbsession, ExamineeData.ID)
-                for i in ExamInfoList[:]:
-                    ExamInfoData: ExamInfoEntity = i
-                    if ExamInfoData.EndTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
-                        ExamInfoList.remove(ExamInfoData)
+                if len(ExamInfoList) > 0:
+                    for i in ExamInfoList[:]:
+                        ExamInfoData: ExamInfoEntity = i
+                        if ExamInfoData.EndTime > 0 and self._common.Time() >= ExamInfoData.EndTime:
+                            ExamInfoList.remove(ExamInfoData)
                 result.Data = ExamInfoList
                 result.State = True
+        _dbsession.close()
         return result
 
-    def SignInAdmissionTicket(self, ClientHost: str, ExamNo: str) -> Result:
+    def SignInAdmissionTicket(self, ClientHost: str, ExamNo: str):
         result = Result()
         _dbsession = DBsession()
         if ExamNo == '':
@@ -38,9 +40,10 @@ class ExamineeTokenLogic(BaseLogic):
                 result.Memo = self._lang.ExamDataDoesNotExist
             else:
                 result = self.PostLoginOperationAction(ClientHost, ExamInfoData.ID)
+        _dbsession.close()
         return result
 
-    def PostLoginOperationAction(self, ClientHost: str, ExamInfoID: int) -> Result:
+    def PostLoginOperationAction(self, ClientHost: str, ExamInfoID: int):
         result = Result()
         _dbsession = DBsession()
         if ExamInfoID <= 0:
@@ -62,6 +65,7 @@ class ExamineeTokenLogic(BaseLogic):
                 if CheckToken is not None:
                     DelInfo: Result = self._examineeTokenModel.Delete(_dbsession, CheckToken.ID)
                     if DelInfo.State == False:
+                        _dbsession.rollback()
                         return result
 
                 SignInTime: str = self._common.Time()
@@ -74,13 +78,14 @@ class ExamineeTokenLogic(BaseLogic):
                 AddInfo: Result = self._examineeTokenModel.Insert(_dbsession, ExamineeTokenData)
                 if AddInfo.State == False:
                     result.Memo = AddInfo.Memo
+                    _dbsession.rollback()
                     return result
 
                 # 修改报名考试起止时间
                 try:
                     ExamInfoData.StartTime = SignInTime
                     ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
-                    _dbsession.commit()
+                    ExamInfoData.StartState = 2
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -90,14 +95,16 @@ class ExamineeTokenLogic(BaseLogic):
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo
                 if self.LogExamAction(_dbsession, 2, ExamInfoData.ExamNo, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
+                    _dbsession.rollback()
                     return result
 
                 _dbsession.commit()
                 result.Data = ExamineeTokenData.Token
                 result.State = True
+        _dbsession.close()
         return result
 
-    def ExamScantronList(self, Token: str) -> Result:
+    def ExamScantronList(self, Token: str):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -107,9 +114,10 @@ class ExamineeTokenLogic(BaseLogic):
             ScantronData: list = self._scantronModel.FindExamID(_dbsession, ExamID)
             result.State = True
             result.Data = ScantronData
+        _dbsession.close()
         return result
 
-    def ExamScantronSolutionInfo(self, Token: str, ID: int) -> Result:
+    def ExamScantronSolutionInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -134,9 +142,10 @@ class ExamineeTokenLogic(BaseLogic):
                     ScantronData.ScantronSolutionList = ScantronSolutionList
                     result.Data = ScantronData
                 result.State = True
+        _dbsession.close()
         return result
 
-    def ExamAnswer(self, Token: str, ScantronID: int, ID: int, Answer: str = '') -> Result:
+    def ExamAnswer(self, Token: str, ScantronID: int, ID: int, Answer: str = ''):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -160,6 +169,7 @@ class ExamineeTokenLogic(BaseLogic):
                     ScantronSolutionDataList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                     if len(ScantronSolutionDataList) == 0:
                         result.Memo = self._lang.WrongData
+                        _dbsession.rollback()
                         return result
                     for i in ScantronSolutionDataList:
                         ScantronSolutionData: ScantronSolutionEntity = i
@@ -185,27 +195,33 @@ class ExamineeTokenLogic(BaseLogic):
                         elif ScantronData.QuestionType == 7 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             else:
                                 if Answer != '':
                                     if int(Answer) == ID:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, int(Answer))
                                     if ScantronSolutionDataSub is None:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                     if ScantronSolutionDataSub.Position == 2:
                                         result.Memo = self._lang.WrongData
+                                        _dbsession.rollback()
                                         return result
                                 ScantronSolutionData.CandidateAnswer = Answer
                         # 连线选项 =======================================================================================
                         elif ScantronData.QuestionType == 8 and ScantronSolutionData.ID == ID:
                             if ScantronSolutionData.Position != 2:
                                 result.Memo = self._lang.WrongData
+                                _dbsession.rollback()
                                 return result
                             else:
                                 if Answer != '':
@@ -216,24 +232,27 @@ class ExamineeTokenLogic(BaseLogic):
                                             ScantronSolutionDataSub: ScantronSolutionEntity = self._scantronSolutionModel.Find(_dbsession, AnswerID)
                                             if ScantronSolutionDataSub is None:
                                                 result.Memo = self._lang.WrongData
+                                                _dbsession.rollback()
                                                 return result
                                             if ScantronSolutionDataSub.ScantronID != ScantronSolutionData.ScantronID:
                                                 result.Memo = self._lang.WrongData
+                                                _dbsession.rollback()
                                                 return result
                                             if ScantronSolutionDataSub.Position == 2:
                                                 result.Memo = self._lang.WrongData
+                                                _dbsession.rollback()
                                                 return result
                                     ScantronSolutionData.CandidateAnswer = ','.join(AnswerList)
                         else:
                             continue
                         ScantronSolutionData.UpdateTime = self._common.Time()
-                        _dbsession.commit()
 
                     _dbsession.commit()
                     result.State = True
+        _dbsession.close()
         return result
 
-    def EndTheExam(self, ClientHost: str, Token: str) -> Result:
+    def EndTheExam(self, ClientHost: str, Token: str):
         result = Result()
         _dbsession = DBsession()
         ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
@@ -248,7 +267,6 @@ class ExamineeTokenLogic(BaseLogic):
                 try:
                     ExamInfoData.ExamState = 3
                     ExamInfoData.ActualDuration = self._common.Time() - ExamInfoData.StartTime
-                    _dbsession.commit()
                 except Exception as e:
                     result.Memo = str(e)
                     _dbsession.rollback()
@@ -268,4 +286,5 @@ class ExamineeTokenLogic(BaseLogic):
 
                 _dbsession.commit()
                 result.State = True
+        _dbsession.close()
         return result

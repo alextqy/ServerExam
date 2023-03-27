@@ -13,6 +13,7 @@ class PaperRuleEntity(BaseEntity, BaseORM):
     SingleScore: float = Column(DECIMAL(10, 2), comment='单题分数', default=0.00)
     PaperID: int = Column(INTEGER, comment='试卷ID', default=0)
     PaperRuleState: int = Column(INTEGER, comment='试卷规则状态 1正常 2禁用', default=0)
+    SerialNumber: int = Column(INTEGER, comment='排序', default=0)
     UpdateTime: int = Column(INTEGER, comment='更新时间', default=int(time()))
 
     def __init__(self):

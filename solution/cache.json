@@ -4,10 +4,10 @@
   "Lang": "",
   "SwitchHttps": false,
   "Sync": false,
-  "SynchronizationCycle": 3,
-  "Title": "bitbox",
+  "SynchronizationCycle": 0,
+  "Title": "",
   "Token": "",
   "TokenType": "",
-  "UDPPort": 6002,
+  "UDPPort": 0,
   "URL": ""
 }

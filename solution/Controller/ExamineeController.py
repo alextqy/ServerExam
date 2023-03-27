@@ -14,7 +14,7 @@ async def NewExaminee(
         Name: str = Form(''),
         ClassID: int = Form(0),
         Contact: str = Form(''),
-) -> Result:
+):
     return examineeLogic.NewExaminee(request.client.host, Token.strip(), ExamineeNo.strip(), Name.strip(), ClassID, Contact.strip())
 
 
@@ -26,8 +26,9 @@ async def UpdateExaminee(
         ID: int = Form(0),
         Name: str = Form(''),
         Contact: str = Form(''),
-) -> Result:
-    return examineeLogic.UpdateExaminee(request.client.host, Token.strip(), ID, Name.strip(), Contact.strip())
+        ClassID: int = Form(0),
+):
+    return examineeLogic.UpdateExaminee(request.client.host, Token.strip(), ID, Name.strip(), Contact.strip(), ClassID)
 
 
 # 考生列表
@@ -39,7 +40,7 @@ async def ExamineeList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         ClassID: int = Form(0),
-) -> ResultList:
+):
     return examineeLogic.ExamineeList(Token.strip(), Page, PageSize, Stext.strip(), ClassID)
 
 
@@ -49,5 +50,14 @@ async def ExamineeInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return examineeLogic.ExamineeInfo(Token.strip(), ID)
+
+
+# 全部考生
+@ExamineeRouter.post('/Examinees')
+async def Examinees(
+        request: Request,
+        Token: str = Form(''),
+):
+    return examineeLogic.Examinees(Token.strip())

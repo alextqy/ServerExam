@@ -14,11 +14,15 @@ async def ExamLogList(
         PageSize: int = Form(10),
         Stext: str = Form(''),
         Type: int = Form(0),
-) -> ResultList:
+):
     return examLogLogic.ExamLogList(Token.strip(), Page, PageSize, Stext.strip(), Type)
 
 
 # 日志详情
 @ExamLogRouter.post('/Exam/Log/Info')
-async def ExamLogInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
+async def ExamLogInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
     return examLogLogic.ExamLogInfo(Token.strip(), ID)

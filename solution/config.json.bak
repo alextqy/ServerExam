@@ -1,5 +1,9 @@
 {
-    "DaoURL": "127.0.0.1:3306",
+    "Lang": "zh-cn",
+    "UDPPort": "60000",
+    "DaoPort": "3306",
     "DaoPWD": "123456",
-    "Lang": "zh-cn"
+    "RedisPort": "6379",
+    "RedisPWD": "123456",
+    "RedisDB": 2
 }

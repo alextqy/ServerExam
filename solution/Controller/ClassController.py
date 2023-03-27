@@ -12,7 +12,7 @@ async def NewClass(
         Token: str = Form(''),
         ClassName: str = Form(''),
         Description: str = Form(''),
-) -> Result:
+):
     return classLogic.NewClass(request.client.host, Token.strip(), ClassName.strip(), Description.strip())
 
 
@@ -24,7 +24,7 @@ async def UpdateClassInfo(
         ID: int = Form(0),
         ClassName: str = Form(''),
         Description: str = Form(''),
-) -> Result:
+):
     return classLogic.UpdateClassInfo(request.client.host, Token.strip(), ID, ClassName.strip(), Description.strip())
 
 
@@ -36,7 +36,7 @@ async def ClassList(
         Page: int = Form(1),
         PageSize: int = Form(10),
         Stext: str = Form(''),
-) -> Result:
+):
     return classLogic.ClassList(Token.strip(), Page, PageSize, Stext.strip())
 
 
@@ -46,5 +46,14 @@ async def ClassInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return classLogic.ClassInfo(Token.strip(), ID)
+
+
+# 全部班级
+@ClassRouter.post('/Classes')
+async def Classes(
+        request: Request,
+        Token: str = Form(''),
+):
+    return classLogic.Classes(Token.strip())

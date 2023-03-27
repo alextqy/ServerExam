@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
 from Service.BaseService import *
+from Service.Common import *
 
 
 class FileHelper(BaseService):
 
     def __init__(self):
         super().__init__()
+        self.Common = Common()
 
     # 根目录
     def BaseDir(self):
@@ -240,7 +242,7 @@ class FileHelper(BaseService):
 
     # 调用本地系统应用打开文件
     def FileNativeCall(self, FilePath):
-        SysType = Common().OSType()
+        SysType = self.Common.OSType()
         if SysType == 'Windows':
             startfile(FilePath)
         elif SysType == 'Linux':
@@ -252,7 +254,7 @@ class FileHelper(BaseService):
 
     # windows下设置文件为只读
     def SetReadOnly(self, FilePath):
-        osType = Common().OSType()
+        osType = self.Common.OSType()
         if osType == 'Windows':
             chmod(FilePath, S_IREAD)
         elif osType == 'MacOS':
@@ -260,7 +262,7 @@ class FileHelper(BaseService):
 
     # windows下取消文件只读
     def UnsetReadOnly(self, FilePath):
-        osType = Common().OSType()
+        osType = self.Common.OSType()
         if osType == 'Windows':
             chmod(FilePath, S_IWRITE)
         elif osType == 'MacOS':

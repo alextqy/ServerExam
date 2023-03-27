@@ -7,7 +7,7 @@ class ExamineeLogic(BaseLogic):
     def __init__(self):
         super().__init__()
 
-    def NewExaminee(self, ClientHost: str, Token: str, ExamineeNo: str, Name: str, ClassID: int, Contact: str) -> Result:
+    def NewExaminee(self, ClientHost: str, Token: str, ExamineeNo: str, Name: str, ClassID: int, Contact: str):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -39,18 +39,21 @@ class ExamineeLogic(BaseLogic):
             AddInfo: Result = self._examineeModel.Insert(_dbsession, ExamineeData)
             if AddInfo.State == False:
                 result.Memo = AddInfo.Memo
+                _dbsession.rollback()
                 return result
 
             Desc = 'new examinee No.:' + ExamineeNo
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
-    def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str) -> Result:
+    def UpdateExaminee(self, ClientHost: str, Token: str, ID: int, Name: str, Contact: str, ClassID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -62,6 +65,8 @@ class ExamineeLogic(BaseLogic):
             result.Memo = self._lang.WrongID
         elif Name == '':
             result.Memo = self._lang.WrongName
+        elif ClassID <= 0:
+            result.Memo = self._lang.WrongClassID
         else:
             if Contact == '':
                 Contact = 'none'
@@ -76,7 +81,7 @@ class ExamineeLogic(BaseLogic):
             try:
                 ExamineeData.Name = Name
                 ExamineeData.Contact = Contact
-                _dbsession.commit()
+                ExamineeData.ClassID = ClassID
             except Exception as e:
                 result.Memo = str(e)
                 _dbsession.rollback()
@@ -85,13 +90,15 @@ class ExamineeLogic(BaseLogic):
             Desc = 'update examinee ID:' + str(ID)
             if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                 result.Memo = self._lang.LoggingFailed
+                _dbsession.rollback()
                 return result
 
             _dbsession.commit()
             result.State = True
+        _dbsession.close()
         return result
 
-    def ExamineeList(self, Token: str, Page: int, PageSize: int, Stext: str, ClassID: int) -> ResultList:
+    def ExamineeList(self, Token: str, Page: int, PageSize: int, Stext: str, ClassID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -101,9 +108,10 @@ class ExamineeLogic(BaseLogic):
             result.Memo = self._lang.PermissionDenied
         else:
             result: ResultList = self._examineeModel.List(_dbsession, Page, PageSize, Stext, ClassID)
+        _dbsession.close()
         return result
 
-    def ExamineeInfo(self, Token: str, ID: int) -> Result:
+    def ExamineeInfo(self, Token: str, ID: int):
         result = Result()
         _dbsession = DBsession()
         AdminID = self.PermissionValidation(_dbsession, Token)
@@ -120,4 +128,18 @@ class ExamineeLogic(BaseLogic):
             else:
                 result.State = True
                 result.Data = ExamineeData
+        _dbsession.close()
+        return result
+
+    def Examinees(self, Token: str):
+        result = Result()
+        _dbsession = DBsession()
+        AdminID = self.PermissionValidation(_dbsession, Token)
+        if Token == '':
+            result.Memo = self._lang.WrongToken
+        elif AdminID == 0:
+            result.Memo = self._lang.PermissionDenied
+        else:
+            result: Result = self._examineeModel.Examinees(_dbsession)
+        _dbsession.close()
         return result

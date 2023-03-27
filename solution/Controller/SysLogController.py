@@ -15,11 +15,15 @@ async def SysLogList(
         Stext: str = Form(''),
         Type: int = Form(0),
         ManagerID: int = Form(0),
-) -> ResultList:
+):
     return sysLogLogic.SysLogList(Token.strip(), Page, PageSize, Stext.strip(), Type, ManagerID)
 
 
 # 日志详情
 @SysLogRouter.post('/Sys/Log/Info')
-async def SysLogInfo(request: Request, Token: str = Form(''), ID: int = Form(0)) -> Result:
+async def SysLogInfo(
+        request: Request,
+        Token: str = Form(''),
+        ID: int = Form(0),
+):
     return sysLogLogic.SysLogInfo(Token.strip(), ID)

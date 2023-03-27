@@ -11,7 +11,7 @@ async def ManagerSignIn(
         request: Request,
         Account: str = Form(''),
         Password: str = Form(''),
-) -> Result:
+):
     return managerLogic.ManagerSignIn(request.client.host, Account.strip(), Password.strip())
 
 
@@ -20,7 +20,7 @@ async def ManagerSignIn(
 async def ManagerSignOut(
         request: Request,
         Token: str = Form(''),
-) -> Result:
+):
     return managerLogic.ManagerSignOut(request.client.host, Token.strip())
 
 
@@ -32,7 +32,7 @@ async def NewManager(
         Account: str = Form(''),
         Password: str = Form(''),
         Name: str = Form(''),
-) -> Result:
+):
     return managerLogic.NewManager(request.client.host, Token.strip(), Account.strip(), Password.strip(), Name.strip())
 
 
@@ -42,7 +42,7 @@ async def ManagerDisabled(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return managerLogic.ManagerDisabled(request.client.host, Token.strip(), ID)
 
 
@@ -53,7 +53,7 @@ async def ManagerChangePassword(
         Token: str = Form(''),
         NewPassword: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return managerLogic.ManagerChangePassword(request.client.host, Token.strip(), NewPassword.strip(), ID)
 
 
@@ -65,7 +65,7 @@ async def UpdateManagerInfo(
         Name: str = Form(''),
         Permission: int = Form(0),
         ID: int = Form(0),
-) -> Result:
+):
     return managerLogic.UpdateManagerInfo(request.client.host, Token.strip(), Name.strip(), Permission, ID)
 
 
@@ -79,7 +79,7 @@ async def ManagerList(
         Stext: str = Form(''),
         State: int = Form(0),
         Permission: int = Form(0),
-) -> ResultList:
+):
     return managerLogic.ManagerList(Token.strip(), Page, PageSize, Stext.strip(), State, Permission)
 
 
@@ -89,5 +89,14 @@ async def ManagerInfo(
         request: Request,
         Token: str = Form(''),
         ID: int = Form(0),
-) -> Result:
+):
     return managerLogic.ManagerInfo(Token.strip(), ID)
+
+
+# 所有管理员
+@ManagerRouter.post('/Managers')
+async def Managers(
+        request: Request,
+        Token: str = Form(''),
+):
+    return managerLogic.Managers(Token.strip())
