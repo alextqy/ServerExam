@@ -1,6 +1,6 @@
 {
     "Lang": "zh-cn",
-    "UDPPort": "60000",
+    "UDPPort": "50000",
     "DaoPort": "3306",
     "DaoPWD": "123456",
     "RedisPort": "6379",
