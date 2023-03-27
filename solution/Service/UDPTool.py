@@ -12,8 +12,9 @@ class UDPTool(BaseService):
         super().__init__()
         self.IP = Common().LocalIP()
 
-        HOST = '192.168.' + \
-            str(Common().Explode('.', self.IP)[2]) + '.255'
+        # HOST = '192.168.' + str(Common().Explode('.', self.IP)[2]) + '.255'
+
+        HOST = '255.255.255.255'
 
         self.PORT = PORT
         self.BUFSIZE = BUFSIZE
