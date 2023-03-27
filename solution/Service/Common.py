@@ -183,7 +183,6 @@ class Common(BaseService):
 
     # 获取本机IP
     def LocalIP(self) -> str:
-        return '192.168.0.28'
         try:
             s = socket(AF_INET, SOCK_DGRAM)
             s.connect(('8.8.8.8', 80))

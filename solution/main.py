@@ -132,7 +132,7 @@ def run():
     StartupEvent()
     _common = Common()
     ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
-    uvicorn.run('main:app', host='192.168.0.29', port=int(ConfigObj['UDPPort']), reload=True)  # Common().LocalIP()
+    uvicorn.run('main:app', host=Common().LocalIP(), port=int(ConfigObj['UDPPort']), reload=True)
 
 
 import uvicorn

@@ -10,7 +10,7 @@ class UDPTool(BaseService):
 
     def __init__(self, PORT=ConfigObj['UDPPort'], BUFSIZE=64, SendInfoStr='BIT EXAM', TimeoutSet=15):
         super().__init__()
-        self.IP = '192.168.0.29'  # Common().LocalIP()
+        self.IP = Common().LocalIP()
 
         HOST = '192.168.' + \
             str(Common().Explode('.', self.IP)[2]) + '.255'
