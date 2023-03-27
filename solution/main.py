@@ -8,6 +8,7 @@ pip install xlrd
 pip install fastapi
 pip install 'uvicorn[standard]'
 pip install requests
+python -m pip install --upgrade pip
 uvicorn main:app --host=0.0.0.0 --port=60000 --reload-exclude TEXT
 '''
 from Service.Common import *
