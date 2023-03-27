@@ -138,4 +138,8 @@ def run():
 
 import uvicorn
 if __name__ == '__main__':
-    run()
+    # run()
+    StartupEvent()
+    _common = Common()
+    ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
+    uvicorn.run('main:app', host=Common().LocalIP(), port=int(ConfigObj['UDPPort']), reload=True)
