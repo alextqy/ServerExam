@@ -8,7 +8,7 @@ ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
 
 class UDPTool(BaseService):
 
-    def __init__(self, PORT=ConfigObj['ServerPort'], BUFSIZE=64, SendInfoStr='BIT EXAM', TimeoutSet=15):
+    def __init__(self, PORT=50001, BUFSIZE=64, SendInfoStr='BIT EXAM', TimeoutSet=15):
         super().__init__()
         self.IP = Common().LocalIP()
 
