@@ -8,7 +8,7 @@ ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
 
 class UDPTool(BaseService):
 
-    def __init__(self, PORT=50001, BUFSIZE=64, SendInfoStr='BIT EXAM', TimeoutSet=15):
+    def __init__(self, PORT='50001', BUFSIZE=64, SendInfoStr='BIT EXAM', TimeoutSet=15):
         super().__init__()
         self.IP = Common().LocalIP()
 
@@ -45,7 +45,7 @@ class UDPTool(BaseService):
     # 单次发送广播
     def SendBroadcast(self):
         self.UDPClient.setsockopt(SOL_SOCKET, SO_BROADCAST, True)
-        self.UDPClient.sendto((self.IP + ':' + self.PORT).encode('utf8'), (self.IP, int(self.PORT)))
+        self.UDPClient.sendto((self.IP + ':' + ConfigObj['ServerPort']).encode('utf8'), (self.IP, int(self.PORT)))
 
     # 接收广播
     def Receive(self, HostName, UDPPort):
