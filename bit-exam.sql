@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- 主机:                           192.168.0.28
--- 服务器版本:                        8.0.32-0ubuntu0.22.04.2 - (Ubuntu)
--- 服务器操作系统:                      Linux
+-- 主机:                           127.0.0.1
+-- 服务器版本:                        8.0.32 - MySQL Community Server - GPL
+-- 服务器操作系统:                      Win64
 -- HeidiSQL 版本:                  12.0.0.6536
 -- --------------------------------------------------------
 
@@ -19,24 +19,20 @@
 CREATE DATABASE IF NOT EXISTS `server-exam` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `server-exam`;
 
--- 导出  表 server-exam.Class 结构
-CREATE TABLE IF NOT EXISTS `Class` (
+-- 导出  表 server-exam.class 结构
+CREATE TABLE IF NOT EXISTS `class` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `ClassName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '班级名称',
   `ClassCode` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '班级代码',
   `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '班级描述',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='班级';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='班级';
 
--- 正在导出表  server-exam.Class 的数据：~3 rows (大约)
-INSERT IGNORE INTO `Class` (`ID`, `CreateTime`, `ClassName`, `ClassCode`, `Description`) VALUES
-	(0000000001, 1678415858, '测试班级', '18d4347e5b461c23e0fb5ceecf345519', '测试班级'),
-	(0000000002, 1678937813, '测试班级1', '0cea34a43139314e8478daab81bbc61f', 'none'),
-	(0000000003, 1679472351, '测试班级2', '01c47f65759766b2d077881815709191', '2222222');
+-- 正在导出表  server-exam.class 的数据：~3 rows (大约)
 
--- 导出  表 server-exam.Examinee 结构
-CREATE TABLE IF NOT EXISTS `Examinee` (
+-- 导出  表 server-exam.examinee 结构
+CREATE TABLE IF NOT EXISTS `examinee` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `ExamineeNo` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '考生编号',
@@ -44,19 +40,12 @@ CREATE TABLE IF NOT EXISTS `Examinee` (
   `ClassID` int(10) unsigned zerofill DEFAULT NULL COMMENT '班级ID',
   `Contact` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系方式',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='考生';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='考生';
 
--- 正在导出表  server-exam.Examinee 的数据：~6 rows (大约)
-INSERT IGNORE INTO `Examinee` (`ID`, `CreateTime`, `ExamineeNo`, `Name`, `ClassID`, `Contact`) VALUES
-	(0000000001, 1678415880, 'TestNo', '测试考生', 0000000001, 'none'),
-	(0000000002, 1678950302, 'testNo1', '测试考生11111', 0000000002, 'asdfsadfasd发所发生的'),
-	(0000000003, 1678959035, 'test3', 'test3', 0000000001, 'none'),
-	(0000000004, 1678959070, 'test4', 'test4', 0000000002, 'none'),
-	(0000000005, 1678960067, 'test5', '测试测试', 0000000002, 'none'),
-	(0000000006, 1679038891, 'x', 'xxxxx', 0000000002, 'none');
+-- 正在导出表  server-exam.examinee 的数据：~6 rows (大约)
 
--- 导出  表 server-exam.ExamineeToken 结构
-CREATE TABLE IF NOT EXISTS `ExamineeToken` (
+-- 导出  表 server-exam.examineetoken 结构
+CREATE TABLE IF NOT EXISTS `examineetoken` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT COMMENT '考生token',
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `Token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '考生token',
@@ -64,10 +53,10 @@ CREATE TABLE IF NOT EXISTS `ExamineeToken` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='考生token';
 
--- 正在导出表  server-exam.ExamineeToken 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.examineetoken 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.ExamInfo 结构
-CREATE TABLE IF NOT EXISTS `ExamInfo` (
+-- 导出  表 server-exam.examinfo 结构
+CREATE TABLE IF NOT EXISTS `examinfo` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `SubjectName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '科目名称',
@@ -87,16 +76,12 @@ CREATE TABLE IF NOT EXISTS `ExamInfo` (
   `StartState` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '开始状态 1未开始 2已开始',
   `SuspendedState` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '暂停状态 1正常 2暂停',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报名';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报名';
 
--- 正在导出表  server-exam.ExamInfo 的数据：~3 rows (大约)
-INSERT IGNORE INTO `ExamInfo` (`ID`, `CreateTime`, `SubjectName`, `ExamNo`, `TotalScore`, `PassLine`, `ActualScore`, `ExamDuration`, `StartTime`, `EndTime`, `ActualDuration`, `Pass`, `UpdateTime`, `ExamineeID`, `ExamState`, `ExamType`, `StartState`, `SuspendedState`) VALUES
-	(0000000005, 1679391798, '测试科目', 'a28c98dce7fd738f947f0fab9a880fad', 00000100.00, 00000060.00, 00000000.00, 0000000120, 0000000000, 0000000000, 0000000000, 1, 1679453793, 0000000001, 4, 2, 1, 1),
-	(0000000006, 1679452800, '测试科目1', 'e1ddffd397e1df806b55f70c79589e34', 00000000.00, 00000000.00, 00000000.00, 0000000000, 0000000000, 0000000000, 0000000000, 1, 1679453727, 0000000006, 1, 2, 1, 1),
-	(0000000007, 1679454564, '测试科目', '462dabb5f86f861c9f12c1246d97393d', 00000100.00, 00000060.00, 00000000.00, 0000000120, 0000000000, 0000000000, 0000000000, 1, 1679454700, 0000000001, 2, 1, 1, 1);
+-- 正在导出表  server-exam.examinfo 的数据：~3 rows (大约)
 
--- 导出  表 server-exam.ExamInfoHistory 结构
-CREATE TABLE IF NOT EXISTS `ExamInfoHistory` (
+-- 导出  表 server-exam.examinfohistory 结构
+CREATE TABLE IF NOT EXISTS `examinfohistory` (
   `ID` int(10) unsigned zerofill NOT NULL,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `SubjectName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '科目名称',
@@ -116,14 +101,10 @@ CREATE TABLE IF NOT EXISTS `ExamInfoHistory` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='历史报名';
 
--- 正在导出表  server-exam.ExamInfoHistory 的数据：~3 rows (大约)
-INSERT IGNORE INTO `ExamInfoHistory` (`ID`, `CreateTime`, `SubjectName`, `ExamNo`, `TotalScore`, `PassLine`, `ActualScore`, `ExamDuration`, `StartTime`, `EndTime`, `ActualDuration`, `Pass`, `UpdateTime`, `ExamineeID`, `ExamState`, `ExamType`) VALUES
-	(0000000002, 1679390890, '测试科目', '6643030cf48f97dbb33531d63a5d8b47', 00000100.00, 00000060.00, 00000000.00, 0000000120, 0000000000, 0000000000, 0000000000, 1, 1679390830, 0000000000, 2, 1),
-	(0000000003, 1679390398, '测试科目1', 'e673ba70acae201b015398825145f9e0', 00000150.00, 00000090.00, 00000000.00, 0000000120, 0000000000, 0000000000, 0000000000, 1, 1679390392, 0000000000, 2, 2),
-	(0000000004, 1679390682, '测试科目', '2da869c41dada4c4b1de77651e97c609', 00000100.00, 00000060.00, 00000000.00, 0000000120, 0000000000, 0000000000, 0000000000, 1, 1679390434, 0000000001, 2, 1);
+-- 正在导出表  server-exam.examinfohistory 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.ExamLog 结构
-CREATE TABLE IF NOT EXISTS `ExamLog` (
+-- 导出  表 server-exam.examlog 结构
+CREATE TABLE IF NOT EXISTS `examlog` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `Type` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '日志类型 1操作 2登录',
@@ -133,32 +114,22 @@ CREATE TABLE IF NOT EXISTS `ExamLog` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='考试日志';
 
--- 正在导出表  server-exam.ExamLog 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.examlog 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.Headline 结构
-CREATE TABLE IF NOT EXISTS `Headline` (
+-- 导出  表 server-exam.headline 结构
+CREATE TABLE IF NOT EXISTS `headline` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `Content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '内容',
   `ContentCode` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内容代码',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='大标题';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='大标题';
 
--- 正在导出表  server-exam.Headline 的数据：~9 rows (大约)
-INSERT IGNORE INTO `Headline` (`ID`, `CreateTime`, `Content`, `ContentCode`, `UpdateTime`) VALUES
-	(0000000001, 1678416176, '一 单选题', '205db33fbb4401805eaf1cc6869f1cb1', 1678416461),
-	(0000000002, 1678416191, '二 判断题', 'a111225f1653dadbd911047375e41371', 1678416465),
-	(0000000003, 1678416200, '三 多选题', 'b500c91de0b5f3cf8a4ebebc96e06ee1', 1678416468),
-	(0000000004, 1678416429, '四 填空题', '373dcb9647bbd0c875b889dc2dff4723', 1678416471),
-	(0000000005, 1678416440, '五 问答题', '0d2afb6cca6ed61c9479c7b193289238', 1678416476),
-	(0000000006, 1678416456, '六 程序题', '039d12fcbda53be8ae3ffabfe9fd49ad', 1678416508),
-	(0000000007, 1678416496, '七 连线题', '24237bdaec1ba68edd4b174a1385db09', 1678416100),
-	(0000000008, 1678416517, '八 拖拽', 'd5e1e371b47c44d6f175e07ce2023fd9', 1678416100),
-	(0000000009, 1679622310, '测试', 'db06c78d1e24cf708a14ce81c9b617ec', 1679622328);
+-- 正在导出表  server-exam.headline 的数据：~9 rows (大约)
 
--- 导出  表 server-exam.Knowledge 结构
-CREATE TABLE IF NOT EXISTS `Knowledge` (
+-- 导出  表 server-exam.knowledge 结构
+CREATE TABLE IF NOT EXISTS `knowledge` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `KnowledgeName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '知识点名称',
@@ -167,15 +138,12 @@ CREATE TABLE IF NOT EXISTS `Knowledge` (
   `KnowledgeState` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '知识点状态 1正常 2禁用',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识点';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识点';
 
--- 正在导出表  server-exam.Knowledge 的数据：~2 rows (大约)
-INSERT IGNORE INTO `Knowledge` (`ID`, `CreateTime`, `KnowledgeName`, `KnowledgeCode`, `SubjectID`, `KnowledgeState`, `UpdateTime`) VALUES
-	(0000000001, 1678416157, '测试知识点', 'ad40306f60ad817a6578b9002aefd153', 0000000001, 1, 1678416100),
-	(0000000002, 1678950339, '测试知识点1', '622468b5439c7d875d5343c4068cfe63', 0000000002, 1, 1678938905);
+-- 正在导出表  server-exam.knowledge 的数据：~2 rows (大约)
 
--- 导出  表 server-exam.Manager 结构
-CREATE TABLE IF NOT EXISTS `Manager` (
+-- 导出  表 server-exam.manager 结构
+CREATE TABLE IF NOT EXISTS `manager` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `Account` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '账号',
@@ -188,14 +156,12 @@ CREATE TABLE IF NOT EXISTS `Manager` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理员';
 
--- 正在导出表  server-exam.Manager 的数据：~2 rows (大约)
-INSERT IGNORE INTO `Manager` (`ID`, `CreateTime`, `Account`, `Password`, `Name`, `State`, `Permission`, `UpdateTime`, `Token`) VALUES
-	(0000000001, 1651887805, 'root', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1675154211, ''),
-	(0000000016, 1678415571, 'admin', '5f1d7a84db00d2fce00b31a7fc73224f', '测试人员', 1, 9, 1678415557, 'faca07371140118d4fba9609ffcff810'),
-	(0000000017, 1679888614, 'abc123', '5f1d7a84db00d2fce00b31a7fc73224f', 'test', 1, 9, 1679888569, 'none');
+-- 正在导出表  server-exam.manager 的数据：~1 rows (大约)
+INSERT IGNORE INTO `manager` (`ID`, `CreateTime`, `Account`, `Password`, `Name`, `State`, `Permission`, `UpdateTime`, `Token`) VALUES
+	(0000000001, 1651887805, 'root', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1675154211, '');
 
--- 导出  表 server-exam.Paper 结构
-CREATE TABLE IF NOT EXISTS `Paper` (
+-- 导出  表 server-exam.paper 结构
+CREATE TABLE IF NOT EXISTS `paper` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `PaperName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '试卷名称',
@@ -207,15 +173,12 @@ CREATE TABLE IF NOT EXISTS `Paper` (
   `PaperState` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '试卷状态 1正常 2禁用',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试卷';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试卷';
 
--- 正在导出表  server-exam.Paper 的数据：~2 rows (大约)
-INSERT IGNORE INTO `Paper` (`ID`, `CreateTime`, `PaperName`, `PaperCode`, `SubjectID`, `TotalScore`, `PassLine`, `ExamDuration`, `PaperState`, `UpdateTime`) VALUES
-	(0000000001, 1678437542, '测试试卷', '70bf952da0b2edd4082ba97b29e5634e', 0000000001, 00000100.00, 00000060.00, 0000000120, 1, 1679280465),
-	(0000000002, 1678950380, '测试试卷1', '5dba16c32b094898ddff70acb7efa3c7', 0000000002, 00000150.00, 00000090.00, 0000000120, 1, 1679386312);
+-- 正在导出表  server-exam.paper 的数据：~2 rows (大约)
 
--- 导出  表 server-exam.PaperRule 结构
-CREATE TABLE IF NOT EXISTS `PaperRule` (
+-- 导出  表 server-exam.paperrule 结构
+CREATE TABLE IF NOT EXISTS `paperrule` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `HeadlineID` int(10) unsigned zerofill DEFAULT NULL COMMENT '大标题ID',
@@ -228,41 +191,12 @@ CREATE TABLE IF NOT EXISTS `PaperRule` (
   `SerialNumber` int(5) unsigned zerofill DEFAULT NULL COMMENT '排序',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试卷规则';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试卷规则';
 
--- 正在导出表  server-exam.PaperRule 的数据：~28 rows (大约)
-INSERT IGNORE INTO `PaperRule` (`ID`, `CreateTime`, `HeadlineID`, `KnowledgeID`, `QuestionType`, `QuestionNum`, `SingleScore`, `PaperID`, `PaperRuleState`, `SerialNumber`, `UpdateTime`) VALUES
-	(0000000003, 1678437824, 0000000001, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678437843),
-	(0000000004, 1678437861, 0000000000, 0000000001, 0000000001, 0000000001, 00000010.00, 0000000001, 1, 00001, 1678437862),
-	(0000000005, 1678437873, 0000000002, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678437873),
-	(0000000006, 1678437898, 0000000000, 0000000001, 0000000002, 0000000001, 00000010.00, 0000000001, 1, 00001, 1678437898),
-	(0000000007, 1678437909, 0000000003, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678437909),
-	(0000000008, 1678437918, 0000000000, 0000000001, 0000000003, 0000000001, 00000010.00, 0000000001, 1, 00001, 1678437918),
-	(0000000009, 1678437970, 0000000004, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678437970),
-	(0000000010, 1678437981, 0000000000, 0000000001, 0000000004, 0000000001, 00000010.00, 0000000001, 1, 00001, 1678437981),
-	(0000000011, 1678438013, 0000000005, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678438013),
-	(0000000012, 1678438029, 0000000000, 0000000001, 0000000005, 0000000001, 00000010.00, 0000000001, 1, 00001, 1678438029),
-	(0000000013, 1678438037, 0000000006, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678438037),
-	(0000000014, 1678438098, 0000000000, 0000000001, 0000000007, 0000000001, 00000020.00, 0000000001, 1, 00001, 1678438098),
-	(0000000015, 1678438149, 0000000008, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000001, 1, 00001, 1678438149),
-	(0000000016, 1678438157, 0000000000, 0000000001, 0000000008, 0000000001, 00000030.00, 0000000001, 1, 00001, 1678438201),
-	(0000000017, 1679385861, 0000000001, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679385861),
-	(0000000018, 1679385882, 0000000000, 0000000002, 0000000001, 0000000001, 00000020.00, 0000000002, 1, 00001, 1679385928),
-	(0000000019, 1679385916, 0000000002, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679385916),
-	(0000000020, 1679385973, 0000000000, 0000000002, 0000000002, 0000000001, 00000020.00, 0000000002, 1, 00001, 1679385973),
-	(0000000021, 1679385986, 0000000003, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679385986),
-	(0000000022, 1679386001, 0000000000, 0000000002, 0000000003, 0000000001, 00000020.00, 0000000002, 1, 00001, 1679386001),
-	(0000000023, 1679386123, 0000000004, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679386123),
-	(0000000024, 1679386143, 0000000000, 0000000002, 0000000004, 0000000001, 00000020.00, 0000000002, 1, 00001, 1679386143),
-	(0000000025, 1679386161, 0000000005, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679386161),
-	(0000000026, 1679386172, 0000000000, 0000000002, 0000000005, 0000000001, 00000020.00, 0000000002, 1, 00001, 1679386172),
-	(0000000027, 1679386197, 0000000007, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679386197),
-	(0000000028, 1679386213, 0000000000, 0000000002, 0000000008, 0000000001, 00000025.00, 0000000002, 1, 00001, 1679386296),
-	(0000000029, 1679386236, 0000000008, 0000000000, 0000000000, 0000000000, 00000000.00, 0000000002, 1, 00001, 1679386236),
-	(0000000030, 1679386287, 0000000000, 0000000002, 0000000007, 0000000001, 00000025.00, 0000000002, 1, 00001, 1679386287);
+-- 正在导出表  server-exam.paperrule 的数据：~28 rows (大约)
 
--- 导出  表 server-exam.Practice 结构
-CREATE TABLE IF NOT EXISTS `Practice` (
+-- 导出  表 server-exam.practice 结构
+CREATE TABLE IF NOT EXISTS `practice` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `QuestionTitle` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '题目',
@@ -278,17 +212,17 @@ CREATE TABLE IF NOT EXISTS `Practice` (
   `HeadlineContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '大标题内容',
   `ExamineeTokenID` int(10) unsigned zerofill DEFAULT NULL COMMENT '考生TokenID',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='练习题';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='练习题';
 
--- 正在导出表  server-exam.Practice 的数据：~1 rows (大约)
+-- 正在导出表  server-exam.practice 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.PracticeSolution 结构
-CREATE TABLE IF NOT EXISTS `PracticeSolution` (
+-- 导出  表 server-exam.practicesolution 结构
+CREATE TABLE IF NOT EXISTS `practicesolution` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `PracticeID` int(10) unsigned zerofill DEFAULT NULL COMMENT '练习题ID',
   `Option` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '试题选项',
-  `OptionAttachment` text COLLATE utf8mb4_unicode_ci COMMENT '选项附件',
+  `OptionAttachment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '选项附件',
   `CorrectAnswer` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '正确答案 1错误 2正确',
   `CorrectItem` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '答案项',
   `ScoreRatio` decimal(10,2) unsigned zerofill DEFAULT NULL COMMENT '得分比例',
@@ -296,12 +230,12 @@ CREATE TABLE IF NOT EXISTS `PracticeSolution` (
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   `CandidateAnswer` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '考生答案',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='练习题选项';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='练习题选项';
 
--- 正在导出表  server-exam.PracticeSolution 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.practicesolution 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.Question 结构
-CREATE TABLE IF NOT EXISTS `Question` (
+-- 导出  表 server-exam.question 结构
+CREATE TABLE IF NOT EXISTS `question` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `QuestionTitle` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '标题',
@@ -310,36 +244,18 @@ CREATE TABLE IF NOT EXISTS `Question` (
   `QuestionState` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '试题状态 1正常 2禁用',
   `Marking` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '人工阅卷 1否 2是',
   `KnowledgeID` int(1) unsigned zerofill DEFAULT NULL COMMENT '知识点ID',
-  `Description` text COLLATE utf8mb4_unicode_ci COMMENT '试题描述',
-  `Attachment` text COLLATE utf8mb4_unicode_ci COMMENT '试题附件',
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '试题描述',
+  `Attachment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '试题附件',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   `Language` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '计算机语言',
   `LanguageVersion` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '计算机语言版本',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试题';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试题';
 
--- 正在导出表  server-exam.Question 的数据：~17 rows (大约)
-INSERT IGNORE INTO `Question` (`ID`, `CreateTime`, `QuestionTitle`, `QuestionCode`, `QuestionType`, `QuestionState`, `Marking`, `KnowledgeID`, `Description`, `Attachment`, `UpdateTime`, `Language`, `LanguageVersion`) VALUES
-	(0000000001, 1678416905, '测试单选题', 'c62d9b86dfc2ffb8efe4250ff192d06a', 1, 1, 1, 1, '测试单选题', 'none', 1678419857, '', ''),
-	(0000000002, 1678416933, '测试判断题', '0826f2afa74c85d3015ac41767e6341a', 2, 1, 1, 1, '测试判断题', 'none', 1678419900, '', ''),
-	(0000000003, 1678416997, '测试多选题', 'bcadb7de2a0957312c092e77cdbaabb0', 3, 1, 1, 1, '测试多选题', 'none', 1678419992, '', ''),
-	(0000000004, 1678417046, '测试填空题<-><->', '679091d67169f8d35ef5c0a7eeef2f13', 4, 1, 1, 1, '测试填空题', 'none', 1678420055, '', ''),
-	(0000000005, 1678418572, '测试问答题', '1ab9294f94206bb2d311e4d2e86994c0', 5, 1, 1, 1, '测试问答题', 'none', 1678429611, '', ''),
-	(0000000006, 1678418763, '测试编程题', 'bde2c0cc50edeebdcebba1ab3ab9512b', 6, 2, 1, 1, '测试编程题', 'none', 1678416100, 'php', '8'),
-	(0000000007, 1678419483, '测试拖拽题', '39b5990848b03b080a0124c760df6afc', 7, 1, 1, 1, '测试拖拽题', 'none', 1678437438, '', ''),
-	(0000000008, 1678419498, '测试连线题', '6adebfccb20a869be6f106fd2cc270f1', 8, 1, 1, 1, '测试连线题', 'D:\\server-exam\\solution/Resource/Question/1678441242789..jpeg', 1678441242, '', ''),
-	(0000000009, 1679384450, '测试单选题1', '94ebb83b698d38b9c0eb99b1bf4d0a43', 1, 1, 1, 2, 'none', 'none', 1679384992, '', ''),
-	(0000000010, 1679384670, '测试判断题1', 'f2ede4cb2a68f5e2bc5edf128bf6dba5', 2, 1, 1, 2, 'none', 'none', 1679385046, '', ''),
-	(0000000011, 1679384725, '测试多选题1', '1abb40174dab7c0fdd43fb844e733efa', 3, 1, 1, 2, 'none', 'none', 1679385119, '', ''),
-	(0000000012, 1679384769, '测试填空题1<-><-><->', '677d86dcde1faf3d3bf55531c62b9d1d', 4, 1, 1, 2, 'none', 'none', 1679385256, '', ''),
-	(0000000013, 1679384796, '测试问答题1', '41e627c28b824c3d588a730814d9cb8d', 5, 1, 1, 2, 'none', 'none', 1679385281, '', ''),
-	(0000000014, 1679384824, '测试编程题1', 'cb700019ad8ac90469915778d969384f', 6, 2, 1, 2, 'none', 'none', 1679367106, 'python', '3'),
-	(0000000015, 1679384852, '测试拖拽题1', '50ba2a00eb13be29bd59081a2e9fbdcf', 7, 1, 1, 2, 'none', 'none', 1679385759, '', ''),
-	(0000000016, 1679384868, '测试连线题1', 'afdb5f5a43c87206651e16a91a8f09ea', 8, 1, 1, 2, 'none', 'none', 1679385805, '', ''),
-	(0000000017, 1679384878, '测试连线题11111', 'b7c12f8c8243aa2b451317fa6fee8416', 8, 2, 1, 2, 'none', 'none', 1679367106, '', '');
+-- 正在导出表  server-exam.question 的数据：~17 rows (大约)
 
--- 导出  表 server-exam.QuestionSolution 结构
-CREATE TABLE IF NOT EXISTS `QuestionSolution` (
+-- 导出  表 server-exam.questionsolution 结构
+CREATE TABLE IF NOT EXISTS `questionsolution` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `QuestionID` int(10) unsigned zerofill DEFAULT NULL COMMENT '试题ID',
@@ -351,79 +267,33 @@ CREATE TABLE IF NOT EXISTS `QuestionSolution` (
   `Position` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '拖拽题/连线题 展示位置 1左 2右',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试题选项';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试题选项';
 
--- 正在导出表  server-exam.QuestionSolution 的数据：~45 rows (大约)
-INSERT IGNORE INTO `QuestionSolution` (`ID`, `CreateTime`, `QuestionID`, `Option`, `OptionAttachment`, `CorrectAnswer`, `CorrectItem`, `ScoreRatio`, `Position`, `UpdateTime`) VALUES
-	(0000000001, 1678419693, 0000000001, '测试单选题选项1', 'none', 1, '', 00000001.00, 0, 1678416100),
-	(0000000002, 1678419706, 0000000001, '测试单选题选项2', 'none', 1, '', 00000001.00, 0, 1678416100),
-	(0000000003, 1678419714, 0000000001, '测试单选题选项3', 'none', 2, '', 00000001.00, 0, 1678416100),
-	(0000000004, 1678419872, 0000000002, '测试判断题1', 'none', 2, '', 00000001.00, 0, 1678416100),
-	(0000000005, 1678419880, 0000000002, '测试判断题2', 'none', 1, '', 00000001.00, 0, 1678416100),
-	(0000000006, 1678419959, 0000000003, '测试多选题1', 'none', 1, '', 00000001.00, 0, 1678416100),
-	(0000000007, 1678419967, 0000000003, '测试多选题2', 'none', 1, '', 00000001.00, 0, 1678416100),
-	(0000000008, 1678419972, 0000000003, '测试多选题3', 'none', 2, '', 00000001.00, 0, 1678416100),
-	(0000000009, 1678419983, 0000000003, '测试多选题4', 'none', 2, '', 00000001.00, 0, 1678416100),
-	(0000000010, 1678420030, 0000000004, 'none', 'none', 1, '测试填空题1', 00000000.50, 0, 1678416100),
-	(0000000011, 1678420041, 0000000004, 'none', 'none', 1, '测试填空题2', 00000000.50, 0, 1678416100),
-	(0000000012, 1678429571, 0000000005, 'none', 'none', 1, '测试问答题答案1', 00000000.50, 0, 1678416100),
-	(0000000013, 1678429578, 0000000005, 'none', 'none', 1, '测试问答题答案2', 00000000.50, 0, 1678416100),
-	(0000000014, 1678429626, 0000000006, 'none', 'none', 1, '测试编程题答案', 00000001.00, 0, 1678416100),
-	(0000000015, 1678430320, 0000000007, '测试拖拽题选项1', 'none', 1, '', 00000001.00, 1, 1678416100),
-	(0000000016, 1678430331, 0000000007, '测试拖拽题选项2', 'none', 1, '', 00000001.00, 1, 1678416100),
-	(0000000019, 1678430622, 0000000007, '测试拖拽题选项3', 'none', 1, '测试拖拽题选项1', 00000001.00, 2, 1678416100),
-	(0000000020, 1678430641, 0000000007, '测试拖拽题选项4', 'none', 1, '测试拖拽题选项2', 00000001.00, 2, 1678416100),
-	(0000000021, 1678437479, 0000000008, '测试连线题选项1', 'none', 1, '', 00000001.00, 1, 1678437424),
-	(0000000022, 1678437486, 0000000008, '测试连线题选项2', 'none', 1, '', 00000001.00, 1, 1678437424),
-	(0000000023, 1678437492, 0000000008, '测试连线题选项3', 'none', 1, '测试连线题选项1', 00000001.00, 2, 1678437424),
-	(0000000024, 1678437501, 0000000008, '测试连线题选项4', 'none', 1, '测试连线题选项2', 00000001.00, 2, 1678437424),
-	(0000000025, 1679384938, 0000000009, '测试单选题选项1', 'none', 1, '', 00000001.00, 0, 1679367106),
-	(0000000026, 1679384956, 0000000009, '测试段选题选项2', 'none', 1, '', 00000001.00, 0, 1679367106),
-	(0000000027, 1679384983, 0000000009, '测试单选题选项3', 'none', 2, '', 00000001.00, 0, 1679367106),
-	(0000000028, 1679385008, 0000000010, '测试判断题选项1', 'none', 2, '', 00000001.00, 0, 1679367106),
-	(0000000029, 1679385032, 0000000010, '测试判断题选项2', 'none', 1, '', 00000001.00, 0, 1679367106),
-	(0000000030, 1679385061, 0000000011, '测试多选题选项1', 'none', 1, '', 00000001.00, 0, 1679367106),
-	(0000000031, 1679385074, 0000000011, '测试多选题选项2', 'none', 2, '', 00000001.00, 0, 1679367106),
-	(0000000032, 1679385079, 0000000011, '测试多选题选项3', 'none', 1, '', 00000001.00, 0, 1679367106),
-	(0000000033, 1679385114, 0000000011, '测试多选题选项4', 'none', 2, '', 00000001.00, 0, 1679367106),
-	(0000000034, 1679385161, 0000000012, 'none', 'none', 1, '测试填空题答案1', 00000000.30, 0, 1679367106),
-	(0000000035, 1679385165, 0000000012, 'none', 'none', 1, '测试填空题答案2', 00000000.30, 0, 1679367106),
-	(0000000036, 1679385192, 0000000012, 'none', 'none', 1, '测试填空题答案3', 00000000.40, 0, 1679367106),
-	(0000000037, 1679385273, 0000000013, 'none', 'none', 1, '测试问答题答案项1', 00000000.50, 0, 1679367106),
-	(0000000038, 1679385276, 0000000013, 'none', 'none', 1, '测试问答题答案项2', 00000000.50, 0, 1679367106),
-	(0000000039, 1679385299, 0000000014, 'none', 'none', 1, '测试编程题答案123', 00000001.00, 0, 1679367106),
-	(0000000040, 1679385333, 0000000015, '测试拖拽题选项1', 'none', 1, '', 00000001.00, 1, 1679367106),
-	(0000000041, 1679385336, 0000000015, '测试拖拽题选项2', 'none', 1, '', 00000001.00, 1, 1679367106),
-	(0000000042, 1679385351, 0000000015, '测试拖拽题选项3', 'none', 2, '测试拖拽题选项1', 00000001.00, 2, 1679367106),
-	(0000000043, 1679385357, 0000000015, '测试拖拽题选项4', 'none', 2, '测试拖拽题选项2', 00000001.00, 2, 1679367106),
-	(0000000044, 1679385782, 0000000016, '测试连线题选项1', 'none', 1, '', 00000001.00, 1, 1679367106),
-	(0000000045, 1679385785, 0000000016, '测试连线题选项2', 'none', 1, '', 00000001.00, 1, 1679367106),
-	(0000000046, 1679385796, 0000000016, '测试连线题选项3', 'none', 2, '测试连线题选项1', 00000001.00, 2, 1679367106),
-	(0000000047, 1679385802, 0000000016, '测试连线题选项4', 'none', 2, '测试连线题选项2', 00000001.00, 2, 1679367106);
+-- 正在导出表  server-exam.questionsolution 的数据：~45 rows (大约)
 
--- 导出  表 server-exam.Scantron 结构
-CREATE TABLE IF NOT EXISTS `Scantron` (
+-- 导出  表 server-exam.scantron 结构
+CREATE TABLE IF NOT EXISTS `scantron` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
-  `QuestionTitle` text COLLATE utf8mb4_unicode_ci COMMENT '标题',
+  `QuestionTitle` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '标题',
   `QuestionCode` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标题代码',
   `QuestionType` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '试题类型 1单选 2判断 3多选 4填空 5问答 6代码实训 7拖拽题 8连线题',
   `Marking` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '人工阅卷 1否 2是',
   `KnowledgeID` int(10) unsigned zerofill DEFAULT NULL COMMENT '知识点ID',
-  `Description` text COLLATE utf8mb4_unicode_ci COMMENT '试题描述',
-  `Attachment` text COLLATE utf8mb4_unicode_ci COMMENT '试题附件',
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '试题描述',
+  `Attachment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '试题附件',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   `Score` decimal(10,2) unsigned zerofill DEFAULT NULL COMMENT '额定分数',
   `ExamID` int(10) unsigned zerofill DEFAULT NULL COMMENT '报名ID',
-  `HeadlineContent` text COLLATE utf8mb4_unicode_ci COMMENT '大标题内容',
+  `HeadlineContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '大标题内容',
   `Right` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '是否正确作答 1 否 2 是',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='答题卡';
 
--- 正在导出表  server-exam.Scantron 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.scantron 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.ScantronHistory 结构
-CREATE TABLE IF NOT EXISTS `ScantronHistory` (
+-- 导出  表 server-exam.scantronhistory 结构
+CREATE TABLE IF NOT EXISTS `scantronhistory` (
   `ID` int(10) unsigned zerofill NOT NULL,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `QuestionTitle` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '标题',
@@ -441,10 +311,10 @@ CREATE TABLE IF NOT EXISTS `ScantronHistory` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='历史答题卡';
 
--- 正在导出表  server-exam.ScantronHistory 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.scantronhistory 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.ScantronSolution 结构
-CREATE TABLE IF NOT EXISTS `ScantronSolution` (
+-- 导出  表 server-exam.scantronsolution 结构
+CREATE TABLE IF NOT EXISTS `scantronsolution` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `ScantronID` int(10) unsigned zerofill DEFAULT NULL COMMENT '试题ID',
@@ -459,10 +329,10 @@ CREATE TABLE IF NOT EXISTS `ScantronSolution` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='答题卡选项';
 
--- 正在导出表  server-exam.ScantronSolution 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.scantronsolution 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.ScantronSolutionHistory 结构
-CREATE TABLE IF NOT EXISTS `ScantronSolutionHistory` (
+-- 导出  表 server-exam.scantronsolutionhistory 结构
+CREATE TABLE IF NOT EXISTS `scantronsolutionhistory` (
   `ID` int(10) unsigned zerofill NOT NULL,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `ScantronID` int(10) unsigned zerofill DEFAULT NULL COMMENT '试题ID',
@@ -477,10 +347,10 @@ CREATE TABLE IF NOT EXISTS `ScantronSolutionHistory` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='历史答题卡选项';
 
--- 正在导出表  server-exam.ScantronSolutionHistory 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.scantronsolutionhistory 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.Subject 结构
-CREATE TABLE IF NOT EXISTS `Subject` (
+-- 导出  表 server-exam.subject 结构
+CREATE TABLE IF NOT EXISTS `subject` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `SubjectName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '科目名称',
@@ -488,687 +358,61 @@ CREATE TABLE IF NOT EXISTS `Subject` (
   `SubjectState` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '科目状态 1正常 2禁用',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='科目';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='科目';
 
--- 正在导出表  server-exam.Subject 的数据：~2 rows (大约)
-INSERT IGNORE INTO `Subject` (`ID`, `CreateTime`, `SubjectName`, `SubjectCode`, `SubjectState`, `UpdateTime`) VALUES
-	(0000000001, 1678416141, '测试科目', '2bfe7c121c4aaa1185bce1e5a962d7d8', 1, 1678416100),
-	(0000000002, 1678950324, '测试科目1', '4167d5a219f6fb9f41171109e747730d', 1, 1678938905);
+-- 正在导出表  server-exam.subject 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.SysConf 结构
-CREATE TABLE IF NOT EXISTS `SysConf` (
+-- 导出  表 server-exam.sysconf 结构
+CREATE TABLE IF NOT EXISTS `sysconf` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `Type` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '配置类型',
-  `Key` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置KEY',
-  `Value` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置Value',
-  `Description` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置描述',
+  `Key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置KEY',
+  `Value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置Value',
+  `Description` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置描述',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统配置';
 
--- 正在导出表  server-exam.SysConf 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.sysconf 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.SysLog 结构
-CREATE TABLE IF NOT EXISTS `SysLog` (
+-- 导出  表 server-exam.syslog 结构
+CREATE TABLE IF NOT EXISTS `syslog` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
   `Type` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '日志类型 1操作 2登录',
   `ManagerID` int(10) unsigned zerofill DEFAULT NULL COMMENT '管理员ID',
-  `Description` text COLLATE utf8mb4_unicode_ci COMMENT '描述信息',
-  `IP` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'IP地址',
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '描述信息',
+  `IP` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'IP地址',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=617 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统日志';
 
--- 正在导出表  server-exam.SysLog 的数据：~607 rows (大约)
-INSERT IGNORE INTO `SysLog` (`ID`, `CreateTime`, `Type`, `ManagerID`, `Description`, `IP`) VALUES
-	(0000000001, 1678414819, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000002, 1678415324, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000003, 1678415449, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000004, 1678415571, 1, 0000000001, 'new manager account:admin', '127.0.0.1'),
-	(0000000005, 1678415634, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000006, 1678415838, 1, 0000000001, 'new teacher account:teacher', '127.0.0.1'),
-	(0000000007, 1678415858, 1, 0000000001, 'new class name:测试班级', '127.0.0.1'),
-	(0000000008, 1678415880, 1, 0000000001, 'new examinee No.:TestNo', '127.0.0.1'),
-	(0000000009, 1678416019, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000010, 1678416130, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000011, 1678416141, 1, 0000000001, 'new subject:测试科目', '127.0.0.1'),
-	(0000000012, 1678416157, 1, 0000000001, 'new knowledge:测试知识点', '127.0.0.1'),
-	(0000000013, 1678416176, 1, 0000000001, 'new headline:一单选题', '127.0.0.1'),
-	(0000000014, 1678416191, 1, 0000000001, 'new headline:二判断题', '127.0.0.1'),
-	(0000000015, 1678416200, 1, 0000000001, 'new headline:三多选题', '127.0.0.1'),
-	(0000000016, 1678416429, 1, 0000000001, 'new headline:四填空题', '127.0.0.1'),
-	(0000000017, 1678416440, 1, 0000000001, 'new headline:五问答题', '127.0.0.1'),
-	(0000000018, 1678416456, 1, 0000000001, 'new headline:六计算机语言', '127.0.0.1'),
-	(0000000019, 1678416461, 1, 0000000001, 'update headline ID:1', '127.0.0.1'),
-	(0000000020, 1678416465, 1, 0000000001, 'update headline ID:2', '127.0.0.1'),
-	(0000000021, 1678416468, 1, 0000000001, 'update headline ID:3', '127.0.0.1'),
-	(0000000022, 1678416471, 1, 0000000001, 'update headline ID:4', '127.0.0.1'),
-	(0000000023, 1678416476, 1, 0000000001, 'update headline ID:5', '127.0.0.1'),
-	(0000000024, 1678416479, 1, 0000000001, 'update headline ID:6', '127.0.0.1'),
-	(0000000025, 1678416496, 1, 0000000001, 'new headline:七 连线题', '127.0.0.1'),
-	(0000000026, 1678416508, 1, 0000000001, 'update headline ID:6', '127.0.0.1'),
-	(0000000027, 1678416517, 1, 0000000001, 'new headline:八 拖拽', '127.0.0.1'),
-	(0000000028, 1678416905, 1, 0000000001, 'new question:测试单选题', '127.0.0.1'),
-	(0000000029, 1678416933, 1, 0000000001, 'new question:测试判断题', '127.0.0.1'),
-	(0000000030, 1678416997, 1, 0000000001, 'new question:测试多选题', '127.0.0.1'),
-	(0000000031, 1678417046, 1, 0000000001, 'new question:测试填空题<->', '127.0.0.1'),
-	(0000000032, 1678418543, 1, 0000000001, 'update question ID:4', '127.0.0.1'),
-	(0000000033, 1678418572, 1, 0000000001, 'new question:测试问答题', '127.0.0.1'),
-	(0000000034, 1678418763, 1, 0000000001, 'new question:测试编程题', '127.0.0.1'),
-	(0000000035, 1678419483, 1, 0000000001, 'new question:测试拖拽题', '127.0.0.1'),
-	(0000000036, 1678419498, 1, 0000000001, 'new question:测试连线题', '127.0.0.1'),
-	(0000000037, 1678419693, 1, 0000000001, 'new question solution:测试单选题选项1', '127.0.0.1'),
-	(0000000038, 1678419706, 1, 0000000001, 'new question solution:测试单选题选项2', '127.0.0.1'),
-	(0000000039, 1678419715, 1, 0000000001, 'new question solution:测试单选题选项3', '127.0.0.1'),
-	(0000000040, 1678419857, 1, 0000000001, 'enable question ID:1', '127.0.0.1'),
-	(0000000041, 1678419872, 1, 0000000001, 'new question solution:测试判断题1', '127.0.0.1'),
-	(0000000042, 1678419880, 1, 0000000001, 'new question solution:测试判断题2', '127.0.0.1'),
-	(0000000043, 1678419900, 1, 0000000001, 'enable question ID:2', '127.0.0.1'),
-	(0000000044, 1678419959, 1, 0000000001, 'new question solution:测试多选题1', '127.0.0.1'),
-	(0000000045, 1678419967, 1, 0000000001, 'new question solution:测试多选题2', '127.0.0.1'),
-	(0000000046, 1678419972, 1, 0000000001, 'new question solution:测试多选题3', '127.0.0.1'),
-	(0000000047, 1678419983, 1, 0000000001, 'new question solution:测试多选题4', '127.0.0.1'),
-	(0000000048, 1678419992, 1, 0000000001, 'enable question ID:3', '127.0.0.1'),
-	(0000000049, 1678420030, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000050, 1678420041, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000051, 1678420055, 1, 0000000001, 'enable question ID:4', '127.0.0.1'),
-	(0000000052, 1678429571, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000053, 1678429578, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000054, 1678429611, 1, 0000000001, 'enable question ID:5', '127.0.0.1'),
-	(0000000055, 1678429626, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000056, 1678430320, 1, 0000000001, 'new question solution:测试拖拽题选项1', '127.0.0.1'),
-	(0000000057, 1678430331, 1, 0000000001, 'new question solution:测试拖拽题选项2', '127.0.0.1'),
-	(0000000058, 1678430347, 1, 0000000001, 'new question solution:测试拖拽题选项3', '127.0.0.1'),
-	(0000000059, 1678430354, 1, 0000000001, 'new question solution:测试拖拽题选项4', '127.0.0.1'),
-	(0000000060, 1678430393, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000061, 1678430586, 1, 0000000001, 'delete question solution option&correct item:测试拖拽题选项3&', '127.0.0.1'),
-	(0000000062, 1678430587, 1, 0000000001, 'delete question solution option&correct item:测试拖拽题选项4&', '127.0.0.1'),
-	(0000000063, 1678430622, 1, 0000000001, 'new question solution:测试拖拽题选项3', '127.0.0.1'),
-	(0000000064, 1678430641, 1, 0000000001, 'new question solution:测试拖拽题选项4', '127.0.0.1'),
-	(0000000065, 1678431047, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000066, 1678431518, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000067, 1678433889, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000068, 1678435362, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000069, 1678435677, 1, 0000000001, 'update question solution CorrectItem ID:19', '127.0.0.1'),
-	(0000000070, 1678435683, 1, 0000000001, 'update question solution CorrectItem ID:20', '127.0.0.1'),
-	(0000000071, 1678435692, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000072, 1678435711, 1, 0000000001, 'update question solution CorrectItem ID:19', '127.0.0.1'),
-	(0000000073, 1678436633, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000074, 1678436661, 1, 0000000001, 'disable question ID:7', '127.0.0.1'),
-	(0000000075, 1678436666, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000076, 1678436700, 1, 0000000001, 'disable question ID:7', '127.0.0.1'),
-	(0000000077, 1678436712, 1, 0000000001, 'update question solution CorrectItem ID:19', '127.0.0.1'),
-	(0000000078, 1678436727, 1, 0000000001, 'update question solution CorrectItem ID:20', '127.0.0.1'),
-	(0000000079, 1678436730, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000080, 1678436736, 1, 0000000001, 'update question solution CorrectItem ID:19', '127.0.0.1'),
-	(0000000081, 1678436745, 1, 0000000001, 'update question solution CorrectItem ID:19', '127.0.0.1'),
-	(0000000082, 1678437217, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000083, 1678437318, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000084, 1678437330, 1, 0000000001, 'disable question ID:7', '127.0.0.1'),
-	(0000000085, 1678437333, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000086, 1678437341, 1, 0000000001, 'update question solution CorrectItem ID:20', '127.0.0.1'),
-	(0000000087, 1678437352, 1, 0000000001, 'update question solution CorrectItem ID:20', '127.0.0.1'),
-	(0000000088, 1678437356, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000089, 1678437413, 1, 0000000001, 'disable question ID:7', '127.0.0.1'),
-	(0000000090, 1678437434, 1, 0000000001, 'update question solution CorrectItem ID:20', '127.0.0.1'),
-	(0000000091, 1678437438, 1, 0000000001, 'enable question ID:7', '127.0.0.1'),
-	(0000000092, 1678437479, 1, 0000000001, 'new question solution:测试连线题选项1', '127.0.0.1'),
-	(0000000093, 1678437486, 1, 0000000001, 'new question solution:测试连线题选项2', '127.0.0.1'),
-	(0000000094, 1678437492, 1, 0000000001, 'new question solution:测试连线题选项3', '127.0.0.1'),
-	(0000000095, 1678437501, 1, 0000000001, 'new question solution:测试连线题选项4', '127.0.0.1'),
-	(0000000096, 1678437510, 1, 0000000001, 'update question solution CorrectItem ID:23', '127.0.0.1'),
-	(0000000097, 1678437514, 1, 0000000001, 'update question solution CorrectItem ID:24', '127.0.0.1'),
-	(0000000098, 1678437517, 1, 0000000001, 'enable question ID:8', '127.0.0.1'),
-	(0000000099, 1678437542, 1, 0000000001, 'new paper:测试试卷', '127.0.0.1'),
-	(0000000100, 1678437570, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000101, 1678437667, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000102, 1678437702, 1, 0000000001, 'delete paper rule ID:1', '127.0.0.1'),
-	(0000000103, 1678437713, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000104, 1678437739, 1, 0000000001, 'delete paper rule ID:2', '127.0.0.1'),
-	(0000000105, 1678437812, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000106, 1678437824, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000107, 1678437836, 1, 0000000001, 'disable paper rule ID:3', '127.0.0.1'),
-	(0000000108, 1678437837, 1, 0000000001, 'enable paper rule ID:3', '127.0.0.1'),
-	(0000000109, 1678437840, 1, 0000000001, 'disable paper rule ID:3', '127.0.0.1'),
-	(0000000110, 1678437843, 1, 0000000001, 'enable paper rule ID:3', '127.0.0.1'),
-	(0000000111, 1678437862, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000112, 1678437873, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000113, 1678437898, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000114, 1678437909, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000115, 1678437918, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000116, 1678437970, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000117, 1678437981, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000118, 1678438013, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000119, 1678438029, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000120, 1678438037, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000121, 1678438098, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000122, 1678438149, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000123, 1678438157, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000124, 1678438201, 1, 0000000001, 'update paper rule ID:16', '127.0.0.1'),
-	(0000000125, 1678438206, 1, 0000000001, 'enable paper ID:1', '127.0.0.1'),
-	(0000000126, 1678438248, 1, 0000000001, 'new exam No.:b3f89ede05816b07738cda2b0ab8082d', '127.0.0.1'),
-	(0000000127, 1678438280, 1, 0000000001, 'generate test paper exam No.:1', '127.0.0.1'),
-	(0000000128, 1678438368, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000129, 1678438893, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000130, 1678438907, 1, 0000000001, 'new exam No.:18801b0f9842032c3fc64e086be30f3c', '127.0.0.1'),
-	(0000000131, 1678438915, 1, 0000000001, 'generate test paper exam No.:1', '127.0.0.1'),
-	(0000000132, 1678439146, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000133, 1678439163, 1, 0000000001, 'new exam No.:4caa8a07e4d01509e9f62e5bebc70715', '127.0.0.1'),
-	(0000000134, 1678439167, 1, 0000000001, 'generate test paper exam No.:1', '127.0.0.1'),
-	(0000000135, 1678439171, 1, 0000000001, 'exam info history No.:4caa8a07e4d01509e9f62e5bebc70715', '127.0.0.1'),
-	(0000000136, 1678441177, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000137, 1678441242, 1, 0000000001, 'update question attachment ID:8 file path:D:\\server-exam\\solution/Resource/Question/1678441242789..jpeg', '127.0.0.1'),
-	(0000000138, 1678670593, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000139, 1678670685, 1, 0000000001, 'new exam No.:9e5fb1ddcfba0c10443d72bad0c48bf0', '127.0.0.1'),
-	(0000000140, 1678670692, 1, 0000000001, 'generate test paper exam No.:2', '127.0.0.1'),
-	(0000000141, 1678673850, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000142, 1678675423, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000143, 1678675524, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000144, 1678690113, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000145, 1678691818, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000146, 1678692121, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000147, 1678692517, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000148, 1678694183, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000149, 1678701013, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000150, 1678756267, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000151, 1678756332, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000152, 1678756500, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000153, 1678756805, 1, 0000000001, 'exam info history No.:9e5fb1ddcfba0c10443d72bad0c48bf0', '127.0.0.1'),
-	(0000000154, 1678756832, 1, 0000000001, 'new exam No.:515d78cf568ac5f24723d463f67bab95', '127.0.0.1'),
-	(0000000155, 1678756848, 1, 0000000001, 'generate test paper exam No.:3', '127.0.0.1'),
-	(0000000156, 1678758238, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000157, 1678758877, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000158, 1678759588, 1, 0000000001, 'reset exam No.:515d78cf568ac5f24723d463f67bab95', '127.0.0.1'),
-	(0000000159, 1678760424, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000160, 1678760534, 1, 0000000001, 'generate test paper exam No.:3', '127.0.0.1'),
-	(0000000161, 1678761130, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000162, 1678762267, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000163, 1678762352, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000164, 1678765734, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000165, 1678775649, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000166, 1678776968, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000167, 1678777015, 1, 0000000001, 'reset exam No.:515d78cf568ac5f24723d463f67bab95', '127.0.0.1'),
-	(0000000168, 1678777024, 1, 0000000001, 'generate test paper exam No.:3', '127.0.0.1'),
-	(0000000169, 1678780038, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000170, 1678780411, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000171, 1678781711, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000172, 1678782815, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000173, 1678782827, 1, 0000000001, 'disable paper ID:1', '127.0.0.1'),
-	(0000000174, 1678782834, 1, 0000000001, 'reset exam No.:515d78cf568ac5f24723d463f67bab95', '127.0.0.1'),
-	(0000000175, 1678784057, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000176, 1678784169, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000177, 1678784173, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000178, 1678784251, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000179, 1678784254, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000180, 1678784259, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000181, 1678784270, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000182, 1678784277, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000183, 1678784451, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000184, 1678784456, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000185, 1678784460, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000186, 1678784466, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000187, 1678784472, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000188, 1678784581, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000189, 1678784588, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000190, 1678784717, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000191, 1678784837, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000192, 1678844368, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000193, 1678846020, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000194, 1678846022, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000195, 1678849326, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000196, 1678849339, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000197, 1678849529, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000198, 1678850081, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000199, 1678852513, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000200, 1678852759, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000201, 1678852797, 1, 0000000001, 'update examinee ID:1', '127.0.0.1'),
-	(0000000202, 1678860529, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000203, 1678861819, 1, 0000000001, 'new exam No.:de2ad6f1872ce982102586170b786432', '127.0.0.1'),
-	(0000000204, 1678864015, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000205, 1678864192, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000206, 1678864501, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000207, 1678864552, 1, 0000000001, 'exam info history No.:de2ad6f1872ce982102586170b786432', '127.0.0.1'),
-	(0000000208, 1678864592, 1, 0000000001, 'enable paper ID:1', '127.0.0.1'),
-	(0000000209, 1678864597, 1, 0000000001, 'generate test paper exam No.:3', '127.0.0.1'),
-	(0000000210, 1678864605, 1, 0000000001, 'exam info history No.:515d78cf568ac5f24723d463f67bab95', '127.0.0.1'),
-	(0000000211, 1678864752, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000212, 1678864814, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000213, 1678866880, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000214, 1678866919, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000215, 1678866925, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000216, 1678867430, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000217, 1678867435, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000218, 1678867451, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000219, 1678867640, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000220, 1678867820, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000221, 1678867879, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000222, 1678867889, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000223, 1678867893, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000224, 1678867944, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000225, 1678867951, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000226, 1678868029, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000227, 1678868033, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000228, 1678868040, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000229, 1678868043, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000230, 1678868050, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000231, 1678868052, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000232, 1678868364, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000233, 1678868373, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000234, 1678868380, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000235, 1678868387, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000236, 1678868439, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000237, 1678868455, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000238, 1678868473, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000239, 1678868475, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000240, 1678868483, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000241, 1678868488, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000242, 1678868496, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000243, 1678868501, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000244, 1678868602, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000245, 1678871588, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000246, 1678871670, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000247, 1678871693, 1, 0000000001, 'teacher change password account:teacher', '127.0.0.1'),
-	(0000000248, 1678871703, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000249, 1678871718, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000250, 1678872613, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000251, 1678872684, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000252, 1678872701, 1, 0000000001, 'teacher change password account:teacher', '127.0.0.1'),
-	(0000000253, 1678872770, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000254, 1678872784, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000255, 1678872788, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000256, 1678873154, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000257, 1678873161, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000258, 1678873167, 1, 0000000001, 'disable Teacher ID:1', '127.0.0.1'),
-	(0000000259, 1678931982, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000260, 1678932046, 1, 0000000001, 'new exam No.:79120f0d47ecc7e4966f674d3806d24a', '127.0.0.1'),
-	(0000000261, 1678932053, 1, 0000000001, 'generate test paper exam No.:5', '127.0.0.1'),
-	(0000000262, 1678932061, 1, 0000000001, 'reset exam No.:79120f0d47ecc7e4966f674d3806d24a', '127.0.0.1'),
-	(0000000263, 1678932065, 1, 0000000001, 'generate test paper exam No.:5', '127.0.0.1'),
-	(0000000264, 1678932069, 1, 0000000001, 'exam info history No.:79120f0d47ecc7e4966f674d3806d24a', '127.0.0.1'),
-	(0000000265, 1678932085, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000266, 1678932100, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000267, 1678932105, 1, 0000000001, 'enable Teacher ID:1', '127.0.0.1'),
-	(0000000268, 1678932107, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000269, 1678932114, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000270, 1678932129, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000271, 1678932134, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000272, 1678933814, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000273, 1678936490, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000274, 1678936508, 1, 0000000001, 'new exam No.:af3797bc45c58d731b5ae3405bf7d483', '127.0.0.1'),
-	(0000000275, 1678936512, 1, 0000000001, 'generate test paper exam No.:6', '127.0.0.1'),
-	(0000000276, 1678936523, 1, 0000000001, 'reset exam No.:af3797bc45c58d731b5ae3405bf7d483', '127.0.0.1'),
-	(0000000277, 1678936529, 1, 0000000001, 'generate test paper exam No.:6', '127.0.0.1'),
-	(0000000278, 1678936540, 1, 0000000001, 'exam info history No.:af3797bc45c58d731b5ae3405bf7d483', '127.0.0.1'),
-	(0000000279, 1678937217, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000280, 1678937223, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000281, 1678937227, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000282, 1678937276, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000283, 1678937561, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000284, 1678937616, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000285, 1678937687, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000286, 1678937769, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000287, 1678937777, 1, 0000000001, 'new teacher-class data ID:1', '127.0.0.1'),
-	(0000000288, 1678937813, 1, 0000000001, 'new class name:测试班级1', '127.0.0.1'),
-	(0000000289, 1678937828, 1, 0000000001, 'new teacher-class data ID:2', '127.0.0.1'),
-	(0000000290, 1678946870, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000291, 1678946877, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000292, 1678947322, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000293, 1678950137, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000294, 1678950234, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000295, 1678950241, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000296, 1678950246, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000297, 1678950265, 1, 0000000001, 'new teacher account:teacher1', '127.0.0.1'),
-	(0000000298, 1678950302, 1, 0000000001, 'new examinee No.:testNo1', '127.0.0.1'),
-	(0000000299, 1678950324, 1, 0000000001, 'new subject:测试科目1', '127.0.0.1'),
-	(0000000300, 1678950340, 1, 0000000001, 'new knowledge:测试知识点1', '127.0.0.1'),
-	(0000000301, 1678950380, 1, 0000000001, 'new paper:测试试卷1', '127.0.0.1'),
-	(0000000302, 1678950396, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000303, 1678950401, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000304, 1678950529, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000305, 1678950636, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000306, 1678953905, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000307, 1678954389, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000308, 1678954673, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000309, 1678955281, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000310, 1678955350, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000311, 1678955615, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000312, 1678955845, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000313, 1678956208, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000314, 1678956410, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000315, 1678956622, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000316, 1678958834, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000317, 1678959021, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000318, 1678959913, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000319, 1678960081, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000320, 1678960699, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000321, 1678960781, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000322, 1679016114, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000323, 1679019447, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000324, 1679019572, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000325, 1679019585, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000326, 1679019590, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000327, 1679019605, 1, 0000000001, 'new exam No.:471a0b97463d463e52ef1f1f598d3af4', '127.0.0.1'),
-	(0000000328, 1679019615, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000329, 1679020536, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000330, 1679020735, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000331, 1679023253, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000332, 1679023263, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000333, 1679023265, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000334, 1679033951, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000335, 1679034695, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000336, 1679034885, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000337, 1679035839, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000338, 1679036504, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000339, 1679036574, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000340, 1679036593, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000341, 1679036806, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000342, 1679036848, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000343, 1679036859, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000344, 1679037022, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000345, 1679037175, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000346, 1679037289, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000347, 1679037293, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000348, 1679037384, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000349, 1679037745, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000350, 1679038463, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000351, 1679038469, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000352, 1679038765, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000353, 1679040415, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000354, 1679042958, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000355, 1679043003, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000356, 1679045499, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000357, 1679046457, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000358, 1679046837, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000359, 1679046921, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000360, 1679280450, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000361, 1679280463, 1, 0000000001, 'disable paper ID:1', '127.0.0.1'),
-	(0000000362, 1679280465, 1, 0000000001, 'enable paper ID:1', '127.0.0.1'),
-	(0000000363, 1679280471, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000364, 1679280476, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000365, 1679280486, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000366, 1679280502, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000367, 1679280529, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000368, 1679280535, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000369, 1679280542, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000370, 1679280621, 2, 0000000000, 'manager login account:admin', '127.0.0.1'),
-	(0000000371, 1679280639, 2, 0000000000, 'manager logout account:admin', '127.0.0.1'),
-	(0000000372, 1679280645, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000373, 1679282428, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000374, 1679283364, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000375, 1679296958, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000376, 1679297085, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000377, 1679297635, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000378, 1679297923, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000379, 1679298005, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000380, 1679298430, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000381, 1679298482, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000382, 1679299203, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000383, 1679299353, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000384, 1679299794, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000385, 1679299851, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000386, 1679299949, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000387, 1679300528, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000388, 1679300823, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000389, 1679300932, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000390, 1679303988, 1, 0000000000, 'teacher 1 new exam No.:90ae51a4d82a7899507d97e059509d1a', '127.0.0.1'),
-	(0000000391, 1679304727, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000392, 1679304727, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000393, 1679304727, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000394, 1679304727, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000395, 1679304727, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000396, 1679304727, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000397, 1679304753, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000398, 1679304783, 1, 0000000000, 'generate test paper exam No.:9', '127.0.0.1'),
-	(0000000399, 1679305182, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000400, 1679305188, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000401, 1679305339, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000402, 1679305878, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000403, 1679305905, 1, 0000000001, 'exam info history No.:c33ad43297c3544aee9bf2d3c7467250', '127.0.0.1'),
-	(0000000404, 1679306082, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000405, 1679306096, 1, 0000000001, 'new exam No.:25c04639310c6946554a0696a038fe34', '127.0.0.1'),
-	(0000000406, 1679306099, 1, 0000000001, 'generate test paper exam No.:11', '127.0.0.1'),
-	(0000000407, 1679306117, 1, 0000000001, 'exam info history No.:25c04639310c6946554a0696a038fe34', '127.0.0.1'),
-	(0000000408, 1679306199, 1, 0000000001, 'new exam No.:e18e1f2d01879894ef859802e0f9f8e1', '127.0.0.1'),
-	(0000000409, 1679306211, 1, 0000000001, 'generate test paper exam No.:1', '127.0.0.1'),
-	(0000000410, 1679306245, 1, 0000000001, 'exam info history No.:e18e1f2d01879894ef859802e0f9f8e1', '127.0.0.1'),
-	(0000000411, 1679306395, 1, 0000000001, 'new exam No.:a05c703c5cf113c89958eb8d03ea0ca7', '127.0.0.1'),
-	(0000000412, 1679306398, 1, 0000000001, 'generate test paper exam No.:1', '127.0.0.1'),
-	(0000000413, 1679306421, 1, 0000000001, 'exam info history No.:a05c703c5cf113c89958eb8d03ea0ca7', '127.0.0.1'),
-	(0000000414, 1679367366, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000415, 1679367386, 1, 0000000001, 'new exam No.:6643030cf48f97dbb33531d63a5d8b47', '127.0.0.1'),
-	(0000000416, 1679367407, 1, 0000000001, 'new exam No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000417, 1679384183, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000418, 1679384343, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000419, 1679384450, 1, 0000000001, 'new question:测试单选题1', '127.0.0.1'),
-	(0000000420, 1679384535, 1, 0000000001, 'update question ID:9', '127.0.0.1'),
-	(0000000421, 1679384670, 1, 0000000001, 'new question:测试判断题1', '127.0.0.1'),
-	(0000000422, 1679384725, 1, 0000000001, 'new question:测试多选题1', '127.0.0.1'),
-	(0000000423, 1679384769, 1, 0000000001, 'new question:测试填空题1<-><-><->', '127.0.0.1'),
-	(0000000424, 1679384796, 1, 0000000001, 'new question:测试问答题1', '127.0.0.1'),
-	(0000000425, 1679384824, 1, 0000000001, 'new question:测试编程题1', '127.0.0.1'),
-	(0000000426, 1679384852, 1, 0000000001, 'new question:测试拖拽题1', '127.0.0.1'),
-	(0000000427, 1679384868, 1, 0000000001, 'new question:测试连线题1', '127.0.0.1'),
-	(0000000428, 1679384878, 1, 0000000001, 'new question:测试连线题1', '127.0.0.1'),
-	(0000000429, 1679384887, 1, 0000000001, 'update question ID:17', '127.0.0.1'),
-	(0000000430, 1679384938, 1, 0000000001, 'new question solution:测试单选题选项1', '127.0.0.1'),
-	(0000000431, 1679384956, 1, 0000000001, 'new question solution:测试段选题选项2', '127.0.0.1'),
-	(0000000432, 1679384983, 1, 0000000001, 'new question solution:测试单选题选项3', '127.0.0.1'),
-	(0000000433, 1679384992, 1, 0000000001, 'enable question ID:9', '127.0.0.1'),
-	(0000000434, 1679385008, 1, 0000000001, 'new question solution:测试判断题选项1', '127.0.0.1'),
-	(0000000435, 1679385032, 1, 0000000001, 'new question solution:测试判断题选项2', '127.0.0.1'),
-	(0000000436, 1679385046, 1, 0000000001, 'enable question ID:10', '127.0.0.1'),
-	(0000000437, 1679385061, 1, 0000000001, 'new question solution:测试多选题选项1', '127.0.0.1'),
-	(0000000438, 1679385074, 1, 0000000001, 'new question solution:测试多选题选项2', '127.0.0.1'),
-	(0000000439, 1679385079, 1, 0000000001, 'new question solution:测试多选题选项3', '127.0.0.1'),
-	(0000000440, 1679385114, 1, 0000000001, 'new question solution:测试多选题选项4', '127.0.0.1'),
-	(0000000441, 1679385119, 1, 0000000001, 'enable question ID:11', '127.0.0.1'),
-	(0000000442, 1679385161, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000443, 1679385165, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000444, 1679385192, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000445, 1679385256, 1, 0000000001, 'enable question ID:12', '127.0.0.1'),
-	(0000000446, 1679385273, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000447, 1679385276, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000448, 1679385281, 1, 0000000001, 'enable question ID:13', '127.0.0.1'),
-	(0000000449, 1679385299, 1, 0000000001, 'new question solution:none', '127.0.0.1'),
-	(0000000450, 1679385333, 1, 0000000001, 'new question solution:测试拖拽题选项1', '127.0.0.1'),
-	(0000000451, 1679385336, 1, 0000000001, 'new question solution:测试拖拽题选项2', '127.0.0.1'),
-	(0000000452, 1679385351, 1, 0000000001, 'new question solution:测试拖拽题选项3', '127.0.0.1'),
-	(0000000453, 1679385357, 1, 0000000001, 'new question solution:测试拖拽题选项4', '127.0.0.1'),
-	(0000000454, 1679385759, 1, 0000000001, 'enable question ID:15', '127.0.0.1'),
-	(0000000455, 1679385782, 1, 0000000001, 'new question solution:测试连线题选项1', '127.0.0.1'),
-	(0000000456, 1679385785, 1, 0000000001, 'new question solution:测试连线题选项2', '127.0.0.1'),
-	(0000000457, 1679385796, 1, 0000000001, 'new question solution:测试连线题选项3', '127.0.0.1'),
-	(0000000458, 1679385802, 1, 0000000001, 'new question solution:测试连线题选项4', '127.0.0.1'),
-	(0000000459, 1679385805, 1, 0000000001, 'enable question ID:16', '127.0.0.1'),
-	(0000000460, 1679385861, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000461, 1679385882, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000462, 1679385916, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000463, 1679385928, 1, 0000000001, 'update paper rule ID:18', '127.0.0.1'),
-	(0000000464, 1679385973, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000465, 1679385986, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000466, 1679386001, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000467, 1679386123, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000468, 1679386143, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000469, 1679386161, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000470, 1679386172, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000471, 1679386197, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000472, 1679386213, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000473, 1679386236, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000474, 1679386287, 1, 0000000001, 'new paper rule', '127.0.0.1'),
-	(0000000475, 1679386296, 1, 0000000001, 'update paper rule ID:28', '127.0.0.1'),
-	(0000000476, 1679386312, 1, 0000000001, 'enable paper ID:2', '127.0.0.1'),
-	(0000000477, 1679386354, 1, 0000000001, 'generate test paper exam No.:3', '127.0.0.1'),
-	(0000000478, 1679386355, 1, 0000000001, 'generate test paper exam No.:2', '127.0.0.1'),
-	(0000000479, 1679386878, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000480, 1679386964, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000481, 1679387103, 1, 0000000001, 'reset exam No.:6643030cf48f97dbb33531d63a5d8b47', '127.0.0.1'),
-	(0000000482, 1679387571, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000483, 1679388432, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000484, 1679388606, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000485, 1679388784, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000486, 1679389033, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000487, 1679389159, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000488, 1679389518, 1, 0000000001, 'reset exam No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000489, 1679389540, 1, 0000000001, 'generate test paper exam No.:3', '127.0.0.1'),
-	(0000000490, 1679389974, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000491, 1679390186, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000492, 1679390240, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000493, 1679390398, 1, 0000000001, 'exam info history No.:e673ba70acae201b015398825145f9e0', '127.0.0.1'),
-	(0000000494, 1679390462, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000495, 1679390469, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000496, 1679390530, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000497, 1679390536, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000498, 1679390566, 1, 0000000001, 'new exam No.:2da869c41dada4c4b1de77651e97c609', '127.0.0.1'),
-	(0000000499, 1679390579, 1, 0000000001, 'generate test paper exam No.:4', '127.0.0.1'),
-	(0000000500, 1679390581, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000501, 1679390589, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000502, 1679390618, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000503, 1679390628, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000504, 1679390645, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000505, 1679390649, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000506, 1679390682, 1, 0000000001, 'exam info history No.:2da869c41dada4c4b1de77651e97c609', '127.0.0.1'),
-	(0000000507, 1679390702, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000508, 1679390707, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000509, 1679390861, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000510, 1679390867, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000511, 1679390872, 1, 0000000001, 'reset exam No.:6643030cf48f97dbb33531d63a5d8b47', '127.0.0.1'),
-	(0000000512, 1679390882, 1, 0000000001, 'reset exam No.:6643030cf48f97dbb33531d63a5d8b47', '127.0.0.1'),
-	(0000000513, 1679390885, 1, 0000000001, 'generate test paper exam No.:2', '127.0.0.1'),
-	(0000000514, 1679390890, 1, 0000000001, 'exam info history No.:6643030cf48f97dbb33531d63a5d8b47', '127.0.0.1'),
-	(0000000515, 1679390918, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000516, 1679391549, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000517, 1679391798, 1, 0000000000, 'teacher 1 new exam No.:a28c98dce7fd738f947f0fab9a880fad', '127.0.0.1'),
-	(0000000518, 1679391813, 1, 0000000000, 'generate test paper exam No.:5', '127.0.0.1'),
-	(0000000519, 1679391834, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000520, 1679391839, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000521, 1679391855, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000522, 1679391861, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000523, 1679392509, 1, 0000000000, 'generate test paper exam No.:5', '127.0.0.1'),
-	(0000000524, 1679392723, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000525, 1679448430, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000526, 1679450700, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000527, 1679450926, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000528, 1679450944, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000529, 1679450967, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000530, 1679450973, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000531, 1679450995, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000532, 1679451295, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000533, 1679451767, 1, 0000000000, 'generate test paper exam No.:5', '127.0.0.1'),
-	(0000000534, 1679452690, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000535, 1679452696, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000536, 1679452800, 1, 0000000000, 'teacher ID 1 new exam No.:e1ddffd397e1df806b55f70c79589e34', '127.0.0.1'),
-	(0000000537, 1679452807, 1, 0000000000, 'generate test paper exam No.:6', '127.0.0.1'),
-	(0000000538, 1679453727, 1, 0000000000, 'teacher ID 1 reset exam No.:e1ddffd397e1df806b55f70c79589e34', '127.0.0.1'),
-	(0000000539, 1679453793, 1, 0000000000, 'teacher ID 1 disable exam No.:a28c98dce7fd738f947f0fab9a880fad', '127.0.0.1'),
-	(0000000540, 1679454564, 1, 0000000000, 'teacher ID 1 new exam No.:462dabb5f86f861c9f12c1246d97393d', '127.0.0.1'),
-	(0000000541, 1679454573, 1, 0000000000, 'generate test paper exam No.:7', '127.0.0.1'),
-	(0000000542, 1679454623, 1, 0000000000, 'teacher ID 1 reset exam No.:462dabb5f86f861c9f12c1246d97393d', '127.0.0.1'),
-	(0000000543, 1679454628, 1, 0000000000, 'generate test paper exam No.:7', '127.0.0.1'),
-	(0000000544, 1679454697, 1, 0000000000, 'teacher ID 1 reset exam No.:462dabb5f86f861c9f12c1246d97393d', '127.0.0.1'),
-	(0000000545, 1679454700, 1, 0000000000, 'teacher ID 1 reset exam No.:462dabb5f86f861c9f12c1246d97393d', '127.0.0.1'),
-	(0000000546, 1679454706, 1, 0000000000, 'generate test paper exam No.:7', '127.0.0.1'),
-	(0000000547, 1679455330, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000548, 1679455436, 2, 0000000000, 'teacher login account:teacher', '127.0.0.1'),
-	(0000000549, 1679455439, 2, 0000000000, 'teacher logout account:teacher', '127.0.0.1'),
-	(0000000550, 1679455444, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000551, 1679456916, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000552, 1679467727, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000553, 1679467735, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000554, 1679468209, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000555, 1679468216, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000556, 1679468339, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000557, 1679468362, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000558, 1679469958, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000559, 1679469964, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000560, 1679470229, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000561, 1679470236, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000562, 1679472327, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000563, 1679472351, 1, 0000000001, 'new class name:测试班级2', '127.0.0.1'),
-	(0000000564, 1679472361, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000565, 1679473252, 2, 0000000000, 'manager login account:root', '127.0.0.1'),
-	(0000000566, 1679473265, 2, 0000000000, 'manager logout account:root', '127.0.0.1'),
-	(0000000567, 1679537330, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000568, 1679537334, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000569, 1679537450, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000570, 1679537453, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000571, 1679537457, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000572, 1679538618, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000573, 1679538842, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000574, 1679538845, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000575, 1679538926, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000576, 1679539080, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000577, 1679539082, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000578, 1679539083, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000579, 1679539308, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000580, 1679539310, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000581, 1679539310, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000582, 1679539445, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000583, 1679539446, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000584, 1679539846, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000585, 1679539855, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000586, 1679539996, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000587, 1679539998, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000588, 1679540093, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000589, 1679540172, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000590, 1679540490, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000591, 1679563992, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000592, 1679564145, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000593, 1679564151, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000594, 1679564393, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000595, 1679564418, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000596, 1679564423, 2, 0000000000, 'teacher login account:teacher', '192.168.0.29'),
-	(0000000597, 1679564448, 2, 0000000000, 'teacher logout account:teacher', '192.168.0.29'),
-	(0000000598, 1679565183, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000599, 1679565190, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000600, 1679574563, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000601, 1679574575, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000602, 1679622269, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000603, 1679622310, 1, 0000000001, 'new headline:dasfasdf\nasdf\nasdfasd\nfasdf\nasd\nf', '192.168.0.29'),
-	(0000000604, 1679622328, 1, 0000000001, 'update headline ID:9', '192.168.0.29'),
-	(0000000605, 1679623473, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000606, 1679624792, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000607, 1679629626, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000608, 1679886474, 2, 0000000000, 'manager login account:root', '192.168.0.29'),
-	(0000000609, 1679886488, 2, 0000000000, 'manager logout account:root', '192.168.0.29'),
-	(0000000610, 1679888608, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000611, 1679888614, 1, 0000000016, 'new manager account:abc123', '192.168.0.29'),
-	(0000000612, 1679900802, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000613, 1679900804, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000614, 1679901833, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000615, 1679901838, 2, 0000000000, 'manager login account:admin', '192.168.0.29'),
-	(0000000616, 1679902078, 2, 0000000000, 'manager login account:admin', '192.168.0.29');
+-- 正在导出表  server-exam.syslog 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.Teacher 结构
-CREATE TABLE IF NOT EXISTS `Teacher` (
+-- 导出  表 server-exam.teacher 结构
+CREATE TABLE IF NOT EXISTS `teacher` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '创建时间',
-  `Account` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '账号',
+  `Account` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '账号',
   `Password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '密码',
-  `Name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
   `State` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '状态 1正常 2禁用',
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
-  `Token` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'token',
+  `Token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'token',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='教师';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='教师';
 
--- 正在导出表  server-exam.Teacher 的数据：~2 rows (大约)
-INSERT IGNORE INTO `Teacher` (`ID`, `CreateTime`, `Account`, `Password`, `Name`, `State`, `UpdateTime`, `Token`) VALUES
-	(0000000001, 1678415838, 'teacher', '5f1d7a84db00d2fce00b31a7fc73224f', '测试教师', 1, 1678932105, ''),
-	(0000000002, 1678950265, 'teacher1', '5f1d7a84db00d2fce00b31a7fc73224f', 'teacher1', 1, 1678938905, 'none');
+-- 正在导出表  server-exam.teacher 的数据：~0 rows (大约)
 
--- 导出  表 server-exam.TeacherClass 结构
-CREATE TABLE IF NOT EXISTS `TeacherClass` (
+-- 导出  表 server-exam.teacherclass 结构
+CREATE TABLE IF NOT EXISTS `teacherclass` (
   `ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `CreateTime` int(10) unsigned zerofill DEFAULT NULL,
   `TeacherID` int(10) unsigned zerofill DEFAULT NULL,
   `ClassID` int(10) unsigned zerofill DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='教师班级对应数据';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='教师班级对应数据';
 
--- 正在导出表  server-exam.TeacherClass 的数据：~2 rows (大约)
-INSERT IGNORE INTO `TeacherClass` (`ID`, `CreateTime`, `TeacherID`, `ClassID`) VALUES
-	(0000000001, 1678937777, 0000000001, 0000000001),
-	(0000000002, 1678937828, 0000000001, 0000000002);
+-- 正在导出表  server-exam.teacherclass 的数据：~0 rows (大约)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
