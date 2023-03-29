@@ -13,7 +13,7 @@ ConfigObj: dict = _common.ReadJsonFile(path[0] + '/config.json')
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///./DaoRoom.db'
 # DBEngine = create_engine(SQLALCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
 
-SQLALCHEMY_DATABASE_URI: str = 'mysql+pymysql://root:' + ConfigObj['DaoPWD'] + '@' + _common.LocalIP() + ':' + ConfigObj['DaoPort'] + '/server-exam'
+SQLALCHEMY_DATABASE_URI: str = 'mysql+pymysql://root:' + ConfigObj['DaoPWD'] + '@127.0.0.1:' + ConfigObj['DaoPort'] + '/server-exam'
 DBEngine = create_engine(
     SQLALCHEMY_DATABASE_URI,
     # pool_size=20,
