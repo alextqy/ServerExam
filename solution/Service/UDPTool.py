@@ -14,8 +14,8 @@ class UDPTool(BaseService):
 
         # HOST = '192.168.' + str(Common().Explode('.', self.IP)[2]) + '.255'
 
-        # HOST = '255.255.255.255'
-        HOST = '0.0.0.0'
+        HOST = '255.255.255.255'
+        # HOST = '0.0.0.0'
 
         self.PORT = PORT
         self.BUFSIZE = BUFSIZE
