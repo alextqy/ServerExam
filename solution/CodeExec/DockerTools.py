@@ -9,6 +9,16 @@ _file: FileHelper = FileHelper()
 _lang: Lang = Lang()
 
 
+# 镜像列表
+@CodeExecRouter.post('/Image/List')
+async def ImageIsExists(request: Request):
+    result = Result()
+    result.State = True
+    result.Memo = ''
+    result.Data = _common.CLI('docker images')
+    return result
+
+
 # 实训环境是否存在
 @CodeExecRouter.post('/Image/Is/Exists')
 async def ImageIsExists(
