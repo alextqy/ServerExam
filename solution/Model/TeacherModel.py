@@ -82,7 +82,7 @@ class TeacherModel(BaseModel):
             for i in DataList:
                 i.Password = ''
                 i.Token = ''
-            _result.Data = DataList
+        _result.Data = DataList
         return _result
 
     def FindAccount(self, _dbsession: DBsession, Account: str) -> EType:
