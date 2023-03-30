@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `class` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='班级';
 
--- 正在导出表  server-exam.class 的数据：~3 rows (大约)
+-- 正在导出表  server-exam.class 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.examinee 结构
 CREATE TABLE IF NOT EXISTS `examinee` (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `examinee` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='考生';
 
--- 正在导出表  server-exam.examinee 的数据：~6 rows (大约)
+-- 正在导出表  server-exam.examinee 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.examineetoken 结构
 CREATE TABLE IF NOT EXISTS `examineetoken` (
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `examinfo` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报名';
 
--- 正在导出表  server-exam.examinfo 的数据：~3 rows (大约)
+-- 正在导出表  server-exam.examinfo 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.examinfohistory 结构
 CREATE TABLE IF NOT EXISTS `examinfohistory` (
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `headline` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='大标题';
 
--- 正在导出表  server-exam.headline 的数据：~9 rows (大约)
+-- 正在导出表  server-exam.headline 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.knowledge 结构
 CREATE TABLE IF NOT EXISTS `knowledge` (
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `knowledge` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识点';
 
--- 正在导出表  server-exam.knowledge 的数据：~2 rows (大约)
+-- 正在导出表  server-exam.knowledge 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.manager 结构
 CREATE TABLE IF NOT EXISTS `manager` (
@@ -154,11 +154,12 @@ CREATE TABLE IF NOT EXISTS `manager` (
   `UpdateTime` int(10) unsigned zerofill DEFAULT NULL COMMENT '更新时间',
   `Token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'token',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理员';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理员';
 
--- 正在导出表  server-exam.manager 的数据：~1 rows (大约)
+-- 正在导出表  server-exam.manager 的数据：~2 rows (大约)
 INSERT IGNORE INTO `manager` (`ID`, `CreateTime`, `Account`, `Password`, `Name`, `State`, `Permission`, `UpdateTime`, `Token`) VALUES
-	(0000000001, 1651887805, 'root', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1675154211, '');
+	(0000000001, 1651887805, 'root', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1675154211, '0068829a5fe2a1cb3b1bb9c97a1d1b76'),
+	(0000000018, 1680060139, 'admin', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1680060106, '67f0b2c7bcf7239d87251bc548c3837f');
 
 -- 导出  表 server-exam.paper 结构
 CREATE TABLE IF NOT EXISTS `paper` (
@@ -175,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `paper` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试卷';
 
--- 正在导出表  server-exam.paper 的数据：~2 rows (大约)
+-- 正在导出表  server-exam.paper 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.paperrule 结构
 CREATE TABLE IF NOT EXISTS `paperrule` (
@@ -193,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `paperrule` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试卷规则';
 
--- 正在导出表  server-exam.paperrule 的数据：~28 rows (大约)
+-- 正在导出表  server-exam.paperrule 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.practice 结构
 CREATE TABLE IF NOT EXISTS `practice` (
@@ -252,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `question` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试题';
 
--- 正在导出表  server-exam.question 的数据：~17 rows (大约)
+-- 正在导出表  server-exam.question 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.questionsolution 结构
 CREATE TABLE IF NOT EXISTS `questionsolution` (
@@ -269,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `questionsolution` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='试题选项';
 
--- 正在导出表  server-exam.questionsolution 的数据：~45 rows (大约)
+-- 正在导出表  server-exam.questionsolution 的数据：~0 rows (大约)
 
 -- 导出  表 server-exam.scantron 结构
 CREATE TABLE IF NOT EXISTS `scantron` (
