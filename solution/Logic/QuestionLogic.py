@@ -60,7 +60,7 @@ class QuestionLogic(BaseLogic):
                     if float(LanguageVersion) < 4 or float(LanguageVersion) > 18:
                         result.Memo = self._lang.ParamErr + ' ver.4 ~ ver.18 required'
                         return result
-                if Language == 'python' and Language != 'latest':
+                if Language == 'python' and LanguageVersion != 'latest':
                     if float(LanguageVersion) != 3:
                         result.Memo = self._lang.ParamErr + ' ver.3 required'
                         return result
