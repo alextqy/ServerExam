@@ -237,7 +237,7 @@ class ManagerLogic(BaseLogic):
                     _dbsession.rollback()
                     return result
 
-                Desc = 'update manager ID:' + str(ID)
+                Desc = 'update manager ID:' + str(ManagerData.ID)
                 if self.LogSysAction(_dbsession, 1, AdminID, Desc, ClientHost) == False:
                     result.Memo = self._lang.LoggingFailed
                     _dbsession.rollback()
