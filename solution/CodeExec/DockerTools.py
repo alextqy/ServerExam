@@ -28,7 +28,7 @@ async def ImageIsExists(request: Request):
                 for j in info:
                     if len(j) > 0:
                         infoList.append(j)
-                ImageArr.append(infoList[0] + '#' + infoList[1])
+                ImageArr.append(infoList[0] + '#' + infoList[1] + '#' + infoList[2])
         result.Data = ImageArr
     except OSError as e:
         result.Memo = str(e)
