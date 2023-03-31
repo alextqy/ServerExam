@@ -15,7 +15,19 @@ async def ImageIsExists(request: Request):
     result = Result()
     result.State = True
     result.Memo = ''
-    result.Data = _common.CLI('docker images')
+    Images = _common.CLI('docker images').lower()
+    ImageList = Images.split('\n')
+    del (ImageList[0])
+    ImageArr = []
+    for i in ImageList:
+        if len(i) > 0:
+            info = i.split(' ')
+            infoList = []
+            for j in info:
+                if len(j) > 0:
+                    infoList.append(j)
+            ImageArr.append(infoList[0] + '#' + infoList[1])
+    result.Data = ImageArr
     return result
 
 
@@ -195,7 +207,7 @@ async def CodeExec(
 
 # 测试
 @CodeExecRouter.post('/Code/Exec/Test')
-async def CodeExec(
+async def CodeExecTest(
         request: Request,
         Key: str = Form(''),
         Language: str = Form(''),
