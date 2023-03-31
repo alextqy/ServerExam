@@ -11,9 +11,9 @@ _lang: Lang = Lang()
 
 # 镜像列表
 @CodeExecRouter.post('/Image/List')
-async def ImageIsExists(request: Request):
+async def ImageList(request: Request):
     result = Result()
-    result.State = True
+    result.State = False
     result.Memo = ''
     result.Data = []
     try:
@@ -29,7 +29,22 @@ async def ImageIsExists(request: Request):
                     if len(j) > 0:
                         infoList.append(j)
                 ImageArr.append(infoList[0] + '#' + infoList[1] + '#' + infoList[2])
+        result.State = True
         result.Data = ImageArr
+    except OSError as e:
+        result.Memo = str(e)
+    return result
+
+
+# 删除镜像
+@CodeExecRouter.post('/Image/Remove')
+async def ImageRemove(request: Request, ImageID: str = Form('')):
+    result = Result()
+    result.State = False
+    result.Memo = ''
+    try:
+        check = _common.CLI('docker rmi ' + ImageID)
+        result.State = True
     except OSError as e:
         result.Memo = str(e)
     return result
@@ -37,20 +52,13 @@ async def ImageIsExists(request: Request):
 
 # 实训环境是否存在
 @CodeExecRouter.post('/Image/Is/Exists')
-async def ImageIsExists(
-        request: Request,
-        Language: str = Form(''),
-        Version: str = Form(''),
-):
+async def ImageIsExists(request: Request, Language: str = Form(''), Version: str = Form('')):
     result = Result()
     result = ImageIsExistsAction(Language.strip(), Version.strip())
     return result
 
 
-def ImageIsExistsAction(
-        Language: str = Form(''),
-        Version: str = Form(''),
-):
+def ImageIsExistsAction(Language: str = Form(''), Version: str = Form('')):
     result = Result()
 
     if Language == '' or Version == '':
@@ -86,23 +94,15 @@ def ImageIsExistsAction(
 
 # 构建docker环境
 @CodeExecRouter.post('/Build/Environment')
-async def BuildEnvironment(
-        request: Request,
-        Language: str = Form(''),
-        Version: str = Form(''),
-):
+async def BuildEnvironment(request: Request, Language: str = Form(''), Version: str = Form('')):
     result = Result()
     result = BuildEnvironmentAction(Language.strip(), Version.strip())
     return result
 
 
 # 允许的代码范围
-def BuildRanges(
-        Language: str = Form(''),
-        Version: str = Form(''),
-):
+def BuildRanges(Language: str = Form(''), Version: str = Form('')):
     result = Result()
-
     LanguageList = [
         'php',
         'node',
@@ -153,10 +153,7 @@ def BuildRanges(
     return result
 
 
-def BuildEnvironmentAction(
-        Language: str = Form(''),
-        Version: str = Form(''),
-):
+def BuildEnvironmentAction(Language: str = Form(''), Version: str = Form('')):
     result = Result()
 
     if Language == '' or Version == '':
