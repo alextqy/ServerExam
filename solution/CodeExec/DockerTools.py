@@ -15,19 +15,23 @@ async def ImageIsExists(request: Request):
     result = Result()
     result.State = True
     result.Memo = ''
-    Images = _common.CLI('docker images').lower()
-    ImageList = Images.split('\n')
-    del (ImageList[0])
-    ImageArr = []
-    for i in ImageList:
-        if len(i) > 0:
-            info = i.split(' ')
-            infoList = []
-            for j in info:
-                if len(j) > 0:
-                    infoList.append(j)
-            ImageArr.append(infoList[0] + '#' + infoList[1])
-    result.Data = ImageArr
+    result.Data = []
+    try:
+        Images = _common.CLI('docker images').lower()
+        ImageList = Images.split('\n')
+        del (ImageList[0])
+        ImageArr = []
+        for i in ImageList:
+            if len(i) > 0:
+                info = i.split(' ')
+                infoList = []
+                for j in info:
+                    if len(j) > 0:
+                        infoList.append(j)
+                ImageArr.append(infoList[0] + '#' + infoList[1])
+        result.Data = ImageArr
+    except OSError as e:
+        result.Memo = str(e)
     return result
 
 
