@@ -178,6 +178,7 @@ def BuildEnvironmentAction(Language: str = Form(''), Version: str = Form('')):
     ImageInfo: Result = ImageIsExistsAction(Language, Version)
     if ImageInfo.State == True:
         result.State = True
+        result.Memo = 'Data already exists'
         return result
 
     try:
@@ -242,6 +243,9 @@ def CodeExecAction(
     CodeFilePath = getcwd() + '/CodeExec/CodeFile/'  # 模板文件夹
     CodeDir = getcwd() + '/CodeExec/CodeTemp/'  # 代码执行文件夹
     result = Result()
+    result.State = False
+    result.Memo = 'error'
+    result.Data = None
 
     try:
         _file.MkDir(CodeDir)
