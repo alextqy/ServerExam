@@ -31,7 +31,7 @@ async def ImageList(request: Request):
                 ImageArr.append(infoList[0] + '#' + infoList[1] + '#' + infoList[2])
         result.State = True
         result.Data = ImageArr
-    except OSError as e:
+    except Exception as e:
         result.Memo = str(e)
     return result
 
@@ -45,7 +45,7 @@ async def ImageRemove(request: Request, ImageID: str = Form('')):
     try:
         check = _common.CLI('docker rmi ' + ImageID)
         result.State = True
-    except OSError as e:
+    except Exception as e:
         result.Memo = str(e)
     return result
 
@@ -86,7 +86,7 @@ def ImageIsExistsAction(Language: str = Form(''), Version: str = Form('')):
                 result.Memo = _lang.NoData
         else:
             result.Memo = _lang.NoData
-    except OSError as e:
+    except Exception as e:
         result.Memo = str(e)
 
     return result
@@ -188,7 +188,7 @@ def BuildEnvironmentAction(Language: str = Form(''), Version: str = Form('')):
             result.Memo = CliInfo
         else:
             result.Memo = _lang.NoData
-    except OSError as e:
+    except Exception as e:
         result.Memo = str(e)
 
     return result
@@ -269,7 +269,7 @@ def CodeExecAction(
 
     try:
         CodeStr = base64.b64decode(CodeStr).decode('utf-8')
-    except OSError as e:
+    except Exception as e:
         result.Memo = str(e)
         return result
     # print('解码数据:')
@@ -348,7 +348,7 @@ def CodeExecAction(
                 try:
                     file = open(CodeFile, 'w')
                     file.close()
-                except OSError as e:
+                except Exception as e:
                     result.Memo = str(e)
                     return result
 
@@ -356,7 +356,7 @@ def CodeExecAction(
                     File = open(CodeFile, 'w')
                     File.write(FileContent)
                     File.close()
-                except OSError as e:
+                except Exception as e:
                     result.Memo = str(e)
                     _file.DeleteFile(CodeFile)
                     return result
@@ -387,8 +387,12 @@ def CodeExecAction(
                     # print('=====================')
                     CheckCliInfo = _common.CLI(CodeDir + RandomStr).replace('\n', '').strip()
                 else:
-                    cliinfo = json.loads(_common.CLI(DockerRun[0]))
-                    CheckCliInfo = cliinfo['Result']
+                    try:
+                        cliinfo = json.loads(_common.CLI(DockerRun[0]))
+                        CheckCliInfo = cliinfo['Result']
+                    except Exception as e:
+                        result.Memo = str(e)
+                        return result
 
                 # print('输出结果字符串 ' + CheckCliInfo)
                 # print('=====================')
@@ -404,7 +408,7 @@ def CodeExecAction(
                 result.Memo = 'Success'
                 result.State = True
                 _file.DeleteFile(CodeFile)
-        except OSError as e:
+        except Exception as e:
             result.Memo = str(e)
             return result
 
