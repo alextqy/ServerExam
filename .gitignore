@@ -16,3 +16,4 @@ solution/Model/__pycache__
 solution/Entity/__pycache__
 solution/Service/__pycache__
 solution/PreOperation/__pycache__
+solution/CodeExec/CodeTemp/*
