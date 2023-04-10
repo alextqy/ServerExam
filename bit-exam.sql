@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `class` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='班级';
 
--- 正在导出表  server-exam.class 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.class 的数据：~1 rows (大约)
 
 -- 导出  表 server-exam.examinee 结构
 CREATE TABLE IF NOT EXISTS `examinee` (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `examinee` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='考生';
 
--- 正在导出表  server-exam.examinee 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.examinee 的数据：~1 rows (大约)
 
 -- 导出  表 server-exam.examineetoken 结构
 CREATE TABLE IF NOT EXISTS `examineetoken` (
@@ -156,10 +156,10 @@ CREATE TABLE IF NOT EXISTS `manager` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理员';
 
--- 正在导出表  server-exam.manager 的数据：~2 rows (大约)
+-- 正在导出表  server-exam.manager 的数据：~1 rows (大约)
 INSERT IGNORE INTO `manager` (`ID`, `CreateTime`, `Account`, `Password`, `Name`, `State`, `Permission`, `UpdateTime`, `Token`) VALUES
-	(0000000001, 1651887805, 'root', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1675154211, '0068829a5fe2a1cb3b1bb9c97a1d1b76'),
-	(0000000018, 1680060139, 'admin', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1680060106, '67f0b2c7bcf7239d87251bc548c3837f');
+	(0000000001, 1651887805, 'root', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin', 1, 9, 1680764997, ''),
+	(0000000018, 1680060139, 'admin', '5f1d7a84db00d2fce00b31a7fc73224f', 'admin123', 1, 9, 1680831282, '5ca50c4873a95238e4298e7b2a61bb43');
 
 -- 导出  表 server-exam.paper 结构
 CREATE TABLE IF NOT EXISTS `paper` (
@@ -387,7 +387,7 @@ CREATE TABLE IF NOT EXISTS `syslog` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统日志';
 
--- 正在导出表  server-exam.syslog 的数据：~0 rows (大约)
+-- 正在导出表  server-exam.syslog 的数据：~127 rows (大约)
 
 -- 导出  表 server-exam.teacher 结构
 CREATE TABLE IF NOT EXISTS `teacher` (
