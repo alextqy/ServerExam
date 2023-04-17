@@ -213,7 +213,7 @@ class QuestionSolutionLogic(BaseLogic):
                         return result
                     if Position == 1:  # 左侧为备选项 不能设置正确答案
                         CorrectItem = ''
-                    CorrectAnswer = 1
+                    CorrectAnswer = 1  # 答案内容不为空 则为正确答案
                     if CorrectItem != '':
                         CorrectAnswer = 2
                     QuestionSolutionList: list = self._questionSolutionModel.FindQuestionID(_dbsession, QuestionData.ID)
