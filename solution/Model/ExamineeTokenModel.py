@@ -75,7 +75,7 @@ class ExamineeTokenModel(BaseModel):
         return _dbsession.query(self.EType).filter(self.EType.ExamID == ExamID).first()
 
     def FindToken(self, _dbsession: DBsession, Token: str) -> EType:
-        return _dbsession.query(self.EType).filter(self.EType.Token == Token).first()
+        return _dbsession.query(self.EType).filter(self.EType.Token == Token.strip()).first()
 
     def DeleteToken(self, _dbsession: DBsession, Token: str):
         _result = Result()

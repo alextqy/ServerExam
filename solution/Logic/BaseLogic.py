@@ -118,18 +118,19 @@ class BaseLogic:
         if ExamineeTokenData is None:
             return 0
         else:
-            ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ExamineeTokenData.ExamID)
-            if ExamInfoData is None:
-                self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
-                return 0
-            elif ExamInfoData.ExamState != 2:
-                self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
-                return 0
-            elif self._common.Time() >= ExamInfoData.EndTime:
-                self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
-                return 0
-            else:
-                return ExamineeTokenData.ExamID
+            return ExamineeTokenData.ExamID
+            # ExamInfoData: ExamInfoEntity = self._examInfoModel.Find(_dbsession, ExamineeTokenData.ExamID)
+            # if ExamInfoData is None:
+            #     self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
+            #     return 0
+            # elif ExamInfoData.ExamState != 2:
+            #     self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
+            #     return 0
+            # elif self._common.Time() >= ExamInfoData.EndTime:
+            #     self._examineeTokenModel.Delete(_dbsession, ExamineeTokenData.ID)
+            #     return 0
+            # else:
+            #     return ExamineeTokenData.ExamID
 
     def PracticeValidation(self, _dbsession: DBsession, Token: str) -> int:
         ExamineeTokenData: ExamineeTokenEntity = self._examineeTokenModel.FindToken(_dbsession, Token)
