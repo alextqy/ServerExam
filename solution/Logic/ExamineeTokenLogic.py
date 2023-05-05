@@ -139,8 +139,8 @@ class ExamineeTokenLogic(BaseLogic):
                         ScantronSolutionData: ScantronSolutionEntity = i
                         ScantronSolutionData.CorrectAnswer = 0
                         ScantronSolutionData.CorrectItem = ''
-                    ScantronData.ScantronSolutionList = ScantronSolutionList
-                    result.Data = ScantronData
+                    ScantronSolutionList = ScantronSolutionList
+                    result.Data = ScantronSolutionList
                 result.State = True
         _dbsession.close()
         return result
