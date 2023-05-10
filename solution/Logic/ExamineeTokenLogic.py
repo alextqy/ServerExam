@@ -82,14 +82,14 @@ class ExamineeTokenLogic(BaseLogic):
                     return result
 
                 # 修改报名考试起止时间
-                try:
-                    ExamInfoData.StartTime = SignInTime
-                    ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
-                    ExamInfoData.StartState = 2
-                except Exception as e:
-                    result.Memo = str(e)
-                    _dbsession.rollback()
-                    return result
+                # try:
+                #     ExamInfoData.StartTime = SignInTime
+                #     ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
+                #     ExamInfoData.StartState = 2
+                # except Exception as e:
+                #     result.Memo = str(e)
+                #     _dbsession.rollback()
+                #     return result
 
                 # 记录日志
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo
@@ -142,6 +142,24 @@ class ExamineeTokenLogic(BaseLogic):
                     ScantronSolutionList = ScantronSolutionList
                     result.Data = ScantronSolutionList
                 result.State = True
+        _dbsession.close()
+        return result
+    
+    def ExamScantronSolutionViewAttachments(self, Token: str, FilePath: str):
+        result = Result()
+        _dbsession = DBsession()
+        ExamID: int = self.ExamineeTokenValidation(_dbsession, Token)
+        if ExamID == 0:
+            result.Memo = self._lang.WrongToken
+        else:
+            import struct
+            if FilePath != '' and FilePath != 'none':
+                with open(FilePath, 'rb') as f:
+                    BtFile = f.read()
+                content = struct.unpack('B' * len(BtFile), BtFile)
+                result.State = True
+                result.Memo = self._file.CheckFileType(FilePath)
+                result.Data = content
         _dbsession.close()
         return result
 

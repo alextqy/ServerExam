@@ -41,6 +41,15 @@ async def ExamScantronSolutionInfo(
 ):
     return examineeTokenLogic.ExamScantronSolutionInfo(Token.strip(), ID)
 
+# 查看附件
+@ExamineeTokenRouter.post('/Exam/Scantron/Solution/View/Attachments')
+async def ExamScantronSolutionViewAttachments(
+        request: Request,
+        Token: str = Form(''),
+        FilePath: str = Form(''),
+):
+    return examineeTokenLogic.ExamScantronSolutionViewAttachments(Token.strip(), FilePath)
+
 
 # 作答
 @ExamineeTokenRouter.post('/Exam/Answer')
