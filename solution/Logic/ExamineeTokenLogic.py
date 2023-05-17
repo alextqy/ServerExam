@@ -129,9 +129,9 @@ class ExamineeTokenLogic(BaseLogic):
             ScantronData: ScantronEntity = self._scantronModel.Find(_dbsession, ID)
             if ScantronData is None:
                 result.Memo = self._lang.WrongData
-            elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6:
-                result.State = True
-                return result
+            # elif ScantronData.QuestionType >= 4 and ScantronData.QuestionType <= 6:
+            #     result.State = True
+            #     return result
             else:
                 ScantronSolutionList: list = self._scantronSolutionModel.FindScantronID(_dbsession, ScantronData.ID)
                 if len(ScantronSolutionList) > 0:
