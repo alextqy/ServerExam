@@ -362,9 +362,20 @@ def CodeExecAction(
                     return result
 
                 if Language == 'java':
-                    _common.CLI(DockerRun[0] + ' openjdk:' + Version + ' javac Test' + RandomStr + '.java')
+                    try:
+                        _common.CLI(DockerRun[0] + ' openjdk:' + Version + ' javac Test' + RandomStr + '.java')
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _file.DeleteFile(CodeFile)
+                        return result
                 if Language == 'c':
-                    _common.CLI('gcc ' + CodeDir + RandomStr + '.c -o ' + CodeDir + RandomStr)
+                    try:
+                        _common.CLI('gcc ' + CodeDir + RandomStr + '.c -o ' + CodeDir + RandomStr)
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _file.DeleteFile(CodeFile)
+                        return result
+                    
                 # print('编译语句:')
                 # print(DockerRun[0])
                 # print('=====================')
@@ -374,8 +385,13 @@ def CodeExecAction(
                     # print('执行语句:')
                     # print(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr)
                     # print('=====================')
-                    cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
-                    CheckCliInfo = cliinfo['Result']
+                    try:
+                        cliinfo = json.loads(_common.CLI(DockerRun[0] + ' openjdk:' + Version + ' java Test' + RandomStr))
+                        CheckCliInfo = cliinfo['Result']
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _file.DeleteFile(CodeFile)
+                        return result
                 elif Language == 'c':
                     # print('编译语句:')
                     # print(DockerRun[0] + ' gcc:' + Version + ' /home/code/' + RandomStr)
@@ -385,7 +401,13 @@ def CodeExecAction(
                     # print('执行语句')
                     # print(CodeDir + RandomStr)
                     # print('=====================')
-                    CheckCliInfo = _common.CLI(CodeDir + RandomStr).replace('\n', '').strip()
+
+                    try:
+                        CheckCliInfo = _common.CLI(CodeDir + RandomStr).replace('\n', '').strip()
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _file.DeleteFile(CodeFile)
+                        return result
                 else:
                     try:
                         cliinfo = json.loads(_common.CLI(DockerRun[0]))
