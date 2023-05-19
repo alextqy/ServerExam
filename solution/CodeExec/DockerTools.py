@@ -398,6 +398,8 @@ def CodeExecAction(
                 # print('输出结果字符串 ' + CheckCliInfo)
                 # print('=====================')
 
+                CheckCliInfo = str(CheckCliInfo)
+
                 # 是否有语法错误
                 if 'error' in CheckCliInfo:
                     result.Data = _lang.OperationFailed
