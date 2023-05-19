@@ -392,6 +392,7 @@ def CodeExecAction(
                         CheckCliInfo = cliinfo['Result']
                     except Exception as e:
                         result.Memo = str(e)
+                        _file.DeleteFile(CodeFile)
                         return result
 
                 # print('输出结果字符串 ' + CheckCliInfo)
