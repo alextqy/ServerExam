@@ -411,6 +411,7 @@ def CodeExecAction(
                 _file.DeleteFile(CodeFile)
         except Exception as e:
             result.Memo = str(e)
+            _file.DeleteFile(CodeFile)
             return result
 
     # 删除执行完成的文件(重要)
