@@ -403,10 +403,11 @@ def CodeExecAction(
                     # print('=====================')
 
                     try:
-                        CheckCliInfo = _common.CLI(CodeDir + RandomStr).replace('\n', '').strip()
+                        CheckCliInfo = os.system(CodeDir + RandomStr + '.exe')
                     except Exception as e:
                         result.Memo = str(e)
-                        _file.DeleteFile(CodeFile)
+                        _file.DeleteFile(CodeDir + RandomStr + '.c')
+                        _file.DeleteFile(CodeDir + RandomStr + '.exe')
                         return result
                 else:
                     try:
@@ -443,7 +444,7 @@ def CodeExecAction(
         _file.DeleteFile(CodeDir + 'Test' + RandomStr + '.class')
         # _file.DeleteFile(CodeDir + 'Test' + RandomStr + '.java')
     if Language == 'c':
-        _file.DeleteFile(CodeDir + RandomStr)
+        _file.DeleteFile(CodeDir + RandomStr + '.exe')
 
     return result
 

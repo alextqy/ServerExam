@@ -115,7 +115,9 @@ class FileHelper(BaseService):
 
     # 删除文件
     def DeleteFile(self, FilePath):
-        remove(FilePath)
+        if self.FileIsExist(FilePath):
+            remove(FilePath)
+        
 
     # 新建文件
     def MkFile(self, Path):
