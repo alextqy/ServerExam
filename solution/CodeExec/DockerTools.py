@@ -409,6 +409,13 @@ def CodeExecAction(
                         _file.DeleteFile(CodeDir + RandomStr + '.c')
                         _file.DeleteFile(CodeDir + RandomStr + '.exe')
                         return result
+                elif Language == 'python':
+                    try:
+                        CheckCliInfo = json.loads(_common.CLI('python ' + CodeDir + RandomStr + '.py'))['Result']
+                    except Exception as e:
+                        result.Memo = str(e)
+                        _file.DeleteFile(CodeDir + RandomStr + '.py')
+                        return result
                 else:
                     try:
                         cliinfo = json.loads(_common.CLI(DockerRun[0]))
