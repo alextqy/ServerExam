@@ -277,6 +277,8 @@ class ExamInfoLogic(BaseLogic):
                                         ScantronData.Description = QuestionData.Description
                                         ScantronData.Attachment = QuestionData.Attachment
                                         ScantronData.ExamID = ID
+                                        ScantronData.Language = QuestionData.Language
+                                        ScantronData.LanguageVersion = QuestionData.LanguageVersion
                                         AddInfo: Result = self._scantronModel.Insert(_dbsession, ScantronData)
                                         if AddInfo.State == False:
                                             result.Memo = AddInfo.Memo
