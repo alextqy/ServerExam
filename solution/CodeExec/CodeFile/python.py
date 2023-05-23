@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 #!/usr/bin/python
 import json
 import time
@@ -19,8 +20,7 @@ if __name__ == '__main__':
 
     start = time.perf_counter()
     dicts['Result'] = str(Run())
-    dicts['RunTime'] = (time.perf_counter() - start) * 1000
-    dicts['RunTime'] = round(dicts['RunTime'], 2)
+    dicts['RunTime'] = round((time.perf_counter() - start) * 1000, 2)
 
     json_dicts = json.dumps(dicts)
     print(json_dicts)
