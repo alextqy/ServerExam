@@ -40,11 +40,8 @@ function Run()
 }
 
 $stime = microtime(true);
-
 $result['Result'] = Run();
-
 $etime = microtime(true);
-
 $result['RunTime'] = round(($etime - $stime) * 1000, 2);
 $result['Memory'] = memory_get_usage();
 Tojson($result);
