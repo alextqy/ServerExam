@@ -82,14 +82,14 @@ class ExamineeTokenLogic(BaseLogic):
                     return result
 
                 # 修改报名考试起止时间
-                # try:
-                #     ExamInfoData.StartTime = SignInTime
-                #     ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
-                #     ExamInfoData.StartState = 2
-                # except Exception as e:
-                #     result.Memo = str(e)
-                #     _dbsession.rollback()
-                #     return result
+                try:
+                    ExamInfoData.StartTime = SignInTime
+                    ExamInfoData.EndTime = SignInTime + ExamInfoData.ExamDuration
+                    ExamInfoData.StartState = 2
+                except Exception as e:
+                    result.Memo = str(e)
+                    _dbsession.rollback()
+                    return result
 
                 # 记录日志
                 Desc = 'examinee login exam No.:' + ExamInfoData.ExamNo
